@@ -756,10 +756,7 @@ async function startQuestion(){
     firstReason=true;
     if(btn){ btn.textContent='▶ 시작'; btn.disabled=false; }
   } catch(e){
-    alert('Firebase 오류: '+e.message+'
-
-Firebase 콘솔 → Realtime Database → Rules 에서
-읽기/쓰기 권한을 true로 설정해주세요.');
+    alert('Firebase 오류: '+e.message+'\n\nFirebase 콘솔 → Realtime Database → Rules에서 읽기/쓰기 권한을 true로 설정해주세요.');
     if(btn){ btn.textContent='▶ 시작'; btn.disabled=false; }
   }
 }
