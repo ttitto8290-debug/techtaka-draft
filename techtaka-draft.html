@@ -503,7 +503,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
     <div style="flex:1;border-right:2px solid #444400;padding:8px 14px;">
       <div id="sb-logos" style="margin-bottom:4px;"></div>
       <div style="font-family:'Press Start 2P',monospace;font-size:8px;color:#888800;letter-spacing:2px;margin-bottom:3px;">ROUND</div>
-      <div id="race-round-title" style="font-family:'Press Start 2P',monospace;font-size:10px;color:#cccc00;margin-bottom:2px;">ROUND 1 - VEHICLE RACE</div>
+      <div id="race-round-title" style="font-family:'Press Start 2P',monospace;font-size:10px;color:#cccc00;margin-bottom:2px;">TECHTAKA 6TH RACE</div>
       <div id="race-timer" style="font-family:'Press Start 2P',monospace;font-size:20px;color:#FFD700;letter-spacing:4px;">READY</div>
     </div>
     <div style="width:280px;padding:8px 14px;">
@@ -949,7 +949,7 @@ async function submitVote(){
 
 let raceCanvas=null, raceCtx=null, raceRaf=null;
 let raceFrame=0, raceStartTime=0;
-const LANE_H=70, LABEL_W=130;
+const LANE_H=62, LABEL_W=130;
 const RACER_COLORS=['#ff4444','#ff8800','#ffff00','#44ff88','#44aaff'];
 
 let racerStates=[];
@@ -1017,19 +1017,6 @@ function drawPix(x,y,frame,color,sc=3,flip=false){
   }
 }
 
-// 관중 픽셀 (앉은 모양, 이벤트시 점프)
-function drawCrowd(y, W, bounce){
-  const colors=['#ff4444','#ffaa00','#44ff88','#44aaff','#ff44ff','#ffff44','#ffffff'];
-  for(let x=LABEL_W; x<W-30; x+=14){
-    const c=colors[Math.floor(x/14)%colors.length];
-    const by=bounce&&Math.random()<0.3?y-4:y;
-    raceCtx.fillStyle=c;
-    raceCtx.fillRect(x+3,by+2,8,6); // 몸
-    raceCtx.fillStyle='#f4c07a';
-    raceCtx.fillRect(x+4,by-2,6,6); // 머리
-  }
-}
-
 // 스크롤 배너 오프셋
 let bannerOffset=0;
 
@@ -1042,23 +1029,34 @@ function drawCanvas(){
   raceCtx.fillStyle='#000033';
   raceCtx.fillRect(0,0,W,H);
 
-  // 관중석 (트랙 위)
+  // 관중석
   raceCtx.fillStyle='#000055';
-  raceCtx.fillRect(LABEL_W,0,W-LABEL_W,18);
-  const crowdBounce=raceRunning&&raceFrame%20<10;
-  drawCrowd(4, W, crowdBounce);
+  raceCtx.fillRect(LABEL_W, 0, W-LABEL_W, 18);
+  const colors6=['#ff4444','#ffaa00','#44ff88','#44aaff','#ff44ff','#ffff44','#fff'];
+  for(let cx=LABEL_W+4; cx<W-32; cx+=14){
+    const cc=colors6[Math.floor(cx/14)%colors6.length];
+    const jump=raceRunning && raceFrame%20<10 && Math.sin(cx*0.3)>0.5;
+    raceCtx.fillStyle='#f4c07a'; raceCtx.fillRect(cx+2, jump?0:2, 6, 5);
+    raceCtx.fillStyle=cc; raceCtx.fillRect(cx+1, jump?5:7, 8, 6);
+  }
 
-  // 홍보 배너 (스크롤)
-  bannerOffset=(bannerOffset+0.8)%(W*2);
-  const bannerText='  🏁 TECHTAKA 6TH ANNIVERSARY   ✨ POWERED BY ARGO   🎉 함께한 6년, 함께할 미래   ';
-  raceCtx.fillStyle='#000000';
-  raceCtx.fillRect(LABEL_W,18,W-LABEL_W,14);
+  // 홍보 배너
+  raceCtx.fillStyle='#111100';
+  raceCtx.fillRect(LABEL_W, 18, W-LABEL_W, 14);
+  bannerOffset=(bannerOffset+1.2)%(W-LABEL_W);
+  const bannerText='  🏁 TECHTAKA 6TH   ✨ POWERED BY ARGO   🎉 함께한 6년 함께할 미래  ';
+  raceCtx.save();
+  raceCtx.beginPath();
+  raceCtx.rect(LABEL_W, 18, W-LABEL_W, 14);
+  raceCtx.clip();
   raceCtx.fillStyle='#cccc00';
   raceCtx.font='bold 9px "Courier New"';
   raceCtx.textAlign='left';
-  const bw=raceCtx.measureText(bannerText).width;
-  raceCtx.fillText(bannerText, LABEL_W+(bw-bannerOffset)%bw-bw, 29);
-  raceCtx.fillText(bannerText, LABEL_W+(bw-bannerOffset)%bw, 29);
+  const tbw=raceCtx.measureText(bannerText).width;
+  const bx=LABEL_W - bannerOffset % tbw;
+  raceCtx.fillText(bannerText, bx, 29);
+  raceCtx.fillText(bannerText, bx+tbw, 29);
+  raceCtx.restore();
 
   const CROWD_H=32; // 관중석+배너 높이
   for(let i=0;i<N;i++){
@@ -1191,7 +1189,6 @@ function raceLoop(){
   raceFrame++;
   const N=racers.length;
   const FINISH=raceCanvas.width-LABEL_W-28;
-  if(raceFrame%3===0) bannerOffset=(bannerOffset||0)+0.8;
 
   for(let i=0;i<N;i++){
     const s=racerStates[i];
