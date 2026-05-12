@@ -721,8 +721,13 @@ async function loadSettingsFromDB(){
 async function savePeople(){
   const raw = document.getElementById('people-textarea').value;
   people = raw.split('\n').map(p=>p.trim()).filter(p=>p);
-  await set(ref(db,'settings/people'), people);
-  alert(`${people.length}명 저장됐어요!`);
+  try {
+    await set(ref(db,'settings/people'), people);
+    alert(people.length+'명 저장됐어요!');
+  } catch(e) {
+    // Firebase 실패해도 로컬에는 반영
+    alert(people.length+'명 로컬 저장됐어요! (Firebase: '+e.message+')');
+  }
 }
 
 async function saveQuestions(){
@@ -749,16 +754,8 @@ function updateHostQ(){
 }
 
 async function startQuestion(){
-  const btn=document.querySelector('[onclick="startQuestion()"]');
-  if(btn){ btn.textContent='전송 중...'; btn.disabled=true; }
-  try{
-    await set(ref(db,'state'),{currentQ:currentQIdx,active:true,closed:false,mode:'draft'});
-    firstReason=true;
-    if(btn){ btn.textContent='▶ 시작'; btn.disabled=false; }
-  } catch(e){
-    alert('Firebase 오류: '+e.message+'\n\nFirebase 콘솔 → Realtime Database → Rules에서 읽기/쓰기 권한을 true로 설정해주세요.');
-    if(btn){ btn.textContent='▶ 시작'; btn.disabled=false; }
-  }
+  await set(ref(db,'state'),{currentQ:currentQIdx,active:true,closed:false,mode:'draft'});
+  firstReason=true;
 }
 
 async function closeVoting(){
@@ -876,7 +873,14 @@ function listenToHostState(){
   onValue(ref(db,'settings'),(snap)=>{
     const s=snap.val()||{};
     if(s.questions) questions=s.questions;
-    if(s.people) people=s.people;
+    if(s.people){
+      people=s.people;
+      // 투표 화면이 열려있으면 즉시 명단 반영
+      const pVoting=document.getElementById('p-voting');
+      if(pVoting && !pVoting.classList.contains('hidden')){
+        renderPeople('');
+      }
+    }
   });
 }
 
