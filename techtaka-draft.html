@@ -502,8 +502,8 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
     <!-- 스코어보드 오버레이 (우측 상단) -->
     <div style="position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.85);border:2px solid #cccc00;padding:10px 12px;font-family:'Press Start 2P',monospace;min-width:200px;z-index:15;">
       <div id="sb-logos" style="margin-bottom:6px;"></div>
-      <div id="race-timer" style="font-size:18px;color:#FFD700;letter-spacing:3px;margin-bottom:6px;">READY</div>
-      <div style="font-size:7px;color:#888800;letter-spacing:1px;margin-bottom:4px;">RANKING</div>
+      <div id="race-timer" style="font-size:22px;color:#FFD700;letter-spacing:3px;margin-bottom:8px;">READY</div>
+      <div style="font-size:8px;color:#888800;letter-spacing:1px;margin-bottom:6px;">RANKING</div>
       <div id="sb-rank-board"></div>
     </div>
 
@@ -943,7 +943,7 @@ async function submitVote(){
 
 let raceCanvas=null, raceCtx=null, raceRaf=null;
 let raceFrame=0, raceStartTime=0;
-const LANE_H=130, LABEL_W=160;
+let LANE_H=88; const LABEL_W=160;
 const RACER_COLORS=['#ff4444','#ff8800','#ffff00','#44ff88','#44aaff'];
 
 let racerStates=[];
@@ -999,7 +999,7 @@ const PF_FALL=[
   [0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]
 ];
 
-function drawPix(x,y,frame,color,sc=8,flip=false){
+function drawPix(x,y,frame,color,sc=6,flip=false){
   for(let r=0;r<frame.length;r++){
     for(let c=0;c<frame[r].length;c++){
       const v=frame[r][c];
@@ -1019,6 +1019,10 @@ function drawCanvas(){
   const W=raceCanvas.width, H=raceCanvas.height;
   const N=racers.length;
   const FINISH=W-LABEL_W-28;
+  // 캐릭터 배율: LANE_H에 맞게 동적 계산, 최소 4 최대 8
+  const sc=Math.min(8, Math.max(4, Math.floor((LANE_H-16)/12)));
+  const charH=12*sc;
+  const charW=8*sc;
 
   raceCtx.fillStyle='#000033';
   raceCtx.fillRect(0,0,W,H);
@@ -1030,8 +1034,8 @@ function drawCanvas(){
   for(let cx=LABEL_W+4; cx<W-32; cx+=18){
     const cc=colors6[Math.floor(cx/14)%colors6.length];
     const jump=raceRunning && raceFrame%20<10 && Math.sin(cx*0.3)>0.5;
-    raceCtx.fillStyle='#f4c07a'; raceCtx.fillRect(cx+3, jump?0:3, 8, 7);
-    raceCtx.fillStyle=cc; raceCtx.fillRect(cx+2, jump?7:10, 10, 8);
+    raceCtx.fillStyle='#f4c07a'; raceCtx.fillRect(cx+3, jump?0:2, 7, 6);
+    raceCtx.fillStyle=cc; raceCtx.fillRect(cx+2, jump?6:8, 9, 7);
   }
 
   // 홍보 배너
@@ -1059,21 +1063,34 @@ function drawCanvas(){
     const tx=LABEL_W;
 
     // 레인 라벨
-    raceCtx.fillStyle=(i%2===0)?'#000055':'#00004a';
+    raceCtx.fillStyle='#00003a';
     raceCtx.fillRect(0,y,LABEL_W,LANE_H);
+    // 구분선
+    raceCtx.fillStyle='rgba(100,100,200,0.3)';
+    raceCtx.fillRect(LABEL_W-2,y,2,LANE_H);
     raceCtx.fillStyle='#ccccff';
-    raceCtx.font='bold 14px "Courier New"';
+    raceCtx.font='bold 11px "Courier New"';
     raceCtx.textAlign='right';
-    raceCtx.fillText(racers[i].name, LABEL_W-6, y+24);
+    raceCtx.fillText(racers[i].name, LABEL_W-6, y+30);
     raceCtx.fillStyle='#7788aa';
-    raceCtx.font='11px "Courier New"';
-    raceCtx.fillText(racers[i].title||'', LABEL_W-6, y+38);
+    raceCtx.font='9px "Courier New"';
+    raceCtx.fillText(racers[i].title||'', LABEL_W-6, y+44);
 
-    // 트랙
-    raceCtx.fillStyle=(i%2===0)?'#004400':'#003800';
+    // 트랙 - 줄무늬 잔디
+    const trackColor1=(i%2===0)?'#004800':'#003c00';
+    const trackColor2=(i%2===0)?'#005800':'#004800';
+    raceCtx.fillStyle=trackColor1;
     raceCtx.fillRect(tx,y,W-tx,LANE_H);
-    raceCtx.fillStyle=(i%2===0)?'#005500':'#004500';
-    raceCtx.fillRect(tx,y+LANE_H/2,W-tx,LANE_H/2);
+    // 밝은 줄무늬 (잔디 방향)
+    raceCtx.fillStyle=trackColor2;
+    for(let stripe=0;stripe<W-tx;stripe+=32){
+      raceCtx.fillRect(tx+stripe,y,16,LANE_H);
+    }
+    // 레인 경계선
+    raceCtx.fillStyle='rgba(255,255,255,0.15)';
+    raceCtx.fillRect(tx,y,W-tx,2);
+    raceCtx.fillStyle='rgba(0,0,0,0.3)';
+    raceCtx.fillRect(tx,y+LANE_H-2,W-tx,2);
 
     // 레인선
     raceCtx.strokeStyle='rgba(255,255,255,0.1)';
@@ -1118,11 +1135,11 @@ function drawCanvas(){
 
     // 레이서
     const px=tx+Math.max(0,Math.min(s.pos, FINISH+4));
-    const py=y+LANE_H/2-48;
+    const py=y+Math.floor(LANE_H/2-charH/2);
     const fi=Math.floor(raceFrame/5)%2;
 
     if(s.anim==='fall'){
-      drawPix(px,py+8,PF_FALL,RACER_COLORS[i],3);
+      drawPix(px,py+Math.floor(sc/2),PF_FALL,RACER_COLORS[i],sc);
       if(raceFrame%8<4){
         raceCtx.fillStyle='#ffff00';
         raceCtx.font='13px serif';
@@ -1130,13 +1147,13 @@ function drawCanvas(){
         raceCtx.fillText('★',px+22,py);
       }
     } else if(s.anim==='sleep'){
-      drawPix(px,py,PF[0],RACER_COLORS[i],3);
+      drawPix(px,py,PF[0],RACER_COLORS[i],sc);
       raceCtx.fillStyle='#88ccff';
       raceCtx.font='12px serif';
       raceCtx.textAlign='left';
       raceCtx.fillText(raceFrame%50<25?'z':'zz', px+24, py-2);
     } else if(s.anim==='boost'){
-      drawPix(px,py,PF[fi],RACER_COLORS[i],3);
+      drawPix(px,py,PF[fi],RACER_COLORS[i],sc);
       for(let f2=0;f2<4;f2++){
         raceCtx.fillStyle=`rgba(255,${80+f2*40},0,${0.9-f2*0.2})`;
         raceCtx.fillRect(px-f2*7-3, py+10+Math.random()*8, 7, 4);
@@ -1153,13 +1170,16 @@ function drawCanvas(){
     // 순위 배지
     const rank=raceFinishOrder.indexOf(i);
     if(rank>=0){
-      const bx=tx+FINISH+14, by=y+LANE_H/2;
+      const bx=tx+FINISH+16, by=y+LANE_H/2;
+      // 배지 글로우
+      raceCtx.fillStyle='rgba(255,200,0,0.3)';
+      raceCtx.beginPath(); raceCtx.arc(bx,by,20,0,Math.PI*2); raceCtx.fill();
       raceCtx.fillStyle=['#FFD700','#C0C0C0','#CD7F32','#888','#666'][rank];
-      raceCtx.beginPath(); raceCtx.arc(bx,by,12,0,Math.PI*2); raceCtx.fill();
+      raceCtx.beginPath(); raceCtx.arc(bx,by,15,0,Math.PI*2); raceCtx.fill();
       raceCtx.fillStyle='#000';
-      raceCtx.font='bold 10px "Courier New"';
+      raceCtx.font='bold 12px "Courier New"';
       raceCtx.textAlign='center';
-      raceCtx.fillText(rank+1,bx,by+4);
+      raceCtx.fillText(rank+1,bx,by+5);
     }
   }
 
@@ -1278,11 +1298,14 @@ function initRaceCanvas(){
   raceCanvas=document.getElementById('race-canvas');
   if(!raceCanvas) return;
   const container=raceCanvas.parentElement;
-  // 부모 크기 확실히 가져오기
-  const W=Math.max(container.offsetWidth||container.clientWidth||window.innerWidth||900, 600);
-  const H=Math.max(container.offsetHeight||container.clientHeight||window.innerHeight-60, 44+racers.length*LANE_H);
+  const W=Math.max(container.offsetWidth||window.innerWidth||900, 600);
+  // 화면 높이에서 상단바 제외한 사용 가능 높이
+  const availH=Math.max(container.offsetHeight||window.innerHeight-55, 400);
+  // CROWD_H=44, 레인 개수에 맞게 LANE_H 동적 계산
+  LANE_H=Math.floor((availH-44)/racers.length);
+  LANE_H=Math.max(LANE_H, 80); // 최소 80px
   raceCanvas.width=W;
-  raceCanvas.height=H;
+  raceCanvas.height=availH;
   raceCtx=raceCanvas.getContext('2d');
   if(!racerStates.length){
     racerStates=racers.map(()=>({pos:4,speed:0,baseSpeed:0,event:null,eventTimer:0,anim:'',finished:false,isGagRacer:false,gagFired:false}));
