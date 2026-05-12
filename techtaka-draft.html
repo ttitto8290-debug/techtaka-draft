@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>테크타카 6주년 🎉</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=DM+Sans:wght@400;700;900&family=Press+Start+2P&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
@@ -499,6 +501,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
   <!-- 스코어보드 -->
   <div style="background:#000;border:3px solid #cccc00;border-bottom:none;display:flex;flex-shrink:0;">
     <div style="flex:1;border-right:2px solid #444400;padding:8px 14px;">
+      <div id="sb-logos" style="margin-bottom:4px;"></div>
       <div style="font-family:'Press Start 2P',monospace;font-size:8px;color:#888800;letter-spacing:2px;margin-bottom:3px;">ROUND</div>
       <div id="race-round-title" style="font-family:'Press Start 2P',monospace;font-size:10px;color:#cccc00;margin-bottom:2px;">ROUND 1 - VEHICLE RACE</div>
       <div id="race-timer" style="font-family:'Press Start 2P',monospace;font-size:20px;color:#FFD700;letter-spacing:4px;">READY</div>
@@ -601,10 +604,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
   </div>
 </div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, set, get, onValue, push, remove, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-
+<script>
 const firebaseConfig = {
   apiKey: "AIzaSyDHalgC6oJ27fW1qer7_QQaSXKV1uI7DZs",
   authDomain: "techtaka-draft.firebaseapp.com",
@@ -614,10 +614,21 @@ const firebaseConfig = {
   messagingSenderId: "848467068467",
   appId: "1:848467068467:web:cb17d3207db6399d1f4546"
 };
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+// compat shim
+function ref(db, path){ return db.ref(path); }
+function set(r, v){ return r.set(v); }
+function get(r){ return r.once('value'); }
+function push(r, v){ return r.push(v); }
+function remove(r){ return r.remove(); }
+function update(r, v){ return r.update(v); }
+function onValue(r, cb){ r.on('value', snap => cb(snap)); }
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
 
+// ── 로고 이미지 ──
+const LOGO_TECHTAKA = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAO8AAAAwCAYAAAD5GC1DAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAZdEVYdFNvZnR3YXJlAEFkb2JlIEltYWdlUmVhZHlxyWU8AAAAIXRFWHRDcmVhdGlvbiBUaW1lADIwMjE6MTE6MjYgMDc6Mjg6NTI3NpoJAAADI0lEQVR4Xu3dgbXSMBTGcXQCN9ARdAOdRN1AJ9ANHEGdQDfQDXQEN9ANfPkoUay3lzZtk3D5/865BziUpC35gJe+wgEAAAAAAAAAAAAAAAAAACCWe6fLFr6cLi3PTpfRvUj1fLj6n++pXg9XV/P6+Zjqw3C1aw9SPU31+XgLTf126la8TWVtv8p7cVvK60f39U7B/ZbqGta1mvunS6BXCq5eyB4fb+EPwoueEVwH4UWvCO4FhBc9IrgzEF70huDO1Gt4rVlRlZ7Uud6nstq4VHv2oUMda2lQ/0xlta9a2sebVFY7qrltXVonr8Z9vEpVElw9b1b7qhrbUV3Ud16FSsc291SjjzENLg1SvTv1osd1KnF12xExvAS3HoLbULTwEtx6CG5jkcJLcOshuB2IEl6CWw/B7USE8EYN7qNUBPdfD1Np5tiqJesU5QWoGWu6PdcS1uNzTfH+Ud8KqbVcrjVKT0zQfdZjVBrIY1udmFBjfb0+SkonNIxDWro/rOVzVRdxtnmNl6mu4fQ4zKPTKnV66a/jrWAI718EN5bQwRXCOyC48eiLDMIGVwgvwY3qUypNTIV16+EluHFpkkoTZWED3PI7rLwZuqnvsNLHIP0tc66knfx9Tvr+prGt+rCo3fOPcprZ1IkBlq+pptrWoLRmlUWP0WPPef3oxcvaD7JkfbXs1HduvUs1FaLx+np9lND6P0n143hrULo/vBn1llmqTsdO8zT73LJ2ng7tWMuWlM4osQaZtezS0vaOaRBZy6q8gaL7rMeorFDrXUiHTKzlvdriMI769fpe0ofum7Jkn5Rsx6XxWl3Lj81bfWRVG2prLb1C611g/K67ha3WsdSe2+ZRf+r3/N37GrV+/kyt/+btJcCRg5vVDjDB3VkPE1atA3wLwc1qBZjgVtDLbHOrAN9ScLO9A0xwK+npUFHtAN9icLO9tp3gVtTj9LZ3WEGDY+5PgGgWeuonPkTtzB283szv2Fbr6LXj7aMl26VZaM2iTp1dM27LW18FVgPeCu6S9fX68H6aZas+vP3ujQO9aAEAAAAAAAAAAAAAACCWw+EOJaXr2yjsWfkAAAAASUVORK5CYII=';
+const LOGO_ARGO = 'data:image/png;base64,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';
 // ── 기본값 ──
 const PIN = "1124";
 
@@ -1006,6 +1017,22 @@ function drawPix(x,y,frame,color,sc=3,flip=false){
   }
 }
 
+// 관중 픽셀 (앉은 모양, 이벤트시 점프)
+function drawCrowd(y, W, bounce){
+  const colors=['#ff4444','#ffaa00','#44ff88','#44aaff','#ff44ff','#ffff44','#ffffff'];
+  for(let x=LABEL_W; x<W-30; x+=14){
+    const c=colors[Math.floor(x/14)%colors.length];
+    const by=bounce&&Math.random()<0.3?y-4:y;
+    raceCtx.fillStyle=c;
+    raceCtx.fillRect(x+3,by+2,8,6); // 몸
+    raceCtx.fillStyle='#f4c07a';
+    raceCtx.fillRect(x+4,by-2,6,6); // 머리
+  }
+}
+
+// 스크롤 배너 오프셋
+let bannerOffset=0;
+
 function drawCanvas(){
   if(!raceCanvas||!raceCtx) return;
   const W=raceCanvas.width, H=raceCanvas.height;
@@ -1015,21 +1042,40 @@ function drawCanvas(){
   raceCtx.fillStyle='#000033';
   raceCtx.fillRect(0,0,W,H);
 
+  // 관중석 (트랙 위)
+  raceCtx.fillStyle='#000055';
+  raceCtx.fillRect(LABEL_W,0,W-LABEL_W,18);
+  const crowdBounce=raceRunning&&raceFrame%20<10;
+  drawCrowd(4, W, crowdBounce);
+
+  // 홍보 배너 (스크롤)
+  bannerOffset=(bannerOffset+0.8)%(W*2);
+  const bannerText='  🏁 TECHTAKA 6TH ANNIVERSARY   ✨ POWERED BY ARGO   🎉 함께한 6년, 함께할 미래   ';
+  raceCtx.fillStyle='#000000';
+  raceCtx.fillRect(LABEL_W,18,W-LABEL_W,14);
+  raceCtx.fillStyle='#cccc00';
+  raceCtx.font='bold 9px "Courier New"';
+  raceCtx.textAlign='left';
+  const bw=raceCtx.measureText(bannerText).width;
+  raceCtx.fillText(bannerText, LABEL_W+(bw-bannerOffset)%bw-bw, 29);
+  raceCtx.fillText(bannerText, LABEL_W+(bw-bannerOffset)%bw, 29);
+
+  const CROWD_H=32; // 관중석+배너 높이
   for(let i=0;i<N;i++){
     const s=racerStates[i]||{pos:4,anim:''};
-    const y=i*LANE_H;
+    const y=CROWD_H+i*LANE_H;
     const tx=LABEL_W;
 
     // 레인 라벨
     raceCtx.fillStyle=(i%2===0)?'#000055':'#00004a';
     raceCtx.fillRect(0,y,LABEL_W,LANE_H);
-    raceCtx.fillStyle='#aaaaff';
-    raceCtx.font='bold 9px "Courier New"';
+    raceCtx.fillStyle='#ccccff';
+    raceCtx.font='bold 12px "Courier New"';
     raceCtx.textAlign='right';
-    raceCtx.fillText(racers[i].name, LABEL_W-6, y+22);
-    raceCtx.fillStyle='#556688';
-    raceCtx.font='8px "Courier New"';
-    raceCtx.fillText(racers[i].title||'', LABEL_W-6, y+34);
+    raceCtx.fillText(racers[i].name, LABEL_W-6, y+24);
+    raceCtx.fillStyle='#7788aa';
+    raceCtx.font='10px "Courier New"';
+    raceCtx.fillText(racers[i].title||'', LABEL_W-6, y+38);
 
     // 트랙
     raceCtx.fillStyle=(i%2===0)?'#004400':'#003800';
@@ -1052,12 +1098,29 @@ function drawCanvas(){
       raceCtx.fillRect(tx+m,y,1,LANE_H);
     }
 
-    // 결승선
+    // 결승선 체크무늬
     const fx=tx+FINISH;
     for(let r2=0;r2<LANE_H;r2+=7){
-      for(let c=0;c<22;c+=7){
+      for(let c=0;c<20;c+=7){
         raceCtx.fillStyle=((Math.floor(r2/7)+Math.floor(c/7))%2===0)?'#fff':'#000';
         raceCtx.fillRect(fx+c,y+r2,7,7);
+      }
+    }
+    // 결승선 깃발 (첫번째 레인 위에만)
+    if(i===0){
+      raceCtx.fillStyle='#FFD700';
+      raceCtx.fillRect(fx+8,y-CROWD_H,3,CROWD_H+8);
+      raceCtx.fillStyle='#FFD700';
+      raceCtx.beginPath();
+      raceCtx.moveTo(fx+11,y-CROWD_H+2);
+      raceCtx.lineTo(fx+26,y-CROWD_H+8);
+      raceCtx.lineTo(fx+11,y-CROWD_H+14);
+      raceCtx.fill();
+      if(LOGO_TECHTAKA){
+        const img=new Image();
+        img._src=LOGO_TECHTAKA;
+        if(!drawCanvas._ttImg){ drawCanvas._ttImg=new Image(); drawCanvas._ttImg.src=LOGO_TECHTAKA; }
+        if(drawCanvas._ttImg.complete) raceCtx.drawImage(drawCanvas._ttImg,fx-28,y-CROWD_H,28,12);
       }
     }
 
@@ -1128,6 +1191,7 @@ function raceLoop(){
   raceFrame++;
   const N=racers.length;
   const FINISH=raceCanvas.width-LABEL_W-28;
+  if(raceFrame%3===0) bannerOffset=(bannerOffset||0)+0.8;
 
   for(let i=0;i<N;i++){
     const s=racerStates[i];
@@ -1142,22 +1206,27 @@ function raceLoop(){
       }
     }
 
+    // 이벤트 간격 체크 (최소 240프레임=4초)
+    const canEvent = (raceFrame - (s.lastEventFrame||0)) > 240;
+
     // 개그 레이서 강제 이벤트 (40~65% 지점에서 100% 발동)
-    if(!s.event && s.isGagRacer && !s.gagFired && s.pos/FINISH>0.40 && s.pos/FINISH<0.65){
+    if(!s.event && s.isGagRacer && !s.gagFired && s.pos/FINISH>0.40 && s.pos/FINISH<0.65 && canEvent){
       const ev=EVENTS[Math.floor(Math.random()*EVENTS.length)];
       s.event=ev; s.eventTimer=ev.duration; s.gagFired=true;
       ev.onStart(s, FINISH);
+      s.lastEventFrame=raceFrame;
       raceEventLog=racers[i].name+ev.desc;
       showBanner('⚡ '+racers[i].name+' '+ev.name, 3000);
       sfx('event');
     }
 
     // 일반 레이서도 낮은 확률로 소소한 이벤트 (FALL/TRIP만)
-    if(!s.event && !s.isGagRacer && !s.finished && s.pos/FINISH>0.2 && Math.random()<0.004){
+    if(!s.event && !s.isGagRacer && !s.finished && s.pos/FINISH>0.2 && canEvent && Math.random()<0.006){
       const minorEvs=[EVENTS[0], EVENTS[4]]; // FALL, TRIP
       const ev=minorEvs[Math.floor(Math.random()*minorEvs.length)];
       s.event=ev; s.eventTimer=Math.floor(ev.duration*0.6);
       ev.onStart(s, FINISH);
+      s.lastEventFrame=raceFrame;
       showBanner('😮 '+racers[i].name+' '+ev.name, 2000);
       sfx('event');
     }
@@ -1202,7 +1271,7 @@ function initRaceCanvas(){
   if(!raceCanvas) return;
   const container=raceCanvas.parentElement;
   raceCanvas.width=Math.max(container.clientWidth||900, 600);
-  raceCanvas.height=racers.length*LANE_H;
+  raceCanvas.height=32+racers.length*LANE_H; // 32 = 관중석+배너
   raceCtx=raceCanvas.getContext('2d');
   // 초기 레이서 상태 세팅
   if(!racerStates.length){
@@ -1214,7 +1283,14 @@ function initRaceCanvas(){
 function initRaceHost(){
   loadRacersFromDB();
   listenToBets();
-  setTimeout(initRaceCanvas, 60);
+  setTimeout(()=>{
+    initRaceCanvas();
+    // 스코어보드 로고 설정
+    const sbLogos=document.getElementById('sb-logos');
+    if(sbLogos) sbLogos.innerHTML=
+      '<img src="'+LOGO_TECHTAKA+'" style="height:14px;margin-right:6px;vertical-align:middle;">'
+      +'<img src="'+LOGO_ARGO+'" style="height:14px;vertical-align:middle;">';
+  }, 60);
 }
 
 async function loadRacersFromDB(){
@@ -1322,10 +1398,12 @@ async function startRace(){
   const FINISH=raceCanvas.width-LABEL_W-28;
 
   const gagIdx=Math.floor(Math.random()*racers.length);
+  // 30초 레이스: 60fps * 30sec = 1800프레임, FINISH≈800px → 속도 0.45~0.65
   racerStates=racers.map((_,i)=>{
-    const base=1.5+Math.random()*1.8;
+    const base=0.45+Math.random()*0.2;
     return {pos:4, speed:base, baseSpeed:base, event:null, eventTimer:0,
-            anim:'', finished:false, isGagRacer:i===gagIdx, gagFired:false};
+            anim:'', finished:false, isGagRacer:i===gagIdx, gagFired:false,
+            lastEventFrame:0};
   });
 
   document.getElementById('race-timer').textContent='GO!!';
@@ -1357,7 +1435,7 @@ async function showRaceResult(finishOrder){
   };
   await push(ref(db,'race_history'), record);
 
-  document.getElementById('rr-vehicle').textContent='';
+  document.getElementById('rr-vehicle').innerHTML='<img src="'+LOGO_TECHTAKA+'" style="height:20px;vertical-align:middle;margin-right:8px;"><img src="'+LOGO_ARGO+'" style="height:20px;vertical-align:middle;">';
   document.getElementById('rr-winner').textContent=winner.name;
   document.getElementById('rr-event-desc').textContent=raceEventLog||'';
   document.getElementById('rr-betters').innerHTML=betters.length
@@ -1691,41 +1769,7 @@ function stopBGM(){
   bgmNodes=[];
 }
 
-// ── 전역 노출 (모든 함수 정의 후) ──
-window.startBGM=startBGM;
-window.enterRaceHistory=enterRaceHistory;
-window.loadRaceHistory=loadRaceHistory;
-window.resetRaceSession=resetRaceSession;
-window.stopBGM=stopBGM;
-window.sfx=sfx;
-window.goHub=goHub;
-window.enterParticipant=enterParticipant;
-window.enterHostPin=enterHostPin;
-window.checkPin=checkPin;
-window.filterPeople=filterPeople;
-window.selectPerson=selectPerson;
-window.submitVote=submitVote;
-window.startQuestion=startQuestion;
-window.resetCurrentQ=resetCurrentQ;
-window.closeVoting=closeVoting;
-window.showReveal=showReveal;
-window.closeReveal=closeReveal;
-window.revealNext=revealNext;
-window.savePeople=savePeople;
-window.saveQuestions=saveQuestions;
-window.selectRound=selectRound;
-window.openRacerSettings=openRacerSettings;
-window.saveRacers=saveRacers;
-window.openRaceBetting=openRaceBetting;
-window.closeRaceBetting=closeRaceBetting;
-window.startRace=startRace;
-window.submitRaceBet=submitRaceBet;
-window.closeRaceResult=closeRaceResult;
-window.startLottery=startLottery;
-window.addPrize=addPrize;
-window.loadPeopleToPool=loadPeopleToPool;
-window.selectPrize=selectPrize;
-window.deletePrize=deletePrize;
+// 일반 script - 전역 노출 불필요
 </script>
 </body>
 </html>
