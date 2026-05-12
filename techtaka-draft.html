@@ -299,8 +299,8 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
 <!-- ══ MAIN HUB ══ -->
 <div id="hub">
   <div class="hub-year">TECHTAKA · 창립 6주년</div>
-  <div class="hub-title">함께한 <span>6년</span>,<br>함께할 미래 🎉</div>
-  <div class="hub-sub">2020 → 2026</div>
+  <div class="hub-title">To keep the<br><span>world in motion</span> 🎉</div>
+  <div class="hub-sub">TECHTAKA · 2020 → 2026</div>
   <div class="hub-cards">
     <div class="hub-card" onclick="enterParticipant()">
       <div class="hc-icon">📱</div>
@@ -472,6 +472,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
 
 <!-- ══ HOST RACE VIEW ══ -->
 <div id="h-race-view" class="hidden view-wrap" style="background:#000080;">
+  <!-- 상단 컨트롤 바 -->
   <div class="top-bar" style="background:#000060;border-bottom:3px solid #cccc00;flex-shrink:0;">
     <div class="logo" style="font-family:'Press Start 2P',monospace;font-size:11px;color:#ffff00;">🏁 TECHTAKA RACE</div>
     <div class="nav-btns">
@@ -484,13 +485,6 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
     </div>
   </div>
 
-  <!-- 회차 정보 -->
-  <div style="display:flex;gap:8px;padding:8px 14px;background:#000060;align-items:center;flex-shrink:0;">
-    <span style="font-family:'Press Start 2P',monospace;font-size:8px;color:#cccc00;">TECHTAKA RACE</span>
-    <div style="flex:1;"></div>
-    <span style="font-family:'Press Start 2P',monospace;font-size:8px;color:#ffff00;">베팅: <span id="bet-total-count" style="color:#00ff88;">0</span>명</span>
-  </div>
-
   <!-- 레이서 설정 패널 -->
   <div id="racer-settings-panel" class="settings-panel hidden" style="flex-shrink:0;">
     <h3>🏇 레이서 설정 (5명)</h3>
@@ -498,26 +492,26 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
     <button class="save-btn" style="width:100%" onclick="saveRacers()">레이서 저장</button>
   </div>
 
-  <!-- 스코어보드 -->
-  <div style="background:#000;border:3px solid #cccc00;border-bottom:none;display:flex;flex-shrink:0;">
-    <div style="flex:1;border-right:2px solid #444400;padding:8px 14px;">
-      <div id="sb-logos" style="margin-bottom:4px;"></div>
-      <div style="font-family:'Press Start 2P',monospace;font-size:8px;color:#888800;letter-spacing:2px;margin-bottom:3px;">ROUND</div>
-      <div id="race-round-title" style="font-family:'Press Start 2P',monospace;font-size:10px;color:#cccc00;margin-bottom:2px;">TECHTAKA 6TH RACE</div>
-      <div id="race-timer" style="font-family:'Press Start 2P',monospace;font-size:20px;color:#FFD700;letter-spacing:4px;">READY</div>
-    </div>
-    <div style="width:280px;padding:8px 14px;">
-      <div style="font-family:'Press Start 2P',monospace;font-size:8px;color:#888800;letter-spacing:2px;margin-bottom:4px;">RANKING</div>
-      <div id="sb-rank-board"></div>
-      <div id="bet-bars" style="margin-top:4px;"></div>
-    </div>
-  </div>
-
-  <!-- Canvas 아레나 -->
-  <div style="flex:1;border:3px solid #cccc00;border-top:none;overflow:hidden;position:relative;">
+  <!-- 트랙 풀스크린 + 오버레이 -->
+  <div style="flex:1;position:relative;overflow:hidden;border:3px solid #cccc00;">
     <canvas id="race-canvas" style="display:block;width:100%;height:100%;image-rendering:pixelated;"></canvas>
-    <!-- 이벤트 알림 -->
-    <div id="race-event-banner" style="display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#000;border:3px solid #ffff00;padding:12px 24px;font-family:'Press Start 2P',monospace;font-size:14px;color:#ffff00;text-align:center;z-index:10;white-space:nowrap;"></div>
+
+    <!-- 이벤트 배너 -->
+    <div id="race-event-banner" style="display:none;position:absolute;top:40%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.92);border:3px solid #ffff00;padding:14px 28px;font-family:'Press Start 2P',monospace;font-size:16px;color:#ffff00;text-align:center;z-index:20;white-space:nowrap;"></div>
+
+    <!-- 스코어보드 오버레이 (우측 상단) -->
+    <div style="position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.85);border:2px solid #cccc00;padding:10px 12px;font-family:'Press Start 2P',monospace;min-width:200px;z-index:15;">
+      <div id="sb-logos" style="margin-bottom:6px;"></div>
+      <div id="race-timer" style="font-size:18px;color:#FFD700;letter-spacing:3px;margin-bottom:6px;">READY</div>
+      <div style="font-size:7px;color:#888800;letter-spacing:1px;margin-bottom:4px;">RANKING</div>
+      <div id="sb-rank-board"></div>
+    </div>
+
+    <!-- 베팅 오버레이 (좌측 하단) -->
+    <div style="position:absolute;bottom:8px;left:8px;background:rgba(0,0,0,0.85);border:2px solid #cccc00;padding:8px 12px;font-family:'Press Start 2P',monospace;min-width:180px;z-index:15;">
+      <div style="font-size:7px;color:#888800;margin-bottom:4px;">BETTING · <span id="bet-total-count" style="color:#00ff88;">0</span>명</div>
+      <div id="bet-bars"></div>
+    </div>
   </div>
 </div>
 
@@ -949,7 +943,7 @@ async function submitVote(){
 
 let raceCanvas=null, raceCtx=null, raceRaf=null;
 let raceFrame=0, raceStartTime=0;
-const LANE_H=62, LABEL_W=130;
+const LANE_H=90, LABEL_W=150;
 const RACER_COLORS=['#ff4444','#ff8800','#ffff00','#44ff88','#44aaff'];
 
 let racerStates=[];
@@ -1005,7 +999,7 @@ const PF_FALL=[
   [0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]
 ];
 
-function drawPix(x,y,frame,color,sc=3,flip=false){
+function drawPix(x,y,frame,color,sc=5,flip=false){
   for(let r=0;r<frame.length;r++){
     for(let c=0;c<frame[r].length;c++){
       const v=frame[r][c];
@@ -1031,34 +1025,34 @@ function drawCanvas(){
 
   // 관중석
   raceCtx.fillStyle='#000055';
-  raceCtx.fillRect(LABEL_W, 0, W-LABEL_W, 18);
+  raceCtx.fillRect(LABEL_W, 0, W-LABEL_W, 28);
   const colors6=['#ff4444','#ffaa00','#44ff88','#44aaff','#ff44ff','#ffff44','#fff'];
-  for(let cx=LABEL_W+4; cx<W-32; cx+=14){
+  for(let cx=LABEL_W+4; cx<W-32; cx+=18){
     const cc=colors6[Math.floor(cx/14)%colors6.length];
     const jump=raceRunning && raceFrame%20<10 && Math.sin(cx*0.3)>0.5;
-    raceCtx.fillStyle='#f4c07a'; raceCtx.fillRect(cx+2, jump?0:2, 6, 5);
-    raceCtx.fillStyle=cc; raceCtx.fillRect(cx+1, jump?5:7, 8, 6);
+    raceCtx.fillStyle='#f4c07a'; raceCtx.fillRect(cx+3, jump?0:3, 8, 7);
+    raceCtx.fillStyle=cc; raceCtx.fillRect(cx+2, jump?7:10, 10, 8);
   }
 
   // 홍보 배너
   raceCtx.fillStyle='#111100';
-  raceCtx.fillRect(LABEL_W, 18, W-LABEL_W, 14);
+  raceCtx.fillRect(LABEL_W, 28, W-LABEL_W, 16);
   bannerOffset=(bannerOffset+1.2)%(W-LABEL_W);
-  const bannerText='  🏁 TECHTAKA 6TH   ✨ POWERED BY ARGO   🎉 함께한 6년 함께할 미래  ';
+  const bannerText='  🏁 TECHTAKA 6TH ANNIVERSARY   ✨ TO KEEP THE WORLD IN MOTION   🚀 POWERED BY ARGO  ';
   raceCtx.save();
   raceCtx.beginPath();
-  raceCtx.rect(LABEL_W, 18, W-LABEL_W, 14);
+  raceCtx.rect(LABEL_W, 28, W-LABEL_W, 16);
   raceCtx.clip();
   raceCtx.fillStyle='#cccc00';
   raceCtx.font='bold 9px "Courier New"';
   raceCtx.textAlign='left';
   const tbw=raceCtx.measureText(bannerText).width;
   const bx=LABEL_W - bannerOffset % tbw;
-  raceCtx.fillText(bannerText, bx, 29);
-  raceCtx.fillText(bannerText, bx+tbw, 29);
+  raceCtx.fillText(bannerText, bx, 41);
+  raceCtx.fillText(bannerText, bx+tbw, 41);
   raceCtx.restore();
 
-  const CROWD_H=32; // 관중석+배너 높이
+  const CROWD_H=44; // 관중석(28)+배너(16)
   for(let i=0;i<N;i++){
     const s=racerStates[i]||{pos:4,anim:''};
     const y=CROWD_H+i*LANE_H;
@@ -1068,11 +1062,11 @@ function drawCanvas(){
     raceCtx.fillStyle=(i%2===0)?'#000055':'#00004a';
     raceCtx.fillRect(0,y,LABEL_W,LANE_H);
     raceCtx.fillStyle='#ccccff';
-    raceCtx.font='bold 12px "Courier New"';
+    raceCtx.font='bold 14px "Courier New"';
     raceCtx.textAlign='right';
     raceCtx.fillText(racers[i].name, LABEL_W-6, y+24);
     raceCtx.fillStyle='#7788aa';
-    raceCtx.font='10px "Courier New"';
+    raceCtx.font='11px "Courier New"';
     raceCtx.fillText(racers[i].title||'', LABEL_W-6, y+38);
 
     // 트랙
@@ -1107,12 +1101,12 @@ function drawCanvas(){
     // 결승선 깃발 (첫번째 레인 위에만)
     if(i===0){
       raceCtx.fillStyle='#FFD700';
-      raceCtx.fillRect(fx+8,y-CROWD_H,3,CROWD_H+8);
+      raceCtx.fillRect(fx+8,y-CROWD_H,4,CROWD_H+10);
       raceCtx.fillStyle='#FFD700';
       raceCtx.beginPath();
-      raceCtx.moveTo(fx+11,y-CROWD_H+2);
-      raceCtx.lineTo(fx+26,y-CROWD_H+8);
-      raceCtx.lineTo(fx+11,y-CROWD_H+14);
+      raceCtx.moveTo(fx+12,y-CROWD_H+2);
+      raceCtx.lineTo(fx+30,y-CROWD_H+10);
+      raceCtx.lineTo(fx+12,y-CROWD_H+18);
       raceCtx.fill();
       if(LOGO_TECHTAKA){
         const img=new Image();
@@ -1124,7 +1118,7 @@ function drawCanvas(){
 
     // 레이서
     const px=tx+Math.max(0,Math.min(s.pos, FINISH+4));
-    const py=y+LANE_H/2-18;
+    const py=y+LANE_H/2-30;
     const fi=Math.floor(raceFrame/5)%2;
 
     if(s.anim==='fall'){
@@ -1228,9 +1222,25 @@ function raceLoop(){
       sfx('event');
     }
 
+    // 막판 스퍼트 (80% 지점에서 랜덤 1~2명 가속)
+    if(!s.spurted && !s.event && s.pos/FINISH>0.80){
+      if(Math.random()<0.4){
+        s.speed=s.baseSpeed*(1.8+Math.random()*1.2);
+        s.spurted=true;
+        showBanner('💨 '+racers[i].name+' 스퍼트!', 1500);
+      } else {
+        s.spurted=true; // 스퍼트 없이도 플래그 세팅
+      }
+    }
+
+    // 주기적 속도 변동 (20프레임마다)
+    if(raceFrame%20===i*4 && !s.event){
+      s.speed=s.baseSpeed*(0.6+Math.random()*0.8);
+    }
+
     // 위치 업데이트
     if(!s.event || s.anim==='boost' || s.anim==='reverse' || s.anim==='trip'){
-      s.pos+=s.speed*(0.75+Math.random()*0.5);
+      s.pos+=s.speed*(0.8+Math.random()*0.4);
     }
     s.pos=Math.max(0, s.pos);
 
@@ -1268,7 +1278,7 @@ function initRaceCanvas(){
   if(!raceCanvas) return;
   const container=raceCanvas.parentElement;
   raceCanvas.width=Math.max(container.clientWidth||900, 600);
-  raceCanvas.height=32+racers.length*LANE_H; // 32 = 관중석+배너
+  raceCanvas.height=44+racers.length*LANE_H; // 44 = 관중석+배너
   raceCtx=raceCanvas.getContext('2d');
   // 초기 레이서 상태 세팅
   if(!racerStates.length){
@@ -1395,12 +1405,11 @@ async function startRace(){
   const FINISH=raceCanvas.width-LABEL_W-28;
 
   const gagIdx=Math.floor(Math.random()*racers.length);
-  // 30초 레이스: 60fps * 30sec = 1800프레임, FINISH≈800px → 속도 0.45~0.65
   racerStates=racers.map((_,i)=>{
-    const base=0.45+Math.random()*0.2;
+    const base=0.3+Math.random()*0.5; // 속도 변동폭 크게
     return {pos:4, speed:base, baseSpeed:base, event:null, eventTimer:0,
             anim:'', finished:false, isGagRacer:i===gagIdx, gagFired:false,
-            lastEventFrame:0};
+            lastEventFrame:0, spurted:false};
   });
 
   document.getElementById('race-timer').textContent='GO!!';
