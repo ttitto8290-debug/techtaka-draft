@@ -302,6 +302,18 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
 .msg-options{display:flex;flex-direction:column;gap:8px;margin-top:14px;}
 .msg-option{display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(255,255,255,0.78);}
 .msg-option input{accent-color:var(--bl);}
+.gp-selected-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:14px;min-height:40px;}
+.gp-step2-layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(320px,0.95fr);gap:16px;align-items:start;}
+.gp-gift-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;}
+.gp-message-col{display:flex;flex-direction:column;gap:16px;position:sticky;top:16px;}
+.gp-group-panel{padding:14px;border:1px solid rgba(255,255,255,0.08);border-radius:14px;background:rgba(255,255,255,0.03);display:flex;flex-direction:column;min-height:0;}
+.gp-group-items{display:flex;flex-direction:column;gap:8px;max-height:42vh;overflow-y:auto;padding-right:4px;}
+@media (max-width:1100px){
+  .gp-selected-grid{grid-template-columns:1fr;}
+  .gp-step2-layout{grid-template-columns:1fr;}
+  .gp-gift-grid{grid-template-columns:1fr;}
+  .gp-message-col{position:static;}
+}
 .message-admin-body{max-width:1180px;width:100%;margin:0 auto;padding:20px 24px 24px;}
 .message-admin-grid{display:grid;grid-template-columns:minmax(0,1.15fr) 360px;gap:18px;}
 .message-filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
@@ -700,28 +712,34 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
         <div class="q-text" id="gp-title">희망 선물을 그룹별로 선택하고 6주년 메시지를 남겨주세요</div>
         <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:6px;">그룹 A 1개, 그룹 B 2개, 그룹 C 2개를 선택해주세요</div>
       </div>
-      <div id="gp-selected-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:14px;min-height:40px;"></div>
-      <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.3);letter-spacing:1px;margin-bottom:8px;">선택 가능한 선물</div>
-      <div id="gp-gift-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;"></div>
-      <div class="msg-section">
-        <div class="msg-title">6주년 메시지</div>
-        <div class="msg-help">짧게 한 줄만 남겨도 좋아요. 행사 중 화면에 소개될 수 있어요.</div>
-        <textarea id="gp-message-input" class="msg-textarea" maxlength="80" placeholder="예: 6주년 축하해요! 앞으로도 같이 멋지게 달려요" oninput="gpHandleMessageInput()"></textarea>
-        <div class="msg-count"><span id="gp-message-count">0</span> / 80</div>
-        <div class="msg-tags" id="gp-tag-list"></div>
-        <div style="margin-top:14px;">
-          <div class="msg-title" style="margin-bottom:8px;">선택 질문</div>
-          <textarea id="gp-extra-input" class="msg-textarea" maxlength="80" placeholder="7주년엔 어떤 모습이면 좋겠나요?" oninput="gpHandleExtraInput()"></textarea>
-          <div class="msg-count"><span id="gp-extra-count">0</span> / 80</div>
+      <div id="gp-selected-list" class="gp-selected-grid"></div>
+      <div id="gp-step2-layout" class="gp-step2-layout">
+        <div>
+          <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.3);letter-spacing:1px;margin-bottom:8px;">선택 가능한 선물</div>
+          <div id="gp-gift-list" class="gp-gift-grid"></div>
         </div>
-        <div class="msg-options">
-          <label class="msg-option"><input type="radio" name="gp-display-mode" value="named" onchange="gpSetDisplayMode(this.value)" checked> 실명 공개</label>
-          <label class="msg-option"><input type="radio" name="gp-display-mode" value="anonymous" onchange="gpSetDisplayMode(this.value)"> 익명 공개</label>
+        <div class="gp-message-col">
+          <div class="msg-section" style="margin:0;">
+            <div class="msg-title">6주년 메시지</div>
+            <div class="msg-help">짧게 한 줄만 남겨도 좋아요. 행사 중 화면에 소개될 수 있어요.</div>
+            <textarea id="gp-message-input" class="msg-textarea" maxlength="80" placeholder="예: 6주년 축하해요! 앞으로도 같이 멋지게 달려요" oninput="gpHandleMessageInput()"></textarea>
+            <div class="msg-count"><span id="gp-message-count">0</span> / 80</div>
+            <div class="msg-tags" id="gp-tag-list"></div>
+            <div style="margin-top:14px;">
+              <div class="msg-title" style="margin-bottom:8px;">선택 질문</div>
+              <textarea id="gp-extra-input" class="msg-textarea" maxlength="80" placeholder="7주년엔 어떤 모습이면 좋겠나요?" oninput="gpHandleExtraInput()"></textarea>
+              <div class="msg-count"><span id="gp-extra-count">0</span> / 80</div>
+            </div>
+            <div class="msg-options">
+              <label class="msg-option"><input type="radio" name="gp-display-mode" value="named" onchange="gpSetDisplayMode(this.value)" checked> 실명 공개</label>
+              <label class="msg-option"><input type="radio" name="gp-display-mode" value="anonymous" onchange="gpSetDisplayMode(this.value)"> 익명 공개</label>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="sub-btn" onclick="gpGoStep1()" style="flex:0.4;background:rgba(255,255,255,0.08);">← 이전</button>
+            <button class="sub-btn" id="gp-submit-btn" onclick="submitGiftPick()" style="flex:1;" disabled>선물 + 메시지 저장</button>
+          </div>
         </div>
-      </div>
-      <div style="display:flex;gap:8px;">
-        <button class="sub-btn" onclick="gpGoStep1()" style="flex:0.4;background:rgba(255,255,255,0.08);">← 이전</button>
-        <button class="sub-btn" id="gp-submit-btn" onclick="submitGiftPick()" style="flex:1;" disabled>선물 + 메시지 저장</button>
       </div>
     </div>
 
@@ -745,6 +763,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
     <div class="nav-btns">
       <button class="nb nb-primary" onclick="showRandomMessageStage()">랜덤 카드</button>
       <button class="nb nb-ghost" onclick="showKeywordCloudStage()">키워드 보기</button>
+      <button class="nb nb-red" onclick="resetAllMessages()">메시지 초기화</button>
       <button class="back-btn" onclick="goHub()">← 홈</button>
     </div>
   </div>
@@ -908,8 +927,8 @@ let people = [];       // ?꾩껜 李몄꽍??(?대쫫 ?좏깮, 異붿꺼, ?좊Ъ
 let candidates = [];   // ?쒕옒?꾪듃 ?ы몴 ?꾨낫
 let selectedPerson = null;
 // 濡쒖뺄?ㅽ넗由ъ??먯꽌 ?ы몴 湲곕줉 蹂듭썝
-let myVotedQs = JSON.parse(localStorage.getItem('tt_voted')||'{}');
-let myBetQLocal = JSON.parse(localStorage.getItem('tt_bets')||'{}');
+let myVotedQs = safeStorageGetJSON('tt_voted',{});
+let myBetQLocal = safeStorageGetJSON('tt_bets',{});
 let firstReason = true;
 let revealData = [], revealStep = 0, revealQIdx = 0;
 let racers = [...DEFAULT_RACERS];
@@ -969,6 +988,31 @@ function escapeHtml(value){
 
 function safeFirebaseKey(value){
   return String(value ?? '').replace(/[.#$/\[\]]/g,'_');
+}
+
+function safeStorageGetRaw(key, fallback=''){
+  try{
+    const value=localStorage.getItem(key);
+    return value===null ? fallback : value;
+  }catch(e){
+    return fallback;
+  }
+}
+
+function safeStorageGetJSON(key, fallback){
+  try{
+    return JSON.parse(safeStorageGetRaw(key, JSON.stringify(fallback)));
+  }catch(e){
+    return fallback;
+  }
+}
+
+function safeStorageSet(key, value){
+  try{ localStorage.setItem(key, value); }catch(e){}
+}
+
+function safeStorageRemove(key){
+  try{ localStorage.removeItem(key); }catch(e){}
 }
 /* duplicate function removed: getNameEntries; latest definition kept */
 
@@ -1307,7 +1351,7 @@ async function closeVoting(){
   try{
     await update(ref(db,'state'),{closed:true});
   } catch(e){
-    alert('Firebase ?ㅻ쪟: '+e.message);
+    alert('Firebase 오류: '+e.message);
   }
 }
 
@@ -1320,8 +1364,8 @@ async function resetCurrentQ(){
   ]);
   delete myVotedQs[currentQIdx];
   try{
-    localStorage.setItem('tt_voted', JSON.stringify(myVotedQs));
-    localStorage.removeItem('tt_voted_name_'+currentQIdx);
+    safeStorageSet('tt_voted', JSON.stringify(myVotedQs));
+    safeStorageRemove('tt_voted_name_'+currentQIdx);
   }catch(e){}
   firstReason=true;
   document.getElementById('reason-feed').innerHTML='<p style="font-size:11px;color:rgba(255,255,255,0.2)">투표가 들어오면 여기에 표시됩니다.</p>';
@@ -2431,6 +2475,19 @@ async function toggleSelectedMessageHidden(){
   await update(ref(db,'anniversary_messages/'+msg.key), {adminHidden:!msg.adminHidden});
 }
 
+async function resetAllMessages(){
+  if(!confirm('등록된 한마디 메시지를 모두 초기화할까요? 테스트 데이터도 함께 삭제됩니다.')) return;
+  await remove(ref(db,'anniversary_messages'));
+  adminMessages=[];
+  selectedMessageKey=null;
+  messageStageSelectedKey=null;
+  renderMessagesAdminStats();
+  renderMessageList();
+  renderSelectedMessagePreview();
+  renderMessageStageCard(null);
+  alert('한마디 메시지 데이터가 초기화되었습니다.');
+}
+
 function renderMessageStageCard(msg){
   const container=document.getElementById('message-stage-content');
   if(!container) return;
@@ -2555,7 +2612,7 @@ const DEFAULT_SELECTION_PRIZES=[
   {id:'reselbio_cica_5ea',name:'리셀바이오 PDRN 시카 크림 5ea 세트',tier:'B',stock:1,bundleSize:5,fallbackLabel:'리셀바이오 시카크림 5ea'}
 ];
 const GIFT_SLOT_RULES=[
-  {slot:1,group:'A',label:'그룹 A',description:'프리미엄/메인 선물',tiers:['S','A']},
+  {slot:1,group:'A',label:'그룹 A',description:'프리미엄/메인 선물',tiers:['S']},
   {slot:2,group:'B',label:'그룹 B',description:'취향형 선물',tiers:['A']},
   {slot:3,group:'B',label:'그룹 B',description:'취향형 선물',tiers:['A']},
   {slot:4,group:'C',label:'그룹 C',description:'실속형 선물',tiers:['B']},
@@ -2625,7 +2682,7 @@ function getPeopleMap(list){
 function getAuthenticatedParticipant(){
   if(currentParticipant) return currentParticipant;
   try{
-    const saved=JSON.parse(localStorage.getItem('tt_auth_person')||'null');
+    const saved=safeStorageGetJSON('tt_auth_person', null);
     if(saved?.id && saved?.name){
       currentParticipant=saved;
       return currentParticipant;
@@ -2636,7 +2693,7 @@ function getAuthenticatedParticipant(){
 
 function setAuthenticatedParticipant(person){
   currentParticipant={id:person.id,name:person.name};
-  localStorage.setItem('tt_auth_person', JSON.stringify(currentParticipant));
+  safeStorageSet('tt_auth_person', JSON.stringify(currentParticipant));
 }
 
 function ensureParticipantAuthUI(){
@@ -2837,13 +2894,39 @@ function updateDraftSafetyUI(remainingStock, projectedCount, round3Allowed, summ
   if(summaryEl) summaryEl.innerHTML=summaryText||'아직 드래프트 보상 로그가 없습니다.';
 }
 
+function getEligibleDraftPeopleSets(){
+  const eligible=normalizePeopleList(people).filter(person=>!isExecutiveName(person.name));
+  return {
+    ids:new Set(eligible.map(person=>person.id)),
+    names:new Set(eligible.map(person=>person.name))
+  };
+}
+
+function isValidDraftRewardPerson(personId, personName, validIds, validNames){
+  return (personId && validIds.has(personId)) || (personName && validNames.has(personName));
+}
+
+function sanitizeDraftRewards(allRewards){
+  const {ids:validIds,names:validNames}=getEligibleDraftPeopleSets();
+  return Object.fromEntries(
+    Object.entries(allRewards||{}).flatMap(([key,round])=>{
+      const assignedRewards=(round?.assignedRewards||[]).filter(item=>isValidDraftRewardPerson(item?.personId||'', item?.name||'', validIds, validNames));
+      const winnerName=String(round?.winnerName||'');
+      const winnerPersonId=String(round?.winnerPersonId||'');
+      const winnerValid=isValidDraftRewardPerson(winnerPersonId, winnerName, validIds, validNames);
+      if(!winnerValid && !assignedRewards.length) return [];
+      return [[key,{...round, winnerName:winnerValid?winnerName:'-', winnerPersonId:winnerValid?winnerPersonId:'', assignedRewards}]];
+    })
+  );
+}
+
 async function refreshDraftSafetyIndicators(currentVotes){
   ensureDraftSafetyPanel();
   const [catalog,rewardsSnap]=await Promise.all([
     ensureSelectionPrizeCatalog(),
     get(ref(db,'draft_rewards'))
   ]);
-  const allRewards=rewardsSnap.val()||{};
+  const allRewards=sanitizeDraftRewards(rewardsSnap.val()||{});
   const remainingStock=getRemainingSelectionStock(catalog);
   const counts={};
   Object.values(currentVotes||{}).forEach(v=>{
@@ -2988,8 +3071,8 @@ async function submitVote(){
     return;
   }
   myVotedQs[qIdx]=true;
-  localStorage.setItem('tt_voted', JSON.stringify(myVotedQs));
-  localStorage.setItem('tt_voted_name_'+qIdx, selectedPerson.name);
+  safeStorageSet('tt_voted', JSON.stringify(myVotedQs));
+  safeStorageSet('tt_voted_name_'+qIdx, selectedPerson.name);
   showP('done');
 }
 
@@ -3024,8 +3107,8 @@ async function submitRaceBet(){
   });
   myBetQ[window._betSession]=true;
   myBetQLocal[window._betSession]=true;
-  localStorage.setItem('tt_bets', JSON.stringify(myBetQLocal));
-  localStorage.setItem('tt_bet_racer_'+window._betSession, participant.name+'|'+(window._betRacers[selectedRacer]?.name||''));
+  safeStorageSet('tt_bets', JSON.stringify(myBetQLocal));
+  safeStorageSet('tt_bet_racer_'+window._betSession, participant.name+'|'+(window._betRacers[selectedRacer]?.name||''));
   showP('race-done');
 }
 
@@ -3051,7 +3134,7 @@ async function loadAuthPeople(){
   if(!ppl.length) ppl=getCachedPeopleList();
   people=ppl.length ? ppl : people;
   try{
-    localStorage.setItem('tt_people_cache', JSON.stringify(serializePeopleList(people)));
+    safeStorageSet('tt_people_cache', JSON.stringify(serializePeopleList(people)));
   }catch(e){}
   renderAuthPeople(document.getElementById('auth-search')?.value||'');
 }
@@ -3122,7 +3205,7 @@ async function savePeople(){
     await set(ref(db,'settings/people'), serializePeopleList(nextPeople));
     people=nextPeople;
     syncCandidatesFromPeople();
-    localStorage.setItem('tt_people_cache', JSON.stringify(serializePeopleList(nextPeople)));
+    safeStorageSet('tt_people_cache', JSON.stringify(serializePeopleList(nextPeople)));
     alert(people.length+'명이 저장됐어요!');
   }catch(e){
     people=prevPeople;
@@ -3212,7 +3295,7 @@ function gpResetMessageState(){
 
 function getCachedPeopleList(){
   try{
-    return normalizePeopleList(JSON.parse(localStorage.getItem('tt_people_cache')||'[]'));
+    return normalizePeopleList(safeStorageGetJSON('tt_people_cache', []));
   }catch(e){
     return [];
   }
@@ -3227,7 +3310,7 @@ async function loadGPPeople(){
   if(!ppl.length) ppl=normalizePeopleList(people);
   if(!ppl.length) ppl=getCachedPeopleList();
   people=ppl.length ? ppl : people;
-  localStorage.setItem('tt_people_cache', JSON.stringify(serializePeopleList(people)));
+  safeStorageSet('tt_people_cache', JSON.stringify(serializePeopleList(people)));
   window._gpPeople=people;
   renderGPPeople(document.getElementById('gp-search')?.value||'');
 }
@@ -3262,7 +3345,7 @@ function renderGPSelected(){
     const rules=GIFT_SLOT_RULES.filter(rule=>rule.group===group);
     const filled=rules.filter(rule=>choices.find(item=>item.slot===rule.slot)).length;
     return `
-      <div style="padding:12px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;margin-bottom:8px;">
+      <div style="padding:12px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;min-width:0;">
         <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;">
           <div style="display:flex;align-items:center;gap:10px;">
             <div style="width:28px;height:28px;border-radius:50%;background:rgba(61,111,232,0.18);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;">${group}</div>
@@ -3292,15 +3375,15 @@ function renderGPGiftList(){
   const catalog=getSelectionPrizeCatalog(prizes);
   const wrap=document.getElementById('gp-gift-list');
   const groups=['A','B','C'];
-  wrap.style.maxHeight='56vh';
-  wrap.style.overflowY='auto';
-  wrap.style.paddingRight='6px';
+  wrap.style.display='grid';
+  wrap.style.gridTemplateColumns='repeat(auto-fit,minmax(220px,1fr))';
+  wrap.style.gap='12px';
   wrap.innerHTML=groups.map(group=>{
     const rules=GIFT_SLOT_RULES.filter(rule=>rule.group===group);
     const selectedIds=new Set(gpChoiceBySlot.filter(Boolean).map(item=>item.id));
-    const items=getSelectionPrizeCatalog(catalog).filter(prize=>rules[0].tiers.includes(prize.tier) && prize.stock>0);
+    const items=getSelectionPrizeCatalog(catalog).filter(prize=>rules.some(rule=>rule.tiers.includes(prize.tier)) && prize.stock>0);
     return `
-      <div style="margin-bottom:18px;padding:14px;border:1px solid rgba(255,255,255,0.08);border-radius:14px;background:rgba(255,255,255,0.03);">
+      <div class="gp-group-panel">
         <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;">
           <div>
             <div style="font-size:13px;font-weight:800;color:#fff;">그룹 ${group}</div>
@@ -3308,7 +3391,7 @@ function renderGPGiftList(){
           </div>
           <div style="padding:4px 8px;border-radius:999px;background:rgba(61,111,232,0.16);font-size:10px;font-weight:800;color:#a6c0ff;">그룹 ${group}</div>
         </div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px;">
+        <div class="gp-group-items">
           ${items.map(item=>{
             const pickedSlots=rules.filter(rule=>gpChoiceBySlot[rule.slot-1]?.id===item.id).map(rule=>rule.slot);
             const active=pickedSlots.length>0;
@@ -3322,6 +3405,7 @@ function renderGPGiftList(){
               </div>
             </button>`;
           }).join('')}
+          ${items.length?'':'<div style="padding:16px 12px;border-radius:10px;background:rgba(255,255,255,0.04);font-size:12px;color:rgba(255,255,255,0.45);text-align:center;">남은 선물이 없습니다</div>'}
         </div>
       </div>
     `;
@@ -3437,7 +3521,7 @@ async function submitGiftPick(){
     ]);
   }catch(e){}
   gpExistingMessageMeta=messageData;
-  localStorage.setItem('tt_gift_pick', JSON.stringify({...giftData, messageData}));
+  safeStorageSet('tt_gift_pick', JSON.stringify({...giftData, messageData}));
   btn.textContent='선물 + 메시지 저장';
   gpShowDone();
 }
@@ -3446,7 +3530,7 @@ function gpShowDone(){
   document.getElementById('gp-step-name').classList.add('hidden');
   document.getElementById('gp-step-gifts').classList.add('hidden');
   document.getElementById('gp-step-done').classList.remove('hidden');
-  const saved=JSON.parse(localStorage.getItem('tt_gift_pick')||'{}');
+  const saved=safeStorageGetJSON('tt_gift_pick', {});
   const savedMessage=saved.messageData||saved;
   const visibilityLabel=savedMessage.displayMode==='anonymous' ? '익명 공개' : '실명 공개';
   const choices=saved.choices||getChoiceArrayFromSlots();
@@ -3466,7 +3550,7 @@ function gpShowDone(){
 }
 
 function gpEdit(){
-  localStorage.removeItem('tt_gift_pick');
+  safeStorageRemove('tt_gift_pick');
   gpSelectedPerson=getAuthenticatedParticipant()||null;
   gpResetMessageState();
   document.getElementById('gp-verify-code').value='';
@@ -3490,7 +3574,7 @@ function gpGoStep1(){
 function enterGiftPick(){
   ensureGiftVerifyUI();
   show('gift-pick-view');
-  const saved=localStorage.getItem('tt_gift_pick');
+  const saved=safeStorageGetRaw('tt_gift_pick', '');
   if(saved){
     try{
       const data=JSON.parse(saved);
@@ -3506,7 +3590,7 @@ function enterGiftPick(){
       gpLoadSavedMessageState(data.messageData||data);
       gpShowDone();
     }catch(e){
-      localStorage.removeItem('tt_gift_pick');
+      safeStorageRemove('tt_gift_pick');
       gpSelectedPerson=getAuthenticatedParticipant()||null;
       gpResetMessageState();
       gpGoStep1();
@@ -3634,8 +3718,20 @@ async function openRaceBetting(){
     alert('레이스 두 세트가 모두 종료되었습니다.');
     return;
   } else if(nextMeta.status==='betting'){
-    alert('현재 레이스 세트가 이미 열려 있습니다.');
-    return;
+    const hasOpenRace=currentState.mode==='race' && currentState.active && !currentState.closed;
+    if(hasOpenRace){
+      alert('현재 레이스 세트가 이미 열려 있습니다.');
+      return;
+    }
+    nextMeta={
+      ...nextMeta,
+      setNumber:nextMeta.setNumber||1,
+      roundInSet:nextMeta.roundInSet||1,
+      status:'betting',
+      eligibleIds:nextMeta.eligibleIds?.length?nextMeta.eligibleIds:baseEligible,
+      survivorIds:nextMeta.survivorIds||[],
+      prizeLabel:getRaceSetLabel(nextMeta.setNumber||1)
+    };
   } else {
     nextMeta={setNumber:nextMeta.setNumber||1,roundInSet:(nextMeta.roundInSet||0)+1,status:'betting',eligibleIds:nextMeta.survivorIds?.length?nextMeta.survivorIds:baseEligible,survivorIds:nextMeta.survivorIds||[],prizeLabel:getRaceSetLabel(nextMeta.setNumber||1)};
   }
@@ -3958,8 +4054,8 @@ function listenToHostState(){
         } else {
           delete myVotedQs[qIdx];
           try{
-            localStorage.setItem('tt_voted', JSON.stringify(myVotedQs));
-            localStorage.removeItem('tt_voted_name_'+qIdx);
+            safeStorageSet('tt_voted', JSON.stringify(myVotedQs));
+            safeStorageRemove('tt_voted_name_'+qIdx);
           }catch(e){}
           showP('voting');
           loadVoteQ(qIdx);
