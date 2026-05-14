@@ -46,6 +46,9 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
 .pin-input:focus{border-color:var(--bl);}
 .pin-btn{width:100%;padding:13px;background:var(--blue);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;font-family:'Noto Sans KR',sans-serif;cursor:pointer;transition:all 0.2s;}
 .pin-btn:hover{background:var(--bl);}
+.pin-actions{display:flex;gap:10px;margin-top:10px;}
+.pin-btn-secondary{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.8);}
+.pin-btn-secondary:hover{background:rgba(255,255,255,0.16);color:#fff;}
 .pin-err{font-size:12px;color:var(--red);margin-top:8px;}
 
 /* ?먥븧 SHARED LAYOUT ?먥븧 */
@@ -82,6 +85,13 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
 .session-reward-name{font-size:13px;font-weight:800;color:#fff;line-height:1.5;}
 .session-reward-prize{font-size:12px;color:rgba(255,255,255,0.62);line-height:1.6;margin-top:2px;}
 .session-reward-empty{padding:14px 12px;border-radius:10px;background:rgba(255,255,255,0.04);font-size:12px;color:rgba(255,255,255,0.35);text-align:center;}
+#p-view .session-reward-panel{background:#fff;border:1px solid rgba(12,35,64,0.12);box-shadow:0 10px 28px rgba(12,35,64,0.08);}
+#p-view .session-reward-title{color:rgba(12,35,64,0.45);}
+#p-view .session-reward-item{background:rgba(12,35,64,0.04);}
+#p-view .session-reward-meta{color:#4B7CFF;}
+#p-view .session-reward-name{color:#0C2340;}
+#p-view .session-reward-prize{color:rgba(12,35,64,0.68);}
+#p-view .session-reward-empty{background:rgba(12,35,64,0.04);color:rgba(12,35,64,0.45);}
 .q-card{background:var(--navy);border-radius:16px;padding:24px 20px;margin-bottom:18px;position:relative;overflow:hidden;}
 .q-card::after{content:'';position:absolute;top:-30px;right:-30px;width:90px;height:90px;background:rgba(255,255,255,0.04);border-radius:50%;}
 .q-num{font-size:10px;font-weight:700;color:var(--bl);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:7px;}
@@ -476,6 +486,10 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
     <h3>관리자 접근</h3>
     <p>PIN 번호를 입력해주세요</p>
     <input class="pin-input" id="pin-input" type="password" maxlength="4" placeholder="••••" oninput="checkPin()">
+    <div class="pin-actions">
+      <button class="pin-btn pin-btn-secondary" type="button" onclick="closePinModal()">취소</button>
+      <button class="pin-btn" type="button" onclick="checkPin(true)">확인</button>
+    </div>
     <div class="pin-err hidden" id="pin-err">PIN이 올바르지 않습니다</div>
   </div>
 </div>
@@ -1275,6 +1289,13 @@ function enterAdminPin(){
   setTimeout(()=>document.getElementById('pin-input').focus(),100);
 }
 
+function closePinModal(){
+  document.getElementById('pin-modal').classList.add('hidden');
+  document.getElementById('pin-input').value='';
+  document.getElementById('pin-err').classList.add('hidden');
+  pendingMode='admin';
+}
+
 // ?섏쐞 ?명솚 (?덉씠???쒕옒?꾪듃 酉??대? ?ㅻ줈媛湲곗슜)
 function enterHostPin(mode){
   if(window._adminUnlocked){ 
@@ -1290,9 +1311,9 @@ function enterHostPin(mode){
   setTimeout(()=>document.getElementById('pin-input').focus(),100);
 }
 
-function checkPin(){
+function checkPin(forceSubmit){
   const val = document.getElementById('pin-input').value;
-  if(val.length===4){
+  if(forceSubmit || val.length===4){
     if(val===PIN){
       document.getElementById('pin-modal').classList.add('hidden');
       window._adminUnlocked=true;
@@ -2895,6 +2916,11 @@ function getSelectionPrizeCatalog(catalog){
   return (catalog||prizes||[]).filter(item=>item && item.selectionActive!==false);
 }
 
+function getSelectionDisplayStock(item){
+  const base=DEFAULT_SELECTION_PRIZES.find(seed=>seed.id===item?.id);
+  return Math.max(0, Number(base?.stock ?? item?.stock ?? 0));
+}
+
 function normalizeRaceSurvivorTarget(value){
   const num=Number(value);
   if(!Number.isFinite(num)) return 5;
@@ -3597,7 +3623,7 @@ function renderGPGiftList(){
   wrap.innerHTML=groups.map(group=>{
     const rules=GIFT_SLOT_RULES.filter(rule=>rule.group===group);
     const selectedIds=new Set(gpChoiceBySlot.filter(Boolean).map(item=>item.id));
-    const items=getSelectionPrizeCatalog(catalog).filter(prize=>rules.some(rule=>rule.tiers.includes(prize.tier)) && prize.stock>0);
+    const items=getSelectionPrizeCatalog(catalog).filter(prize=>rules.some(rule=>rule.tiers.includes(prize.tier)));
     return `
       <div class="gp-group-panel">
         <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;">
@@ -3612,16 +3638,17 @@ function renderGPGiftList(){
             const pickedSlots=rules.filter(rule=>gpChoiceBySlot[rule.slot-1]?.id===item.id).map(rule=>rule.slot);
             const active=pickedSlots.length>0;
             const disabled=selectedIds.has(item.id) && !active;
+            const displayStock=getSelectionDisplayStock(item);
             return `<button type="button" class="p-item${active?' sel':''}" style="width:100%;text-align:left;border:none;background:${active?'rgba(61,111,232,0.16)':'rgba(255,255,255,0.04)'};opacity:${disabled?0.45:1};pointer-events:${disabled?'none':'auto'};align-items:flex-start;padding:12px 14px;min-height:84px;" onclick="gpSetChoice('${group}', '${item.id}')">
               <div class="p-av" style="${active?'background:var(--blue);color:#fff;':'background:rgba(255,255,255,0.1);color:#fff;'}">${group}</div>
               <div style="flex:1;min-width:0;">
                 <div style="font-size:13px;font-weight:800;color:#fff;line-height:1.5;word-break:keep-all;">${escapeHtml(item.name)}</div>
-                <div style="font-size:11px;color:rgba(255,255,255,0.62);margin-top:4px;">남은 수량 ${item.stock}</div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.62);margin-top:4px;">준비 수량 ${displayStock}</div>
                 ${active?`<div style="font-size:10px;color:#8bf0c7;margin-top:4px;">선택됨</div>`:''}
               </div>
             </button>`;
           }).join('')}
-          ${items.length?'':'<div style="padding:16px 12px;border-radius:10px;background:rgba(255,255,255,0.04);font-size:12px;color:rgba(255,255,255,0.45);text-align:center;">남은 선물이 없습니다</div>'}
+          ${items.length?'':'<div style="padding:16px 12px;border-radius:10px;background:rgba(255,255,255,0.04);font-size:12px;color:rgba(255,255,255,0.45);text-align:center;">표시할 선물이 없습니다</div>'}
         </div>
       </div>
     `;
