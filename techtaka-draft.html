@@ -131,6 +131,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
 .waiting-msg .wi{font-size:36px;margin-bottom:8px;}
 .waiting-msg p{font-size:11px;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0);}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-100%);}to{opacity:1;transform:translateY(0);}}
 
 /* 설정 패널 */
 .settings-panel{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:18px;margin-bottom:16px;}
@@ -330,6 +331,12 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
       <h2>레이스 기록</h2>
       <p>회차별 결과<br>베팅 성공자 확인</p>
     </div>
+    <div class="hub-card" onclick="enterGiftPick()">
+      <div class="hc-icon">🎁</div>
+      <h2>선물 사전 선택</h2>
+      <p>희망 선물을<br>미리 골라두세요</p>
+      <div class="hc-badge" style="background:var(--purple);">사전오픈</div>
+    </div>
   </div>
 </div>
 
@@ -366,7 +373,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
       <div class="search-w"><span class="si">🔍</span><input type="text" id="search-input" placeholder="이름 검색..." oninput="filterPeople(this.value)"></div>
       <div class="ppl-list" id="people-list"></div>
       <div id="sel-prev" class="sel-prev hidden">✅ <span id="sel-name"></span>을(를) 선택했습니다</div>
-      <div class="sec-lbl">선택 이유를 적어주세요</div>
+      <div class="sec-lbl">선택 이유 <span style="font-weight:400;color:var(--sub);letter-spacing:0;">(선택사항)</span></div>
       <textarea class="reason-ta" id="reason-input" placeholder="왜 이 동료를 선택했나요?"></textarea>
       <button class="sub-btn" id="submit-btn" onclick="submitVote()" disabled>투표하기</button>
     </div>
@@ -385,6 +392,10 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
       <div class="race-bet-card">
         <div class="race-bet-title">🏁 WHO WILL WIN?<br>1등할 레이서를 선택하세요!</div>
         <div class="racer-options" id="racer-options"></div>
+      </div>
+      <div id="race-name-wrap" style="margin-bottom:12px;">
+        <div class="sec-lbl">내 이름</div>
+        <input type="text" id="race-name-input" class="reason-ta" style="height:44px;resize:none;" placeholder="이름을 입력하세요">
       </div>
       <button class="sub-btn" id="race-bet-btn" onclick="submitRaceBet()" disabled>베팅하기</button>
     </div>
@@ -527,6 +538,56 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
   </div>
 </div>
 
+<!-- ══ GIFT PICK VIEW ══ -->
+<div id="gift-pick-view" class="hidden view-wrap" style="background:#0A0F1A;">
+  <div class="top-bar">
+    <div class="logo">TECHTAKA <span>선물 선택</span></div>
+    <button class="back-btn" onclick="goHub()">← 홈</button>
+  </div>
+  <div class="p-body" style="max-width:520px;">
+    <!-- 이름 선택 단계 -->
+    <div id="gp-step-name">
+      <div class="q-card" style="margin-bottom:16px;">
+        <div class="q-num">STEP 1</div>
+        <div class="q-text">내 이름을 선택해주세요</div>
+      </div>
+      <div class="search-w" style="margin-bottom:8px;">
+        <span class="si">🔍</span>
+        <input type="text" id="gp-search" placeholder="이름 검색..." oninput="filterGPPeople(this.value)">
+      </div>
+      <div class="ppl-list" id="gp-people-list" style="margin-bottom:14px;"></div>
+      <button class="sub-btn" id="gp-next-btn" onclick="gpGoStep2()" disabled>다음 →</button>
+    </div>
+
+    <!-- 선물 선택 단계 -->
+    <div id="gp-step-gifts" class="hidden">
+      <div class="q-card" style="margin-bottom:16px;">
+        <div class="q-num">STEP 2</div>
+        <div class="q-text" id="gp-title">희망 선물을 순서대로 선택해주세요</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:6px;">최대 5개 · 먼저 선택할수록 우선 적용</div>
+      </div>
+      <div id="gp-selected-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:14px;min-height:40px;"></div>
+      <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.3);letter-spacing:1px;margin-bottom:8px;">선택 가능한 선물</div>
+      <div id="gp-gift-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;"></div>
+      <div style="display:flex;gap:8px;">
+        <button class="sub-btn" onclick="gpGoStep1()" style="flex:0.4;background:rgba(255,255,255,0.08);">← 이전</button>
+        <button class="sub-btn" id="gp-submit-btn" onclick="submitGiftPick()" style="flex:1;" disabled>선물 선택 완료</button>
+      </div>
+    </div>
+
+    <!-- 완료 단계 -->
+    <div id="gp-step-done" class="hidden">
+      <div class="status-sc">
+        <div class="bi">🎁</div>
+        <h2>선택 완료!</h2>
+        <div id="gp-done-list" style="margin:12px 0;text-align:left;width:100%;"></div>
+        <p style="color:var(--sub);">행사 추첨 시 희망 선물로<br>매칭해드릴게요 🎉</p>
+        <button class="sub-btn" onclick="gpEdit()" style="margin-top:16px;background:rgba(255,255,255,0.08);font-size:12px;">수정하기</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ══ LOTTERY VIEW ══ -->
 <div id="lottery-view" class="hidden view-wrap">
   <div class="top-bar" style="background:rgba(0,0,0,0.5);">
@@ -553,8 +614,12 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
         <!-- 경품 목록 -->
         <div class="panel">
           <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.4);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;">경품 목록</div>
-          <div class="add-prize">
-            <input type="text" id="prize-input" placeholder="경품명 입력 (예: 루메나 가습기 🌊)">
+          <div class="add-prize" style="flex-wrap:wrap;gap:6px;">
+            <input type="text" id="prize-input" placeholder="경품명 입력 (예: 루메나 가습기 🌊)" style="flex:1;min-width:150px;">
+            <select id="prize-type-select" style="padding:8px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:7px;color:#fff;font-size:12px;font-family:'Noto Sans KR',sans-serif;cursor:pointer;">
+              <option value="normal">🎁 일반</option>
+              <option value="match">⭐ 매칭</option>
+            </select>
             <button class="save-btn" onclick="addPrize()">추가</button>
           </div>
           <div class="prize-list" id="prize-list"></div>
@@ -652,15 +717,31 @@ let winnerLog = [];
 
 // ── 네비게이션 ──
 function goHub(){
-  ['hub','p-view','h-draft-view','h-race-view','lottery-view','race-history-view'].forEach(id=>{
+  ['hub','p-view','h-draft-view','h-race-view','lottery-view','race-history-view','gift-pick-view'].forEach(id=>{
     document.getElementById(id).classList.add('hidden');
   });
   document.getElementById('hub').classList.remove('hidden');
   if(raceInterval) clearInterval(raceInterval);
 }
 
+
+function showNewQBanner(qIdx){
+  const existing=document.getElementById('new-q-banner');
+  if(existing) existing.remove();
+  const b=document.createElement('div');
+  b.id='new-q-banner';
+  b.style.cssText='position:fixed;top:0;left:0;right:0;background:var(--blue);color:#fff;text-align:center;padding:14px;font-size:15px;font-weight:700;z-index:100;animation:slideDown 0.4s ease;';
+  b.innerHTML=`🆕 ${qIdx+1}번째 질문이 시작됐어요!`;
+  document.body.appendChild(b);
+  setTimeout(()=>b.remove(), 3000);
+}
 function enterParticipant(){
   show('p-view'); listenToHostState();
+}
+
+// QR 파라미터 자동 진입
+if(new URLSearchParams(window.location.search).get('p')==='1'){
+  document.addEventListener('DOMContentLoaded',()=>enterParticipant());
 }
 
 function enterHostPin(mode){
@@ -687,7 +768,7 @@ function checkPin(){
 }
 
 function show(id){
-  ['hub','p-view','h-draft-view','h-race-view','lottery-view','race-history-view'].forEach(i=>document.getElementById(i).classList.add('hidden'));
+  ['hub','p-view','h-draft-view','h-race-view','lottery-view','race-history-view','gift-pick-view'].forEach(i=>document.getElementById(i).classList.add('hidden'));
   document.getElementById(id).classList.remove('hidden');
 }
 
@@ -849,12 +930,52 @@ function listenToHostState(){
 
     if(mode==='draft'){
       if(closed){showP('closed');}
-      else if(myVotedQs[qIdx]){showP('done');}
-      else{showP('voting');loadVoteQ(qIdx);}
+      else if(myVotedQs[qIdx]){
+        // 이미 투표한 질문 - 완료 화면에 내가 뽑은 사람 표시
+        const votedName=localStorage.getItem('tt_voted_name_'+qIdx)||'';
+        const doneEl=document.getElementById('p-done');
+        if(doneEl){
+          doneEl.querySelector('p').innerHTML=
+            (votedName?`<strong style="color:var(--blue)">${votedName}</strong>님을 선택했어요<br><br>`:'')
+            +'진행자 화면에서<br>결과를 함께 확인해주세요';
+        }
+        showP('done');
+      }
+      else{
+        // 새 질문 전환 안내
+        if(window._lastQIdx!==undefined && window._lastQIdx!==qIdx){
+          showNewQBanner(qIdx);
+        }
+        window._lastQIdx=qIdx;
+        showP('voting');loadVoteQ(qIdx);
+      }
     } else if(mode==='race'){
       if(closed){showP('race-done');}
-      else if(myBetQ[s.raceSession]){showP('race-done');}
-      else{showP('race');loadRaceBet(s.racers||racers,s.raceSession||0);}
+      else if(myBetQ[s.raceSession]){
+        // 이미 베팅한 회차 - 내가 베팅한 레이서 표시
+        const savedBet=localStorage.getItem('tt_bet_racer_'+s.raceSession)||'';
+        const [,,rName]=savedBet.split('|');
+        const raceDoneEl=document.getElementById('p-race-done');
+        if(raceDoneEl && savedBet){
+          const parts=savedBet.split('|');
+          if(parts[1]) raceDoneEl.querySelector('p').innerHTML=
+            `<strong style="color:var(--blue)">${parts[1]}</strong>에게 베팅했어요!<br><br>화면을 보면서<br>레이스를 응원해주세요! 🎉`;
+        }
+        showP('race-done');
+      }
+      else{
+        // 새 회차 안내
+        if(s.raceSession>1 && window._lastRaceSession!==undefined && window._lastRaceSession!==s.raceSession){
+          const b=document.getElementById('new-q-banner')||document.createElement('div');
+          b.id='new-q-banner';
+          b.style.cssText='position:fixed;top:0;left:0;right:0;background:#1E4DB7;color:#fff;text-align:center;padding:14px;font-size:15px;font-weight:700;z-index:100;';
+          b.innerHTML=`🏁 ${s.raceSession}회차 레이스가 시작됐어요!`;
+          document.body.appendChild(b);
+          setTimeout(()=>b.remove(),3000);
+        }
+        window._lastRaceSession=s.raceSession;
+        showP('race');loadRaceBet(s.racers||racers,s.raceSession||0);
+      }
     }
   });
 
@@ -882,7 +1003,7 @@ function showP(screen){
 }
 
 function loadVoteQ(qIdx){
-  document.getElementById('p-q-num').textContent=`QUESTION ${qIdx+1}`;
+  document.getElementById('p-q-num').textContent=`QUESTION ${qIdx+1} / ${questions.length}`;
   document.getElementById('p-q-text').textContent=questions[qIdx]||'';
   selectedPerson=null;
   document.getElementById('sel-prev').classList.add('hidden');
@@ -920,6 +1041,11 @@ async function submitVote(){
   } catch(e){ btn.disabled=false; btn.textContent='투표하기'; alert('오류: '+e.message); return; }
   myVotedQs[qIdx]=true;
   localStorage.setItem('tt_voted', JSON.stringify(myVotedQs));
+  localStorage.setItem('tt_voted_name_'+qIdx, selectedPerson);
+  // 완료 화면에 내가 뽑은 사람 표시
+  const doneEl=document.getElementById('p-done');
+  if(doneEl) doneEl.querySelector('p').innerHTML=
+    `<strong style="color:var(--blue)">${selectedPerson}</strong>님을 선택했어요<br><br>진행자 화면에서<br>결과를 함께 확인해주세요`;
   showP('done');
 }
 
@@ -1528,6 +1654,10 @@ function loadRaceBet(raceRacers, sessionIdx){
     </div>`).join('');
   window._betSession=sessionIdx;
   window._betRacers=raceRacers;
+  // 저장된 이름 자동 입력
+  const savedName=localStorage.getItem('tt_myname');
+  const nameInp=document.getElementById('race-name-input');
+  if(savedName && nameInp) nameInp.value=savedName;
 }
 
 window.selectRacer=function(idx){
@@ -1541,15 +1671,20 @@ async function submitRaceBet(){
   const btn=document.getElementById('race-bet-btn');
   btn.disabled=true; btn.textContent='제출 중...';
   // 이름 선택: 로컬스토리지에 저장된 이름 사용, 없으면 팝업
-  let betterName = localStorage.getItem('tt_myname');
-  if(!betterName){
-    betterName = prompt('베팅자 이름을 입력해주세요:','') || '익명';
-    if(betterName !== '익명') localStorage.setItem('tt_myname', betterName);
-  }
+  const nameInput=document.getElementById('race-name-input');
+  let betterName=(nameInput?.value.trim())||localStorage.getItem('tt_myname')||'익명';
+  if(betterName!=='익명') localStorage.setItem('tt_myname', betterName);
+  if(nameInput) nameInput.value=betterName;
   await push(ref(db,'bets/s'+window._betSession),{racerIdx:selectedRacer,name:betterName,ts:Date.now()});
   myBetQ[window._betSession]=true;
   myBetQLocal[window._betSession]=true;
   localStorage.setItem('tt_bets', JSON.stringify(myBetQLocal));
+  localStorage.setItem('tt_bet_racer_'+window._betSession, betterName+'|'+(window._betRacers[selectedRacer]?.name||''));
+  // 완료 화면에 내가 베팅한 레이서 표시
+  const racerName=window._betRacers[selectedRacer]?.name||'';
+  const raceDoneEl=document.getElementById('p-race-done');
+  if(raceDoneEl) raceDoneEl.querySelector('p').innerHTML=
+    `<strong style="color:var(--blue)">${racerName}</strong>에게 베팅했어요!<br><br>화면을 보면서<br>레이스를 응원해주세요! 🎉`;
   showP('race-done');
 }
 
@@ -1575,11 +1710,16 @@ const DEFAULT_PRIZES = [
   '홍삼정 에브리데이 🌿',
 ];
 
-function initLottery(){
-  if(prizes.length===0){
-    prizes = DEFAULT_PRIZES.map(name=>({name,done:false}));
-    renderPrizeList();
+async function initLottery(){
+  // Firebase에서 경품 로드
+  const snap=await get(ref(db,'settings/prizes'));
+  if(snap.val()&&snap.val().length>0){
+    prizes=snap.val();
+  } else if(prizes.length===0){
+    prizes=DEFAULT_PRIZES.map(name=>({name,done:false,type:'normal'}));
+    await set(ref(db,'settings/prizes'),prizes);
   }
+  renderPrizeList();
   loadPeopleToPool();
 }
 
@@ -1602,12 +1742,14 @@ function updatePoolDisplay(){
   if(activePrizeIdx!==null) document.getElementById('lottery-start-btn').disabled=false;
 }
 
-function addPrize(){
+async function addPrize(){
   const input=document.getElementById('prize-input');
   const val=input.value.trim();
+  const type=document.getElementById('prize-type-select')?.value||'normal';
   if(!val) return;
-  prizes.push({name:val,done:false});
+  prizes.push({name:val,done:false,type});
   input.value='';
+  await set(ref(db,'settings/prizes'),prizes);
   renderPrizeList();
 }
 
@@ -1622,10 +1764,11 @@ function renderPrizeList(){
     </div>`).join('');
 }
 
-function deletePrize(idx){
+async function deletePrize(idx){
   prizes.splice(idx,1);
   if(activePrizeIdx===idx) activePrizeIdx=null;
   else if(activePrizeIdx>idx) activePrizeIdx--;
+  await set(ref(db,'settings/prizes'),prizes);
   renderPrizeList();
 }
 
@@ -1655,27 +1798,36 @@ async function startLottery(){
 
   let speed=50,pos=0;
   const winner=shuffled[Math.floor(Math.random()*shuffled.length)];
+  // 매칭 경품이면 사전 선택 확인
+  const isMatch=prizes[activePrizeIdx]?.type==='match';
+  let matchedPrize=null;
+  if(isMatch) matchedPrize=await getGiftMatch(winner);
 
-  const spin=setInterval(()=>{
+  const spin=setInterval(async ()=>{
     pos+=speed;
     spinInner.style.transform=`translateX(-${pos}px)`;
     speed=Math.max(speed*0.985,2);
     if(speed<=2.1){
       clearInterval(spin);
       spinWrap.style.display='none';
-      // 결과 표시
+      // 결과 표시 (매칭이면 희망 선물로 표시)
+      const displayPrize=matchedPrize?matchedPrize.name:prizes[donePrizeIdx].name;
       document.getElementById('lottery-display').innerHTML=`
-        <div style="font-size:13px;color:rgba(255,255,255,0.3);margin-bottom:8px;">${prizes[activePrizeIdx].name}</div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.3);margin-bottom:8px;">${matchedPrize?'⭐ 희망 선물 매칭':'🎁 '+prizes[donePrizeIdx].name}</div>
         <div class="lottery-winner">${winner}</div>
+        <div style="font-size:20px;font-weight:800;color:#FFD700;margin:8px 0;">${displayPrize}</div>
         <div style="font-size:13px;color:var(--green);font-weight:600;">🎊 당첨!</div>`;
+      if(matchedPrize){ matchedPrize.done=true; matchedPrize.winner=winner; }
 
       // 당첨 기록
-      prizes[activePrizeIdx].done=true;
-      prizes[activePrizeIdx].winner=winner;
+      const donePrizeIdx=activePrizeIdx;
+      prizes[donePrizeIdx].done=true;
+      prizes[donePrizeIdx].winner=winner;
       lotteryPool=lotteryPool.filter(p=>p!==winner);
+      activePrizeIdx=null;
+      await set(ref(db,'settings/prizes'),prizes);
       updatePoolDisplay();
       renderPrizeList();
-      activePrizeIdx=null;
 
       // 로그 추가
       const log=document.getElementById('winner-log');
@@ -1785,6 +1937,154 @@ function stopBGM(){
   clearTimeout(bgmNodes._loopTimer);
   bgmNodes.forEach(o=>{ try{o.stop();}catch(e){} });
   bgmNodes=[];
+}
+
+
+// ── GIFT PICK ──
+let gpSelectedName='';
+let gpSelectedGifts=[]; // [{id, name}] 우선순위 순서
+
+function enterGiftPick(){
+  show('gift-pick-view');
+  // 기존 선택 확인
+  const saved=localStorage.getItem('tt_gift_pick');
+  if(saved){
+    const data=JSON.parse(saved);
+    gpSelectedName=data.name;
+    gpSelectedGifts=data.gifts||[];
+    // 완료 화면으로 바로
+    gpShowDone();
+  } else {
+    gpGoStep1();
+  }
+  loadGPPeople();
+}
+
+async function loadGPPeople(){
+  const snap=await get(ref(db,'settings/people'));
+  const ppl=snap.val()||people;
+  window._gpPeople=ppl;
+  renderGPPeople('');
+}
+
+function renderGPPeople(filter){
+  const ppl=(window._gpPeople||[]).filter(p=>p.includes(filter));
+  document.getElementById('gp-people-list').innerHTML=ppl.length
+    ?ppl.map(p=>`<div class="p-item${gpSelectedName===p?' sel':''}" onclick="gpSelectName('${p}')">
+        <div class="p-av">${p[0]}</div>${p}</div>`).join('')
+    :'<div style="padding:16px;text-align:center;font-size:12px;color:var(--sub)">검색 결과가 없습니다</div>';
+}
+
+function filterGPPeople(v){ renderGPPeople(v); }
+
+function gpSelectName(name){
+  gpSelectedName=name;
+  document.getElementById('gp-next-btn').disabled=false;
+  renderGPPeople(document.getElementById('gp-search').value);
+}
+
+function gpGoStep1(){
+  document.getElementById('gp-step-name').classList.remove('hidden');
+  document.getElementById('gp-step-gifts').classList.add('hidden');
+  document.getElementById('gp-step-done').classList.add('hidden');
+}
+
+async function gpGoStep2(){
+  if(!gpSelectedName) return;
+  document.getElementById('gp-step-name').classList.add('hidden');
+  document.getElementById('gp-step-gifts').classList.remove('hidden');
+  document.getElementById('gp-step-done').classList.add('hidden');
+  document.getElementById('gp-title').textContent=gpSelectedName+'님의 희망 선물';
+  // Firebase에서 매칭 경품만 로드
+  const snap=await get(ref(db,'settings/prizes'));
+  const allPrizes=snap.val()||DEFAULT_PRIZES.map(n=>({name:n,type:'normal',done:false}));
+  window._gpPrizes=allPrizes.filter(p=>p.type==='match'&&!p.done);
+  renderGPGiftList();
+  renderGPSelected();
+}
+
+function renderGPGiftList(){
+  const prizes=window._gpPrizes||[];
+  const selectedIds=gpSelectedGifts.map(g=>g.id);
+  document.getElementById('gp-gift-list').innerHTML=prizes.length
+    ?prizes.map((p,i)=>{
+      const sel=selectedIds.includes(i);
+      return `<div class="p-item${sel?' sel':''}" onclick="gpToggleGift(${i},'${p.name.replace(/'/g,'\'')}')">
+        <div class="p-av" style="${sel?'background:var(--blue);color:#fff;':''}">${sel?gpSelectedGifts.findIndex(g=>g.id===i)+1:'+'}</div>
+        ${p.name}
+      </div>`;
+    }).join('')
+    :'<div style="padding:16px;text-align:center;font-size:12px;color:var(--sub)">매칭 선물이 없습니다<br>진행자에게 문의하세요</div>';
+}
+
+function gpToggleGift(id, name){
+  const idx=gpSelectedGifts.findIndex(g=>g.id===id);
+  if(idx>=0){
+    gpSelectedGifts.splice(idx,1);
+  } else {
+    if(gpSelectedGifts.length>=5) return;
+    gpSelectedGifts.push({id,name});
+  }
+  document.getElementById('gp-submit-btn').disabled=gpSelectedGifts.length===0;
+  renderGPGiftList();
+  renderGPSelected();
+}
+
+function renderGPSelected(){
+  const el=document.getElementById('gp-selected-list');
+  el.innerHTML=gpSelectedGifts.length
+    ?gpSelectedGifts.map((g,i)=>`
+      <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(61,111,232,0.1);border:1px solid rgba(61,111,232,0.3);border-radius:8px;">
+        <div style="width:22px;height:22px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">${i+1}</div>
+        <span style="flex:1;font-size:13px;">${g.name}</span>
+        <span onclick="gpToggleGift(${g.id},'${g.name.replace(/'/g,"\'")}')" style="color:rgba(255,255,255,0.3);cursor:pointer;font-size:16px;">✕</span>
+      </div>`).join('')
+    :'<div style="font-size:12px;color:rgba(255,255,255,0.2);padding:8px 0;">아래 목록에서 선물을 선택하세요</div>';
+}
+
+async function submitGiftPick(){
+  if(!gpSelectedName||gpSelectedGifts.length===0) return;
+  const btn=document.getElementById('gp-submit-btn');
+  btn.disabled=true; btn.textContent='저장 중...';
+  const data={name:gpSelectedName, gifts:gpSelectedGifts, ts:Date.now()};
+  await set(ref(db,'gift_preferences/'+gpSelectedName.replace(/[.#$/\[\]]/g,'_')), data);
+  localStorage.setItem('tt_gift_pick', JSON.stringify(data));
+  btn.textContent='선물 선택 완료';
+  gpShowDone();
+}
+
+function gpShowDone(){
+  document.getElementById('gp-step-name').classList.add('hidden');
+  document.getElementById('gp-step-gifts').classList.add('hidden');
+  document.getElementById('gp-step-done').classList.remove('hidden');
+  const saved=JSON.parse(localStorage.getItem('tt_gift_pick')||'{}');
+  document.getElementById('gp-done-list').innerHTML=`
+    <div style="font-size:13px;color:var(--sub);margin-bottom:8px;">${saved.name||gpSelectedName}님의 희망 선물</div>
+    ${(saved.gifts||gpSelectedGifts).map((g,i)=>`
+      <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(255,255,255,0.04);border-radius:8px;margin-bottom:4px;">
+        <div style="width:22px;height:22px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;">${i+1}</div>
+        <span style="font-size:13px;">${g.name}</span>
+      </div>`).join('')}`;
+}
+
+function gpEdit(){
+  localStorage.removeItem('tt_gift_pick');
+  gpSelectedGifts=[];
+  gpGoStep1();
+  renderGPPeople('');
+}
+
+// ── 추첨 매칭 로직 ──
+async function getGiftMatch(winnerName){
+  const snap=await get(ref(db,'gift_preferences/'+winnerName.replace(/[.#$/\[\]]/g,'_')));
+  if(!snap.val()) return null;
+  const prefs=snap.val().gifts||[];
+  // 남은 매칭 경품 확인
+  for(const pref of prefs){
+    const prize=prizes.find(p=>p.name===pref.name&&p.type==='match'&&!p.done);
+    if(prize) return prize;
+  }
+  return null;
 }
 
 // 일반 script - 전역 노출 불필요
