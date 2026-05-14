@@ -1366,9 +1366,14 @@ function watchAdminStatus(){
 
 // ?몄뀡 ?쒖옉 (珥덇린?????湲??곹깭)
 async function adminStartSession(){
-  if(!confirm('세션을 시작할까요? 기존 투표와 베팅 데이터는 유지됩니다.')) return;
+  if(!confirm('세션을 시작할까요?\n\n기존 명단/질문/선물 설정은 유지되고, 참여/투표/베팅/보상 로그는 초기화됩니다.')) return;
   await Promise.all([
     set(ref(db,'state'),{active:false,standby:true,mode:'idle',sessionStartedAt:Date.now()}),
+    remove(ref(db,'votes')),
+    remove(ref(db,'bets')),
+    remove(ref(db,'draft_rewards')),
+    remove(ref(db,'race_reward_sets')),
+    remove(ref(db,'race_set_state')),
     remove(ref(db,FINAL_DRAW_LOG_PATH)),
     remove(ref(db,SESSION_PARTICIPANTS_PATH))
   ]);
@@ -2998,15 +3003,46 @@ function getDraftRewardedSet(allRewards){
   return set;
 }
 
+async function getCurrentSessionStartedAt(){
+  const stateSnap=await get(ref(db,'state'));
+  return Number(stateSnap.val()?.sessionStartedAt)||0;
+}
+
+function filterDraftRewardsBySession(allRewards, sessionStartedAt){
+  const minTs=Number(sessionStartedAt)||0;
+  if(!minTs) return allRewards||{};
+  return Object.fromEntries(
+    Object.entries(allRewards||{}).filter(([,round])=>(Number(round?.processedAt)||0) >= minTs)
+  );
+}
+
+function filterRaceRewardSetsBySession(allSets, sessionStartedAt){
+  const minTs=Number(sessionStartedAt)||0;
+  if(!minTs) return allSets||{};
+  return Object.fromEntries(
+    Object.entries(allSets||{}).filter(([,setInfo])=>(Number(setInfo?.completedAt)||0) >= minTs)
+  );
+}
+
+function filterFinalDrawLogBySession(finalDrawLog, sessionStartedAt){
+  const minTs=Number(sessionStartedAt)||0;
+  if(!minTs) return finalDrawLog||{};
+  return Object.fromEntries(
+    Object.entries(finalDrawLog||{}).filter(([,entry])=>(Number(entry?.ts)||0) >= minTs)
+  );
+}
+
 async function getDraftRewardContext(){
-  const [catalog,rewardsSnap]=await Promise.all([
+  const [catalog,rewardsSnap,sessionStartedAt]=await Promise.all([
     ensureSelectionPrizeCatalog(),
-    get(ref(db,'draft_rewards'))
+    get(ref(db,'draft_rewards')),
+    getCurrentSessionStartedAt()
   ]);
+  const sessionRewards=sanitizeDraftRewards(filterDraftRewardsBySession(rewardsSnap.val()||{}, sessionStartedAt));
   return {
     catalog,
-    allRewards:rewardsSnap.val()||{},
-    rewardedSet:getDraftRewardedSet(rewardsSnap.val()||{})
+    allRewards:sessionRewards,
+    rewardedSet:getDraftRewardedSet(sessionRewards)
   };
 }
 
@@ -3107,11 +3143,12 @@ function sanitizeDraftRewards(allRewards){
 
 async function refreshDraftSafetyIndicators(currentVotes){
   ensureDraftSafetyPanel();
-  const [catalog,rewardsSnap]=await Promise.all([
+  const [catalog,rewardsSnap,sessionStartedAt]=await Promise.all([
     ensureSelectionPrizeCatalog(),
-    get(ref(db,'draft_rewards'))
+    get(ref(db,'draft_rewards')),
+    getCurrentSessionStartedAt()
   ]);
-  const allRewards=sanitizeDraftRewards(rewardsSnap.val()||{});
+  const allRewards=sanitizeDraftRewards(filterDraftRewardsBySession(rewardsSnap.val()||{}, sessionStartedAt));
   const remainingStock=getRemainingSelectionStock(catalog);
   const counts={};
   Object.values(currentVotes||{}).forEach(v=>{
@@ -4284,12 +4321,17 @@ function listenToSessionRewardPanels(){
 }
 
 async function getFinalDrawEligiblePeople(){
-  const [draftSnap,raceSnap,finalSnap]=await Promise.all([
+  const [draftSnap,raceSnap,finalSnap,sessionStartedAt]=await Promise.all([
     get(ref(db,'draft_rewards')),
     get(ref(db,'race_reward_sets')),
-    get(ref(db,FINAL_DRAW_LOG_PATH))
+    get(ref(db,FINAL_DRAW_LOG_PATH)),
+    getCurrentSessionStartedAt()
   ]);
-  const wonIds=getAnyPrizeWinnerIdsFromLogs(draftSnap.val()||{}, raceSnap.val()||{}, finalSnap.val()||null);
+  const wonIds=getAnyPrizeWinnerIdsFromLogs(
+    filterDraftRewardsBySession(draftSnap.val()||{}, sessionStartedAt),
+    filterRaceRewardSetsBySession(raceSnap.val()||{}, sessionStartedAt),
+    filterFinalDrawLogBySession(finalSnap.val()||{}, sessionStartedAt)
+  );
   return normalizePeopleList(people).filter(person=>!isExecutiveName(person.name) && !wonIds.has(person.id));
 }
 
