@@ -69,8 +69,9 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
 #p-view{background:var(--bg);color:var(--text);}
 #p-view .top-bar{background:var(--navy);border-bottom:none;}
 .p-body{max-width:1100px;margin:0 auto;padding:20px;width:100%;}
+#gift-pick-view.view-wrap{height:auto;min-height:100vh;overflow-y:auto;overflow-x:hidden;}
 #gift-pick-view{overflow-y:auto;overflow-x:hidden;}
-#gift-pick-view .p-body{max-width:1100px;padding-bottom:40px;}
+#gift-pick-view .p-body{max-width:1100px;padding-bottom:120px;}
 .p-layout{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:18px;align-items:start;}
 .p-main-col{min-width:0;}
 .session-reward-panel{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:18px;}
@@ -658,6 +659,16 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
       <div style="font-size:11px;color:rgba(255,255,255,0.55);margin-bottom:6px;">최종 생존 인원</div>
       <input id="race-survivor-target-input" type="number" min="1" max="20" value="5" style="width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.04);color:#fff;font-size:13px;font-weight:700;">
       <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:6px;">생존자가 이 숫자 이하가 되면 해당 세트가 종료됩니다.</div>
+    </div>
+    <div style="margin:12px 0 10px;">
+      <div style="font-size:11px;color:rgba(255,255,255,0.55);margin-bottom:6px;">우승자 강제 (QA용)</div>
+      <select id="race-force-winner-input" style="width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.04);color:#fff;font-size:13px;font-weight:700;font-family:'Noto Sans KR',sans-serif;">
+        <option value="auto">자동</option>
+        <option value="Soo">Soo</option>
+        <option value="Chris">Chris</option>
+        <option value="John">John</option>
+      </select>
+      <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:6px;">QA 중에만 사용하고, 행사 전에는 자동으로 돌려주세요.</div>
     </div>
     <button class="save-btn" style="width:100%" onclick="saveRacers()">레이서 저장</button>
   </div>
@@ -1871,6 +1882,7 @@ function raceLoop(){
   } else {
     document.getElementById('race-timer').textContent='FINISH!';
     stopBGM();
+    raceFinishOrder=applyForcedRaceWinner(raceFinishOrder);
     setTimeout(()=>showRaceResult(raceFinishOrder), 1200);
   }
 }
@@ -2687,6 +2699,7 @@ let currentParticipant=null;
 let authSelectedPerson=null;
 let gpChoiceBySlot=[null,null,null,null,null];
 let raceSurvivorTarget=5;
+let raceForcedWinner='auto';
 let activeSessionParticipants={};
 
 function isExecutiveName(name){
@@ -2755,6 +2768,23 @@ function getAuthenticatedParticipant(){
     }
   }catch(e){}
   return null;
+}
+
+function ensureSessionParticipantCheckedIn(participant){
+  const target=participant||getAuthenticatedParticipant();
+  if(!target?.id || !target?.name) return Promise.resolve(false);
+  const key=safeFirebaseKey(target.id);
+  activeSessionParticipants=activeSessionParticipants||{};
+  activeSessionParticipants[key]={
+    personId:target.id,
+    name:target.name,
+    checkedInAt:Date.now()
+  };
+  return update(ref(db,`${SESSION_PARTICIPANTS_PATH}/${key}`),{
+    personId:target.id,
+    name:target.name,
+    checkedInAt:firebase.database.ServerValue.TIMESTAMP
+  }).then(()=>true).catch(()=>false);
 }
 
 function setAuthenticatedParticipant(person){
@@ -2878,6 +2908,16 @@ function getCurrentRaceSurvivorTarget(){
 function renderRaceSurvivorTargetInput(){
   const input=document.getElementById('race-survivor-target-input');
   if(input) input.value=String(getCurrentRaceSurvivorTarget());
+}
+
+function normalizeRaceForcedWinner(value){
+  const next=String(value||'auto').trim();
+  return ['auto','Soo','Chris','John'].includes(next) ? next : 'auto';
+}
+
+function renderRaceForcedWinnerInput(){
+  const input=document.getElementById('race-force-winner-input');
+  if(input) input.value=normalizeRaceForcedWinner(raceForcedWinner);
 }
 
 function normalizePrizeCatalog(raw){
@@ -3308,12 +3348,8 @@ function verifyParticipantAuth(){
     alert('확인값 4자리가 일치하지 않습니다.');
     return;
   }
-  update(ref(db,`${SESSION_PARTICIPANTS_PATH}/${safeFirebaseKey(authSelectedPerson.id)}`),{
-    personId:authSelectedPerson.id,
-    name:authSelectedPerson.name,
-    checkedInAt:firebase.database.ServerValue.TIMESTAMP
-  }).catch(()=>{});
   setAuthenticatedParticipant(authSelectedPerson);
+  ensureSessionParticipantCheckedIn(authSelectedPerson).catch(()=>{});
   authSelectedPerson=null;
   document.getElementById('auth-code').value='';
   document.getElementById('auth-search').value='';
@@ -3321,11 +3357,15 @@ function verifyParticipantAuth(){
   listenToHostState();
 }
 
-function enterParticipant(){
+async function enterParticipant(){
   ensureParticipantAuthUI();
   ensureGiftVerifyUI();
   replaceListener('sessionParticipants', onValue(ref(db,SESSION_PARTICIPANTS_PATH),(snap)=>{
     activeSessionParticipants=snap.val()||{};
+    if(window._adminUnlocked){
+      syncCandidatesFromPeople();
+      listenToVotes();
+    }
     const votingEl=document.getElementById('p-voting');
     if(votingEl && !votingEl.classList.contains('hidden')){
       renderPeople(document.getElementById('search-input')?.value||'');
@@ -3334,6 +3374,7 @@ function enterParticipant(){
   show('p-view');
   const participant=getAuthenticatedParticipant();
   if(participant){
+    await ensureSessionParticipantCheckedIn(participant);
     showP('waiting');
     listenToHostState();
   } else {
@@ -3363,6 +3404,8 @@ async function loadSettingsFromDB(){
   await refreshDraftSafetyIndicators();
   replaceListener('sessionParticipants', onValue(ref(db,SESSION_PARTICIPANTS_PATH),(snap)=>{
     activeSessionParticipants=snap.val()||{};
+    syncCandidatesFromPeople();
+    listenToVotes();
   }));
 }
 
@@ -3795,6 +3838,14 @@ const RACE_SET_PRIZES={1:'스타벅스 3만원 기프트카드',2:'올리브영 
 const FINAL_DRAW_LOG_PATH='final_draw_log';
 const SESSION_PARTICIPANTS_PATH='session_participants';
 
+function applyForcedRaceWinner(finishOrder){
+  const forcedName=normalizeRaceForcedWinner(raceForcedWinner);
+  if(forcedName==='auto') return finishOrder;
+  const forcedIdx=racers.findIndex(r=>r.name===forcedName);
+  if(forcedIdx<0 || !Array.isArray(finishOrder) || !finishOrder.includes(forcedIdx)) return finishOrder;
+  return [forcedIdx, ...finishOrder.filter(idx=>idx!==forcedIdx)];
+}
+
 function getRaceEligibleBasePeople(){
   return normalizePeopleList(people).filter(person=>!isExecutiveName(person.name));
 }
@@ -3818,10 +3869,12 @@ async function initRaceHost(){
     const settingsSnap=await get(ref(db,'settings'));
     const settings=settingsSnap.val()||{};
     raceSurvivorTarget=normalizeRaceSurvivorTarget(settings.raceSurvivorTarget ?? raceSurvivorTarget);
+    raceForcedWinner=normalizeRaceForcedWinner(settings.raceForcedWinner ?? raceForcedWinner);
   }catch(e){}
   racers=[...FIXED_RACE_RACERS];
   renderRacerSetupRows();
   renderRaceSurvivorTargetInput();
+  renderRaceForcedWinnerInput();
   renderBetBars();
   setTimeout(()=>{
     initRaceCanvas();
@@ -3859,20 +3912,24 @@ function renderRacerSetupRows(){
 async function saveRacers(){
   racers=[...FIXED_RACE_RACERS];
   raceSurvivorTarget=normalizeRaceSurvivorTarget(document.getElementById('race-survivor-target-input')?.value);
+  raceForcedWinner=normalizeRaceForcedWinner(document.getElementById('race-force-winner-input')?.value);
   renderRacerSetupRows();
   renderRaceSurvivorTargetInput();
+  renderRaceForcedWinnerInput();
   renderBetBars();
   try{
-    await update(ref(db,'settings'),{raceSurvivorTarget});
+    await update(ref(db,'settings'),{raceSurvivorTarget,raceForcedWinner});
   }catch(e){}
   document.getElementById('racer-settings-panel').classList.add('hidden');
-  alert(`레이서는 Soo, Chris, John으로 고정됩니다.\n최종 생존 인원: ${raceSurvivorTarget}명`);
+  alert(`레이서는 Soo, Chris, John으로 고정됩니다.\n최종 생존 인원: ${raceSurvivorTarget}명\n우승자 강제: ${raceForcedWinner==='auto'?'자동':raceForcedWinner}`);
 }
 
 function openRacerSettings(){
   const panel=document.getElementById('racer-settings-panel');
   panel.classList.toggle('hidden');
   renderRacerSetupRows();
+  renderRaceSurvivorTargetInput();
+  renderRaceForcedWinnerInput();
 }
 
 async function openRaceBetting(){
@@ -4316,6 +4373,7 @@ function listenToHostState(){
   replaceListener('hostState', onValue(ref(db,'state'), async (snap)=>{
     const participant=getAuthenticatedParticipant();
     if(!participant){ showP('auth'); return; }
+    ensureSessionParticipantCheckedIn(participant).catch(()=>{});
     const s=snap.val()||{};
     const mode=s.mode||'draft';
     const active=s.active??false;
