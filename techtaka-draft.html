@@ -2227,18 +2227,7 @@ function normalizeLotteryPrizeItem(item){
 }
 
 async function resetLotterySessionState(){
-  let basePrizes=Array.isArray(lotteryPrizes) && lotteryPrizes.length ? lotteryPrizes : null;
-  if(!basePrizes){
-    try{
-      const snap=await get(ref(db,'settings/prizes'));
-      basePrizes=snap.val();
-    }catch(e){}
-  }
-  const selectionCatalog=await ensureSelectionPrizeCatalog();
-  if(!Array.isArray(basePrizes) || !basePrizes.length || isLegacyLotteryPrizeList(basePrizes)){
-    basePrizes=buildDefaultLotteryPrizes();
-  }
-  const resetPrizes=stripSelectionPrizeOverlap(basePrizes.map(normalizeLotteryPrizeItem).filter(Boolean), selectionCatalog);
+  const resetPrizes=[];
   lotteryPrizes=resetPrizes;
   lotteryPool=[];
   activePrizeIdx=null;
@@ -3244,8 +3233,20 @@ function getWeightedRandomChoice(items, weightFn){
   return weighted[weighted.length-1]?.item||null;
 }
 
-function getPersonGiftChoiceEntries(personId, prefMap){
-  const pref=prefMap.get(personId)||{};
+function findGiftPreferenceRecord(personId, personName, prefMap){
+  const idKey=String(personId||'').trim();
+  const nameKey=String(personName||'').trim();
+  if(idKey && prefMap.has(idKey)) return prefMap.get(idKey)||{};
+  if(nameKey){
+    for(const value of prefMap.values()){
+      if(String(value?.name||'').trim()===nameKey) return value||{};
+    }
+  }
+  return {};
+}
+
+function getPersonGiftChoiceEntries(personId, prefMap, personName){
+  const pref=findGiftPreferenceRecord(personId, personName, prefMap);
   return Array.isArray(pref.choices)
     ? pref.choices.map(choice=>{
         if(!choice) return null;
@@ -3261,8 +3262,8 @@ function getPersonGiftChoiceEntries(personId, prefMap){
     : [];
 }
 
-function getPersonGiftChoices(personId, prefMap){
-  const pref=prefMap.get(personId)||{};
+function getPersonGiftChoices(personId, prefMap, personName){
+  const pref=findGiftPreferenceRecord(personId, personName, prefMap);
   const choices=Array.isArray(pref.choices) ? pref.choices.filter(Boolean).map(choice=>{
     if(typeof choice==='string') return choice;
     return choice?.prizeId||choice?.id||'';
@@ -3271,7 +3272,9 @@ function getPersonGiftChoices(personId, prefMap){
 }
 
 function allocatePrizeToPerson(person, prefMap, catalog){
-  const choiceEntries=getPersonGiftChoiceEntries(person.personId||person.id, prefMap);
+  const personId=person.personId||person.id||'';
+  const personName=person.name||'';
+  const choiceEntries=getPersonGiftChoiceEntries(personId, prefMap, personName);
   const groupedChoices={A:[],B:[],C:[]};
   choiceEntries.forEach(choice=>{
     const found=catalog.find(item=>item.id===choice.prizeId && item.stock>0 && !RANDOM_PRIZE_EXCLUDED_NAMES.has(String(item.name||'').trim()));
@@ -3296,6 +3299,19 @@ function allocatePrizeToPerson(person, prefMap, catalog){
   if(fallback){
     fallback.stock-=1;
     return {prizeId:fallback.id, prizeName:fallback.fallbackLabel||fallback.name, prizeGroup:'C', source:'fallback'};
+  }
+  const anyRemaining=getSelectionPrizeCatalog(catalog).filter(item=>item.stock>0 && !RANDOM_PRIZE_EXCLUDED_NAMES.has(String(item.name||'').trim()));
+  const chosenAny=getWeightedRandomChoice(anyRemaining, item=>{
+    const tier=String(item.tier||'').toUpperCase();
+    if(tier==='S') return GROUP_RANDOM_WEIGHTS.A||0;
+    if(tier==='A') return GROUP_RANDOM_WEIGHTS.B||0;
+    return GROUP_RANDOM_WEIGHTS.C||0;
+  });
+  if(chosenAny){
+    chosenAny.stock-=1;
+    const tier=String(chosenAny.tier||'').toUpperCase();
+    const prizeGroup=tier==='S' ? 'A' : (tier==='A' ? 'B' : 'C');
+    return {prizeId:chosenAny.id, prizeName:chosenAny.name, prizeGroup, source:'catalog_fallback'};
   }
   return null;
 }
@@ -4664,10 +4680,7 @@ async function refreshGiftStatusView(){
       get(ref(db,'race_reward_sets')),
       get(ref(db,FINAL_DRAW_LOG_PATH))
     ]);
-    const prizeListRaw=prizeSnap.val();
-    const prizeList=Array.isArray(prizeListRaw)
-      ? stripSelectionPrizeOverlap(prizeListRaw.map(normalizeLotteryPrizeItem).filter(Boolean), catalog)
-      : buildDefaultLotteryPrizes();
+    const prizeList=[];
     const sessionStartedAt=Number(stateSnap.val()?.sessionStartedAt)||0;
     const sessionDraftRewards=filterDraftRewardsBySession(draftSnap.val()||{}, sessionStartedAt);
     const issuedEntries=getSessionRewardEntriesFromLogs(
