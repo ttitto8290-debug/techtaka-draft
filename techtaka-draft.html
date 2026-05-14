@@ -68,7 +68,19 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
 /* ?먥븧 PARTICIPANT ?먥븧 */
 #p-view{background:var(--bg);color:var(--text);}
 #p-view .top-bar{background:var(--navy);border-bottom:none;}
-.p-body{max-width:480px;margin:0 auto;padding:20px;}
+.p-body{max-width:1100px;margin:0 auto;padding:20px;width:100%;}
+#gift-pick-view{overflow-y:auto;overflow-x:hidden;}
+#gift-pick-view .p-body{max-width:1100px;padding-bottom:40px;}
+.p-layout{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:18px;align-items:start;}
+.p-main-col{min-width:0;}
+.session-reward-panel{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:18px;}
+.session-reward-title{font-size:10px;font-weight:700;color:rgba(255,255,255,0.35);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;}
+.session-reward-list{display:flex;flex-direction:column;gap:8px;max-height:60vh;overflow-y:auto;}
+.session-reward-item{background:rgba(255,255,255,0.05);border-radius:10px;padding:10px 12px;}
+.session-reward-meta{font-size:10px;font-weight:800;color:#9ec0ff;letter-spacing:0.4px;text-transform:uppercase;margin-bottom:5px;}
+.session-reward-name{font-size:13px;font-weight:800;color:#fff;line-height:1.5;}
+.session-reward-prize{font-size:12px;color:rgba(255,255,255,0.62);line-height:1.6;margin-top:2px;}
+.session-reward-empty{padding:14px 12px;border-radius:10px;background:rgba(255,255,255,0.04);font-size:12px;color:rgba(255,255,255,0.35);text-align:center;}
 .q-card{background:var(--navy);border-radius:16px;padding:24px 20px;margin-bottom:18px;position:relative;overflow:hidden;}
 .q-card::after{content:'';position:absolute;top:-30px;right:-30px;width:90px;height:90px;background:rgba(255,255,255,0.04);border-radius:50%;}
 .q-num{font-size:10px;font-weight:700;color:var(--bl);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:7px;}
@@ -307,7 +319,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
 .gp-gift-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;}
 .gp-message-col{display:flex;flex-direction:column;gap:16px;position:static;}
 .gp-group-panel{padding:14px;border:1px solid rgba(255,255,255,0.08);border-radius:14px;background:rgba(255,255,255,0.03);display:flex;flex-direction:column;min-height:0;}
-.gp-group-items{display:flex;flex-direction:column;gap:8px;max-height:36vh;overflow-y:auto;padding-right:4px;}
+.gp-group-items{display:flex;flex-direction:column;gap:8px;max-height:none;overflow:visible;padding-right:0;}
 @media (max-width:1200px){
   .gp-selected-grid{grid-template-columns:1fr;}
   .gp-gift-grid{grid-template-columns:1fr;}
@@ -348,6 +360,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
 .message-cloud{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:14px;max-width:900px;margin:0 auto;}
 .message-cloud-word{display:inline-flex;align-items:center;justify-content:center;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);font-weight:800;line-height:1;}
 @media (max-width: 980px){
+  .p-layout{grid-template-columns:1fr;}
   .message-admin-grid{grid-template-columns:1fr;}
   .message-stage-quote{font-size:28px;}
   .message-stage-card{padding:30px 26px;}
@@ -964,6 +977,7 @@ let selectedMessageKey = null;
 let messageAdminFilter = 'displayable';
 let messageStageMode = 'random';
 let messageStageSelectedKey = null;
+let sessionRewardEntries = [];
 const firebaseUnsubs = {
   adminStatus:null,
   hostState:null,
@@ -972,6 +986,10 @@ const firebaseUnsubs = {
   votes:null,
   bets:null,
   adminMessages:null,
+  rewardDraft:null,
+  rewardRace:null,
+  rewardFinal:null,
+  rewardState:null,
 };
 
 function replaceListener(key, nextUnsub){
@@ -1019,6 +1037,24 @@ function safeStorageRemove(key){
   try{ localStorage.removeItem(key); }catch(e){}
 }
 /* duplicate function removed: getNameEntries; latest definition kept */
+
+function clearLocalRaceBetState(sessionIdx){
+  myBetQ = {};
+  myBetQLocal = {};
+  safeStorageRemove('tt_bets');
+  try{
+    const keys=[];
+    for(let i=0;i<localStorage.length;i+=1){
+      const key=localStorage.key(i);
+      if(key && key.indexOf('tt_bet_racer_')===0) keys.push(key);
+    }
+    keys.forEach(key=>safeStorageRemove(key));
+  }catch(e){
+    if(Number.isInteger(sessionIdx) && sessionIdx>=0){
+      safeStorageRemove('tt_bet_racer_'+sessionIdx);
+    }
+  }
+}
 
 
 function appendSafeLineBreaks(el, lines){
@@ -1071,7 +1107,7 @@ function normalizeSessionParticipants(raw){
 
 function getParticipatingPeople(){
   const participants=normalizeSessionParticipants(activeSessionParticipants);
-  if(!participants.length) return normalizePeopleList(people);
+  if(!participants.length) return [];
   const activeIds=new Set(participants.map(item=>item.id));
   const activeNames=new Set(participants.map(item=>item.name));
   return normalizePeopleList(people).filter(person=>activeIds.has(person.id) || activeNames.has(person.name));
@@ -1300,11 +1336,12 @@ function watchAdminStatus(){
 async function adminStartSession(){
   if(!confirm('세션을 시작할까요? 기존 투표와 베팅 데이터는 유지됩니다.')) return;
   await Promise.all([
-    set(ref(db,'state'),{active:false,standby:true,mode:'idle'}),
+    set(ref(db,'state'),{active:false,standby:true,mode:'idle',sessionStartedAt:Date.now()}),
     remove(ref(db,FINAL_DRAW_LOG_PATH)),
     remove(ref(db,SESSION_PARTICIPANTS_PATH))
   ]);
   activeSessionParticipants={};
+  renderSessionRewardPanels([]);
   alert('세션이 대기 상태로 시작되었습니다. 이제 드래프트나 레이스에서 세션을 진행해주세요.');
 }
 
@@ -1421,7 +1458,7 @@ function renderBars(qv){
   document.getElementById('bar-area').innerHTML=`<div class="result-bars">${sorted.map(([name,cnt],i)=>{
     const rc=i===0?'r1':i===1?'r2':i===2?'r3':'rn';
     const fc=i===0?' gold':'';
-    return `<div class="bar-item vis" style="transition-delay:${i*0.05}s"><div class="rank-dot ${rc}">${i+1}</div><div class="bar-info"><div class="bar-name-row"><span>${escapeHtml(labels[name]||name)}</span><span class="bar-cnt">${cnt}표</span></div><div class="bar-track"><div class="bar-fill${fc}" style="width:${(cnt/max*100).toFixed(1)}%"></div></div></div></div>`;
+    return `<div class="bar-item vis" style="transition-delay:${i*0.05}s"><div class="rank-dot ${rc}">${i+1}</div><div class="bar-info"><div class="bar-name-row"><span>후보 ${i+1}</span><span class="bar-cnt">${cnt}표</span></div><div class="bar-track"><div class="bar-fill${fc}" style="width:${(cnt/max*100).toFixed(1)}%"></div></div></div></div>`;
   }).join('')}</div>`;
 }
 
@@ -1430,7 +1467,7 @@ function renderReasons(qv){
   const items=Object.values(qv).filter(v=>v.reason);
   if(items.length===0) return;
   if(firstReason){feed.innerHTML='';firstReason=false;}
-  feed.innerHTML=items.slice(-6).reverse().map(v=>`<div class="reason-item"><div class="ri-name">${escapeHtml(v.person)}</div>${escapeHtml(v.reason)}</div>`).join('');
+  feed.innerHTML=items.slice(-6).reverse().map(v=>`<div class="reason-item">${escapeHtml(v.reason)}</div>`).join('');
 }
 /* duplicate function removed: showReveal; latest definition kept */
 
@@ -2657,7 +2694,7 @@ function isExecutiveName(name){
 }
 
 function syncCandidatesFromPeople(){
-  candidates=normalizePeopleList(people).filter(person=>!isExecutiveName(person.name));
+  candidates=getParticipatingPeople().filter(person=>!isExecutiveName(person.name));
   const textarea=document.getElementById('candidates-textarea');
   if(textarea){
     textarea.value=candidates.map(item=>item.name).join('\n');
@@ -2776,6 +2813,44 @@ function ensureDraftSafetyPanel(){
     <div id="draft-reward-summary" style="margin-top:12px;font-size:12px;color:rgba(255,255,255,0.72);line-height:1.7;"></div>
   `;
   grid.parentElement.appendChild(panel);
+}
+
+function ensureSessionRewardPanels(){
+  const pBody=document.querySelector('#p-view .p-body');
+  if(pBody && !document.getElementById('p-session-reward-panel')){
+    const layout=document.createElement('div');
+    layout.className='p-layout';
+    const main=document.createElement('div');
+    main.className='p-main-col';
+    main.id='p-main-col';
+    const side=document.createElement('div');
+    side.id='p-session-reward-panel';
+    side.className='session-reward-panel';
+    side.innerHTML=`
+      <div class="session-reward-title">이번 세션 확정 보상</div>
+      <div class="session-reward-list" id="p-session-reward-list">
+        <div class="session-reward-empty">아직 확정된 보상이 없습니다</div>
+      </div>
+    `;
+    [...pBody.children].forEach(child=>main.appendChild(child));
+    layout.appendChild(main);
+    layout.appendChild(side);
+    pBody.appendChild(layout);
+  }
+
+  const adminSide=document.querySelector('#h-draft-view .side-inner');
+  if(adminSide && !document.getElementById('admin-session-reward-panel')){
+    const block=document.createElement('div');
+    block.className='side-block';
+    block.id='admin-session-reward-panel';
+    block.innerHTML=`
+      <h3>이번 세션 확정 보상</h3>
+      <div class="session-reward-list" id="admin-session-reward-list">
+        <div class="session-reward-empty">아직 확정된 보상이 없습니다</div>
+      </div>
+    `;
+    adminSide.appendChild(block);
+  }
 }
 
 function showP(screen){
@@ -3705,6 +3780,8 @@ document.addEventListener('DOMContentLoaded',()=>{
   ensureParticipantAuthUI();
   ensureGiftVerifyUI();
   ensureDraftSafetyPanel();
+  ensureSessionRewardPanels();
+  listenToSessionRewardPanels();
   getAuthenticatedParticipant();
 });
 
@@ -3900,6 +3977,7 @@ async function resetRaceSession(){
   if(!confirm('레이스 기록, 베팅, 세트 상태를 모두 초기화할까요?')) return;
   window._localRaceState={active:false,standby:true,mode:'idle'};
   window._localRaceSetState={};
+  clearLocalRaceBetState(raceSession);
   try{
     await Promise.all([
       remove(ref(db,'bets')),
@@ -4020,6 +4098,105 @@ function getAnyPrizeWinnerIdsFromLogs(draftRewards, raceRewardSets, finalDrawLog
     if(entry?.winner?.personId) ids.add(entry.winner.personId);
   });
   return ids;
+}
+
+function getSessionRewardEntriesFromLogs(draftRewards, raceRewardSets, finalDrawLog, sessionStartedAt){
+  const minTs=Number(sessionStartedAt)||0;
+  const entries=[];
+
+  Object.entries(draftRewards||{}).forEach(([key,round])=>{
+    const ts=Number(round?.processedAt)||0;
+    if(ts<minTs) return;
+    (round?.assignedRewards||[]).forEach(item=>{
+      if(!(item?.personId||item?.name)) return;
+      entries.push({
+        source:'draft',
+        label:`드래프트 ${key.toUpperCase()}`,
+        personId:item.personId||'',
+        name:item.name||'-',
+        prizeName:item.prizeName||'-',
+        ts
+      });
+    });
+  });
+
+  Object.values(raceRewardSets||{}).forEach(setInfo=>{
+    const ts=Number(setInfo?.completedAt)||0;
+    if(ts<minTs) return;
+    (setInfo?.winners||[]).forEach(item=>{
+      if(!(item?.personId||item?.name)) return;
+      entries.push({
+        source:'race',
+        label:`레이스 ${Number(setInfo?.setNumber)||1}세트`,
+        personId:item.personId||'',
+        name:item.name||'-',
+        prizeName:setInfo?.prizeLabel||'-',
+        ts
+      });
+    });
+  });
+
+  Object.values(finalDrawLog||{}).forEach(entry=>{
+    const ts=Number(entry?.ts)||0;
+    if(ts<minTs) return;
+    if(!(entry?.winner?.personId||entry?.winner?.name)) return;
+    entries.push({
+      source:'lottery',
+      label:'최종 추첨',
+      personId:entry.winner.personId||'',
+      name:entry.winner.name||'-',
+      prizeName:entry.prizeName||'-',
+      ts
+    });
+  });
+
+  return entries.sort((a,b)=>b.ts-a.ts);
+}
+
+function renderSessionRewardPanels(entries){
+  sessionRewardEntries=entries||[];
+  const html=sessionRewardEntries.length
+    ? sessionRewardEntries.map(item=>`
+      <div class="session-reward-item">
+        <div class="session-reward-meta">${escapeHtml(item.label)}</div>
+        <div class="session-reward-name">${escapeHtml(item.name)}</div>
+        <div class="session-reward-prize">${escapeHtml(item.prizeName)}</div>
+      </div>`).join('')
+    : '<div class="session-reward-empty">아직 확정된 보상이 없습니다</div>';
+  const participantEl=document.getElementById('p-session-reward-list');
+  const adminEl=document.getElementById('admin-session-reward-list');
+  if(participantEl) participantEl.innerHTML=html;
+  if(adminEl) adminEl.innerHTML=html;
+}
+
+async function refreshSessionRewardPanels(){
+  ensureSessionRewardPanels();
+  try{
+    const [stateSnap,draftSnap,raceSnap,finalSnap]=await Promise.all([
+      get(ref(db,'state')),
+      get(ref(db,'draft_rewards')),
+      get(ref(db,'race_reward_sets')),
+      get(ref(db,FINAL_DRAW_LOG_PATH))
+    ]);
+    const state=stateSnap.val()||{};
+    const entries=getSessionRewardEntriesFromLogs(
+      draftSnap.val()||{},
+      raceSnap.val()||{},
+      finalSnap.val()||{},
+      Number(state?.sessionStartedAt)||0
+    );
+    renderSessionRewardPanels(entries);
+  }catch(e){
+    renderSessionRewardPanels(sessionRewardEntries||[]);
+  }
+}
+
+function listenToSessionRewardPanels(){
+  const rerender=()=>{ refreshSessionRewardPanels(); };
+  replaceListener('rewardDraft', onValue(ref(db,'draft_rewards'), rerender));
+  replaceListener('rewardRace', onValue(ref(db,'race_reward_sets'), rerender));
+  replaceListener('rewardFinal', onValue(ref(db,FINAL_DRAW_LOG_PATH), rerender));
+  replaceListener('rewardState', onValue(ref(db,'state'), rerender));
 }
 
 async function getFinalDrawEligiblePeople(){
@@ -4186,7 +4363,24 @@ function listenToHostState(){
         return;
       }
       if(closed){ showP('race-done'); }
-      else if(myBetQ[s.raceSession]){ showP('race-done'); }
+      else if(myBetQ[s.raceSession]){
+        let stillHasBet=true;
+        try{
+          const betSnap=await get(ref(db,`bets/s${s.raceSession}`));
+          const currentBets=Object.values(betSnap.val()||{});
+          stillHasBet=currentBets.some(b=>String(b?.personId||'')===String(participant.id));
+        }catch(e){}
+        if(stillHasBet){
+          showP('race-done');
+        } else {
+          delete myBetQ[s.raceSession];
+          delete myBetQLocal[s.raceSession];
+          safeStorageSet('tt_bets', JSON.stringify(myBetQLocal));
+          safeStorageRemove('tt_bet_racer_'+s.raceSession);
+          showP('race');
+          loadRaceBet(s.racers||racers,s.raceSession||0);
+        }
+      }
       else {
         showP('race');
         loadRaceBet(s.racers||racers,s.raceSession||0);
