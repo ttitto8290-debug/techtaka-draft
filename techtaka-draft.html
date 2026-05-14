@@ -1301,12 +1301,21 @@ function handleAdminMessagesSnapshot(raw){
   renderMessagesAdminStats();
   renderMessageList();
   renderSelectedMessagePreview();
-  if(messageStageMode==='cloud' && !document.getElementById('message-stage-view').classList.contains('hidden')){
+  const stageOpen=!document.getElementById('message-stage-view').classList.contains('hidden');
+  if(messageStageMode==='cloud' && stageOpen){
     renderMessageStageCloud();
-  } else if(!document.getElementById('message-stage-view').classList.contains('hidden') && messageStageSelectedKey){
-    const stageMsg=adminMessages.find(msg=>msg.key===messageStageSelectedKey);
-    if(messageStageMode==='selected'){
+  } else if(stageOpen){
+    if(messageStageMode==='random'){
+      const stageMsg=adminMessages.find(msg=>msg.key===messageStageSelectedKey) || pickRandomDisplayableMessage();
+      messageStageSelectedKey=stageMsg?.key||null;
       renderMessageStageCard(stageMsg||null);
+    } else if(messageStageSelectedKey){
+      const stageMsg=adminMessages.find(msg=>msg.key===messageStageSelectedKey);
+      if(messageStageMode==='selected'){
+        renderMessageStageCard(stageMsg||null);
+      }
+    } else if(messageStageMode==='selected'){
+      renderMessageStageCard(null);
     }
   }
 }
