@@ -3067,6 +3067,7 @@ function showP(screen){
     if(el) el.classList.add('hidden');
   });
   document.getElementById(`p-${screen}`)?.classList.remove('hidden');
+  refreshSessionRewardPanels().catch(()=>{});
 }
 
 function getSelectionPrizeCatalog(catalog){
@@ -3655,6 +3656,7 @@ function verifyParticipantAuth(){
 async function enterParticipant(){
   ensureParticipantAuthUI();
   ensureGiftVerifyUI();
+  ensureSessionRewardPanels();
   replaceListener('sessionParticipants', onValue(ref(db,SESSION_PARTICIPANTS_PATH),(snap)=>{
     activeSessionParticipants=snap.val()||{};
     if(window._adminUnlocked){
@@ -3672,6 +3674,7 @@ async function enterParticipant(){
     await ensureSessionParticipantCheckedIn(participant);
     showP('waiting');
     listenToHostState();
+    refreshSessionRewardPanels().catch(()=>{});
   } else {
     loadAuthPeople();
     document.getElementById('auth-code').value='';
