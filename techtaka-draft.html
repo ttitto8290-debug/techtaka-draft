@@ -97,6 +97,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
 .status-sc .bi{font-size:56px;margin-bottom:16px;}
 .status-sc h2{font-size:20px;font-weight:700;color:var(--text);margin-bottom:8px;}
 .status-sc p{font-size:13px;color:var(--sub);line-height:1.6;}
+#gp-step-done .status-sc h2{color:#ffffff;text-shadow:0 0 12px rgba(61,111,232,0.22);}
 
 /* ?먥븧 HOST DRAFT ?먥븧 */
 #h-draft-view .h-body{padding:20px 24px;}
@@ -696,8 +697,8 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
     <div id="gp-step-gifts" class="hidden">
       <div class="q-card" style="margin-bottom:16px;">
         <div class="q-num">STEP 2</div>
-        <div class="q-text" id="gp-title">희망 선물을 우선순위대로 선택하고 6주년 메시지를 남겨주세요</div>
-        <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:6px;">1~3순위 기준으로 우선 배정됩니다</div>
+        <div class="q-text" id="gp-title">희망 선물을 그룹별로 선택하고 6주년 메시지를 남겨주세요</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:6px;">그룹 A 1개, 그룹 B 2개, 그룹 C 2개를 선택해주세요</div>
       </div>
       <div id="gp-selected-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:14px;min-height:40px;"></div>
       <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.3);letter-spacing:1px;margin-bottom:8px;">선택 가능한 선물</div>
@@ -728,7 +729,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
     <div id="gp-step-done" class="hidden">
       <div class="status-sc">
         <div class="bi">🎁</div>
-        <h2>선택 완료!</h2>
+        <h2 style="color:#fff;">선택 완료!</h2>
         <div id="gp-done-list" style="margin:12px 0;text-align:left;width:100%;"></div>
         <p style="color:var(--sub);">행사 추첨 시 희망 선물로<br>매칭해드릴게요 🎉</p>
         <button class="sub-btn" onclick="gpEdit()" style="margin-top:16px;background:rgba(255,255,255,0.08);font-size:12px;">수정하기</button>
@@ -1312,12 +1313,22 @@ async function closeVoting(){
 
 async function resetCurrentQ(){
   if(!confirm(`Q${currentQIdx+1} 데이터를 삭제할까요?`)) return;
-  await remove(ref(db,`votes/q${currentQIdx}`));
+  await Promise.all([
+    remove(ref(db,`votes/q${currentQIdx}`)),
+    remove(ref(db,`draft_rewards/q${currentQIdx}`)),
+    set(ref(db,'state'),{currentQ:currentQIdx,active:false,closed:false,standby:true,mode:'idle'})
+  ]);
+  delete myVotedQs[currentQIdx];
+  try{
+    localStorage.setItem('tt_voted', JSON.stringify(myVotedQs));
+    localStorage.removeItem('tt_voted_name_'+currentQIdx);
+  }catch(e){}
   firstReason=true;
   document.getElementById('reason-feed').innerHTML='<p style="font-size:11px;color:rgba(255,255,255,0.2)">투표가 들어오면 여기에 표시됩니다.</p>';
   document.getElementById('bar-area').innerHTML='<div class="waiting-msg"><div class="wi">🗳️</div><p>투표가 시작되면 실시간으로 집계됩니다.</p></div>';
   document.getElementById('total-h').textContent='0';
   document.getElementById('unique-h').textContent='0';
+  await refreshDraftSafetyIndicators({});
 }
 /* duplicate function removed: listenToVotes; latest definition kept */
 
@@ -1929,20 +1940,88 @@ const DEFAULT_PRIZES = [
   '올리브영 3만원 기프트카드',
   '올리브영 3만원 기프트카드',
   '올리브영 3만원 기프트카드',
+  '스타벅스 3만원 기프트카드',
+  '스타벅스 3만원 기프트카드',
+  '스타벅스 3만원 기프트카드',
+  '스타벅스 3만원 기프트카드',
+  '스타벅스 3만원 기프트카드',
+  '바이오던스 마스크팩 2BOX 세트 (10ea)',
+  '바이오던스 마스크팩 2BOX 세트 (10ea)',
+  '바이오던스 마스크팩 2BOX 세트 (10ea)',
+  '바이오던스 마스크팩 2BOX 세트 (10ea)',
+  '바이오던스 마스크팩 2BOX 세트 (10ea)',
+  '바이오던스 마스크팩 2BOX 세트 (10ea)',
+  '바이오던스 마스크팩 2BOX 세트 (10ea)',
+  '바이오던스 마스크팩 2BOX 세트 (10ea)',
+  '바이오던스 마스크팩 2BOX 세트 (10ea)',
+  '바이오던스 마스크팩 2BOX 세트 (10ea)',
+  '바이오던스 마스크팩 2BOX 세트 (10ea)',
+  '바이오던스 마스크팩 2BOX 세트 (10ea)',
   '루메나 MIST TOWER PLUS',
   '루메나 MIST POT',
   '스테나 STN100A',
   'KORIN HubPack X',
   'KORIN HubSling X',
   'KORIN ClickSling S',
-  'KORIN ClickSling S',
-  '저주파 마사지기 ⚡',
-  '저주파 마사지기 ⚡',
-  '저주파 마사지기 ⚡',
-  '저주파 마사지기 ⚡',
-  '저주파 마사지기 ⚡',
-  '홍삼정 에브리데이',
+  '이야 충전식 저주파 마사지기 LF-0324',
+  '이야 충전식 저주파 마사지기 LF-0324',
+  '이야 충전식 저주파 마사지기 LF-0324',
+  '이야 충전식 저주파 마사지기 LF-0324',
+  '이야 충전식 저주파 마사지기 LF-0324',
+  '이야 충전식 저주파 마사지기 LF-0324',
+  '이야 충전식 저주파 마사지기 LF-0324',
+  '이야 충전식 저주파 마사지기 LF-0324',
+  '이야 충전식 저주파 마사지기 LF-0324',
+  '이야 충전식 저주파 마사지기 LF-0324',
+  '이야 충전식 저주파 마사지기 LF-0324',
+  '이야 충전식 저주파 마사지기 LF-0324',
+  '이야 충전식 저주파 마사지기 LF-0324',
+  '이야 충전식 저주파 마사지기 LF-0324',
+  '이야 충전식 저주파 마사지기 LF-0324',
+  '이야 충전식 저주파 마사지기 LF-0324',
+  '이야 충전식 저주파 마사지기 LF-0324',
+  '이야 충전식 저주파 마사지기 LF-0324',
+  '이야 충전식 저주파 마사지기 LF-0324',
+  '이야 충전식 저주파 마사지기 LF-0324',
+  '홍삼정 에브리데이 100포 1BOX',
+  '볼빅 소닉 V10 소프트 트랙 골프공 12개입',
+  '볼빅 소닉 V10 소프트 트랙 골프공 12개입',
+  '볼빅 소닉 V10 소프트 트랙 골프공 12개입',
+  '볼빅 소닉 V10 소프트 트랙 골프공 12개입',
+  '볼빅 소닉 V10 소프트 트랙 골프공 12개입',
+  '볼빅 소닉 V10 소프트 트랙 골프공 12개입',
+  '볼빅 소닉 V10 소프트 트랙 골프공 12개입',
+  '볼빅 소닉 V10 소프트 트랙 골프공 12개입',
+  '볼빅 소닉 V10 소프트 트랙 골프공 12개입',
+  '카카오프렌즈 닥터라이언 피규어',
+  '카카오프렌즈 닥터라이언 피규어',
+  '카카오프렌즈 닥터라이언 피규어',
+  '루메나 WARMER PAD 발난로',
+  'INTHome 맥북 프로 노트북 거치대 IH-LS001',
+  '카카오프렌즈 춘식이 유리볼 2ea 세트',
+  '카카오프렌즈 춘식이 유리볼 2ea 세트',
+  '카카오프렌즈 춘식이 유리볼 2ea 세트',
+  '카카오프렌즈 춘식이 유리볼 2ea 세트',
+  '카카오프렌즈 춘식이 유리볼 2ea 세트',
+  '카카오프렌즈 춘식이 유리볼 2ea 세트',
+  '카카오프렌즈 춘식이 유리볼 2ea 세트',
+  '카카오프렌즈 춘식이 유리볼 2ea 세트',
+  '카카오프렌즈 춘식이 유리볼 2ea 세트',
+  '카카오프렌즈 춘식이 유리볼 2ea 세트',
 ];
+
+function buildDefaultLotteryPrizes(){
+  return DEFAULT_PRIZES.map(name=>({name,done:false,type:'normal'}));
+}
+
+function isLegacyLotteryPrizeList(list){
+  if(!Array.isArray(list) || !list.length) return false;
+  const names=list.map(item=>typeof item==='string' ? item : String(item?.name||'').trim()).filter(Boolean);
+  return names.includes('저주파 마사지기 ⚡')
+    && names.includes('올리브영 3만원 기프트카드')
+    && names.includes('루메나 MIST POT')
+    && !names.includes('스타벅스 3만원 기프트카드');
+}
 /* duplicate function removed: initLottery; latest definition kept */
 
 /* duplicate function removed: loadPeopleToPool; latest definition kept */
@@ -2476,14 +2555,16 @@ const DEFAULT_SELECTION_PRIZES=[
   {id:'reselbio_cica_5ea',name:'리셀바이오 PDRN 시카 크림 5ea 세트',tier:'B',stock:1,bundleSize:5,fallbackLabel:'리셀바이오 시카크림 5ea'}
 ];
 const GIFT_SLOT_RULES=[
-  {slot:1,label:'1순위',tiers:['S','A']},
-  {slot:2,label:'2순위',tiers:['A']},
-  {slot:3,label:'3순위',tiers:['B']}
+  {slot:1,group:'A',label:'그룹 A',description:'프리미엄/메인 선물',tiers:['S','A']},
+  {slot:2,group:'B',label:'그룹 B',description:'취향형 선물',tiers:['A']},
+  {slot:3,group:'B',label:'그룹 B',description:'취향형 선물',tiers:['A']},
+  {slot:4,group:'C',label:'그룹 C',description:'실속형 선물',tiers:['B']},
+  {slot:5,group:'C',label:'그룹 C',description:'실속형 선물',tiers:['B']}
 ];
 const FALLBACK_PRIZE_IDS=['lf_0324','choonsik_glass_set','volvik_v10_box','reselbio_cica_5ea'];
 let currentParticipant=null;
 let authSelectedPerson=null;
-let gpChoiceBySlot=[null,null,null];
+let gpChoiceBySlot=[null,null,null,null,null];
 
 function isExecutiveName(name){
   return EXECUTIVE_NAMES.includes(String(name||'').trim());
@@ -2499,7 +2580,12 @@ function syncCandidatesFromPeople(){
 }
 
 function normalizePeopleList(raw){
-  return (raw||[]).map((entry,idx)=>{
+  const list=Array.isArray(raw)
+    ? raw
+    : (raw && typeof raw==='object')
+      ? Object.values(raw)
+      : [];
+  return list.map((entry,idx)=>{
     if(typeof entry==='string'){
       const parts=entry.split('|');
       const name=String(parts[0]||'').trim();
@@ -2843,6 +2929,19 @@ function getDraftCandidatePool(){
     .filter(entry=>entry.id!==getAuthenticatedParticipant()?.id);
 }
 
+function filterDraftVotesByEligiblePeople(qv){
+  const validEntries=getNameEntries(people, 'person').filter(entry=>!isExecutiveName(entry.name));
+  const validIds=new Set(validEntries.map(entry=>entry.id));
+  const validNames=new Set(validEntries.map(entry=>entry.name));
+  return Object.fromEntries(
+    Object.entries(qv||{}).filter(([, vote])=>{
+      const personId=vote?.personId||'';
+      const personName=vote?.person||'';
+      return validIds.has(personId) || validNames.has(personName);
+    })
+  );
+}
+
 function renderPeople(filter){
   const filtered=getDraftCandidatePool().filter(entry=>entry.name.includes(filter||''));
   window._peopleViewEntries=filtered;
@@ -2871,7 +2970,7 @@ async function submitVote(){
   const qIdx=window._voteQ;
   const btn=document.getElementById('submit-btn');
   btn.disabled=true;
-  btn.textContent='?쒖텧 以?.';
+  btn.textContent='제출 중...';
   try{
     await push(ref(db,`votes/q${qIdx}`),{
       voterName:participant.name,
@@ -2884,8 +2983,8 @@ async function submitVote(){
     });
   }catch(e){
     btn.disabled=false;
-    btn.textContent='?ы몴?섍린';
-    alert('?ㅻ쪟: '+e.message);
+    btn.textContent='투표하기';
+    alert('오류: '+e.message);
     return;
   }
   myVotedQs[qIdx]=true;
@@ -2916,7 +3015,7 @@ async function submitRaceBet(){
   if(!participant || selectedRacer===null) return;
   const btn=document.getElementById('race-bet-btn');
   btn.disabled=true;
-  btn.textContent='?쒖텧 以?.';
+  btn.textContent='제출 중...';
   await push(ref(db,'bets/s'+window._betSession),{
     racerIdx:selectedRacer,
     name:participant.name,
@@ -2931,7 +3030,8 @@ async function submitRaceBet(){
 }
 
 function renderAuthPeople(filter){
-  const filtered=normalizePeopleList(people).filter(person=>person.name.includes(filter||''));
+  const q=String(filter||'').trim().toLowerCase();
+  const filtered=normalizePeopleList(people).filter(person=>!q || person.name.toLowerCase().includes(q));
   window._authPeopleEntries=filtered;
   document.getElementById('auth-people-list').innerHTML=filtered.length?filtered.map((entry,i)=>`
     <div class="p-item${authSelectedPerson?.id===entry.id?' sel':''}" onclick="selectAuthPersonByIndex(${i})">
@@ -2940,6 +3040,21 @@ function renderAuthPeople(filter){
 }
 
 function filterAuthPeople(val){ renderAuthPeople(val); }
+
+async function loadAuthPeople(){
+  let ppl=[];
+  try{
+    const snap=await get(ref(db,'settings/people'));
+    ppl=normalizePeopleList(snap.val());
+  }catch(e){}
+  if(!ppl.length) ppl=normalizePeopleList(people);
+  if(!ppl.length) ppl=getCachedPeopleList();
+  people=ppl.length ? ppl : people;
+  try{
+    localStorage.setItem('tt_people_cache', JSON.stringify(serializePeopleList(people)));
+  }catch(e){}
+  renderAuthPeople(document.getElementById('auth-search')?.value||'');
+}
 
 window.selectAuthPersonByIndex=function(idx){
   const person=window._authPeopleEntries?.[idx];
@@ -2975,7 +3090,7 @@ function enterParticipant(){
     showP('waiting');
     listenToHostState();
   } else {
-    renderAuthPeople('');
+    loadAuthPeople();
     document.getElementById('auth-code').value='';
     document.getElementById('auth-selected').classList.add('hidden');
     document.getElementById('auth-submit-btn').disabled=true;
@@ -3044,14 +3159,14 @@ async function startQuestion(){
 async function listenToVotes(){
   replaceListener('votes', onValue(ref(db,'votes'), async (snap)=>{
     const all=snap.val()||{};
-    const qv=all[`q${currentQIdx}`]||{};
+    const qv=filterDraftVotesByEligiblePeople(all[`q${currentQIdx}`]||{});
     const counts={},labels={};
     Object.values(qv).forEach(v=>{
       const key=v.personId||v.person;
       counts[key]=(counts[key]||0)+1;
       labels[key]=v.person||key;
     });
-    renderBars(counts, labels);
+    renderBars(qv);
     renderReasons(qv);
     document.getElementById('total-h').textContent=Object.keys(qv).length;
     document.getElementById('unique-h').textContent=Object.keys(counts).length;
@@ -3061,7 +3176,7 @@ async function listenToVotes(){
 
 async function showReveal(){
   const snap=await get(ref(db,`votes/q${currentQIdx}`));
-  const qv=snap.val()||{};
+  const qv=filterDraftVotesByEligiblePeople(snap.val()||{});
   const counts={},reasons={},labels={};
   Object.values(qv).forEach(v=>{
     const key=v.personId||v.person;
@@ -3075,7 +3190,7 @@ async function showReveal(){
   if(!revealData.length){ alert('투표 데이터가 없습니다.'); return; }
   const rewardLog=await processDraftRewardsForQuestion(currentQIdx, qv, revealData[0].personId, revealData[0].name);
   await refreshDraftSafetyIndicators(qv);
-  const summary=(rewardLog?.assignedRewards||[]).map(item=>`${item.name} ??${item.prizeName}`).join(', ');
+  const summary=(rewardLog?.assignedRewards||[]).map(item=>`${item.name} → ${item.prizeName}`).join(', ');
   const summaryEl=document.getElementById('draft-reward-summary');
   if(summaryEl){
     summaryEl.innerHTML=`<div>Q${currentQIdx+1} 1위 ${escapeHtml(revealData[0].name)}</div><div>보상 지급 ${rewardLog?.assignedRewards?.length||0}건${summary?` · ${escapeHtml(summary)}`:''}</div>`;
@@ -3092,7 +3207,7 @@ function gpResetMessageState(){
   gpMessageText='';
   gpExtraAnswer='';
   gpExistingMessageMeta=null;
-  gpChoiceBySlot=[null,null,null];
+  gpChoiceBySlot=[null,null,null,null,null];
 }
 
 function getCachedPeopleList(){
@@ -3118,7 +3233,8 @@ async function loadGPPeople(){
 }
 
 function renderGPPeople(filter){
-  const list=normalizePeopleList(window._gpPeople||people).filter(entry=>entry.name.includes(filter||''));
+  const q=String(filter||'').trim();
+  const list=normalizePeopleList(window._gpPeople||people).filter(entry=>!q || entry.name.includes(q));
   window._gpPeopleEntries=list;
   document.getElementById('gp-people-list').innerHTML=list.length?list.map((entry,i)=>`
     <div class="p-item${gpSelectedPerson?.id===entry.id?' sel':''}" onclick="gpSelectNameByIndex(${i})">
@@ -3135,40 +3251,74 @@ window.gpSelectNameByIndex=function(idx){
 };
 
 function getChoiceArrayFromSlots(){
-  return gpChoiceBySlot.filter(Boolean).map(item=>({slot:item.slot,prizeId:item.id,name:item.name,tier:item.tier}));
+  return gpChoiceBySlot.filter(Boolean).map(item=>({slot:item.slot,group:item.group,prizeId:item.id,name:item.name,tier:item.tier}));
 }
 
 function renderGPSelected(){
   const el=document.getElementById('gp-selected-list');
   const choices=getChoiceArrayFromSlots();
-  el.innerHTML=GIFT_SLOT_RULES.map(rule=>{
-    const picked=choices.find(item=>item.slot===rule.slot);
-    return `<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(255,255,255,0.04);border-radius:8px;margin-bottom:4px;">
-      <div style="width:28px;height:28px;border-radius:50%;background:${picked?'var(--blue)':'rgba(255,255,255,0.12)'};color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">${rule.slot}</div>
-      <div style="flex:1;">
-        <div style="font-size:12px;color:rgba(255,255,255,0.5);">${rule.label}</div>
-        <div style="font-size:13px;">${escapeHtml(picked?.name||'아직 선택하지 않음')}</div>
-      </div>
-    </div>`;
+  const groups=['A','B','C'];
+  el.innerHTML=groups.map(group=>{
+    const rules=GIFT_SLOT_RULES.filter(rule=>rule.group===group);
+    const filled=rules.filter(rule=>choices.find(item=>item.slot===rule.slot)).length;
+    return `
+      <div style="padding:12px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;margin-bottom:8px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:28px;height:28px;border-radius:50%;background:rgba(61,111,232,0.18);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;">${group}</div>
+            <div>
+              <div style="font-size:13px;font-weight:800;color:#fff;">그룹 ${group}</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.45);">${rules[0]?.description||''}</div>
+            </div>
+          </div>
+          <div style="font-size:11px;font-weight:700;color:${filled===rules.length?'#8bf0c7':'rgba(255,255,255,0.42)'};">${filled}/${rules.length} 선택</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          ${rules.map((rule,idx)=>{
+            const picked=choices.find(item=>item.slot===rule.slot);
+            return `<div style="display:flex;align-items:center;gap:8px;padding:9px 10px;background:rgba(255,255,255,0.04);border-radius:10px;">
+              <div style="width:22px;height:22px;border-radius:50%;background:${picked?'var(--blue)':'rgba(255,255,255,0.12)'};color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;">${idx+1}</div>
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:12px;font-weight:700;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHtml(picked?.name||'아직 선택하지 않음')}</div>
+              </div>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>`;
   }).join('');
 }
 
 function renderGPGiftList(){
   const catalog=getSelectionPrizeCatalog(prizes);
   const wrap=document.getElementById('gp-gift-list');
-  wrap.innerHTML=GIFT_SLOT_RULES.map(rule=>{
-    const items=getAllowedPrizesForSlot(catalog, rule.slot);
+  const groups=['A','B','C'];
+  wrap.style.maxHeight='56vh';
+  wrap.style.overflowY='auto';
+  wrap.style.paddingRight='6px';
+  wrap.innerHTML=groups.map(group=>{
+    const rules=GIFT_SLOT_RULES.filter(rule=>rule.group===group);
+    const selectedIds=new Set(gpChoiceBySlot.filter(Boolean).map(item=>item.id));
+    const items=getSelectionPrizeCatalog(catalog).filter(prize=>rules[0].tiers.includes(prize.tier) && prize.stock>0);
     return `
-      <div style="margin-bottom:16px;">
-        <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.42);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">${rule.label} · Tier ${rule.tiers.join('/')}</div>
-        <div style="display:flex;flex-direction:column;gap:6px;">
+      <div style="margin-bottom:18px;padding:14px;border:1px solid rgba(255,255,255,0.08);border-radius:14px;background:rgba(255,255,255,0.03);">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;">
+          <div>
+            <div style="font-size:13px;font-weight:800;color:#fff;">그룹 ${group}</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.45);">${rules[0]?.description||''} · ${rules.length}개 선택</div>
+          </div>
+          <div style="padding:4px 8px;border-radius:999px;background:rgba(61,111,232,0.16);font-size:10px;font-weight:800;color:#a6c0ff;">그룹 ${group}</div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px;">
           ${items.map(item=>{
-            const active=gpChoiceBySlot[rule.slot-1]?.id===item.id;
-            return `<button type="button" class="p-item${active?' sel':''}" style="width:100%;text-align:left;border:none;background:${active?'rgba(61,111,232,0.16)':'rgba(255,255,255,0.04)'};" onclick="gpSetChoice(${rule.slot}, '${item.id}')">
-              <div class="p-av" style="${active?'background:var(--blue);color:#fff;':''}">${item.tier}</div>
-              <div style="flex:1;">
-                <div style="font-size:13px;font-weight:700;">${escapeHtml(item.name)}</div>
-                <div style="font-size:11px;color:rgba(255,255,255,0.45);margin-top:2px;">남은 수량 ${item.stock}</div>
+            const pickedSlots=rules.filter(rule=>gpChoiceBySlot[rule.slot-1]?.id===item.id).map(rule=>rule.slot);
+            const active=pickedSlots.length>0;
+            const disabled=selectedIds.has(item.id) && !active;
+            return `<button type="button" class="p-item${active?' sel':''}" style="width:100%;text-align:left;border:none;background:${active?'rgba(61,111,232,0.16)':'rgba(255,255,255,0.04)'};opacity:${disabled?0.45:1};pointer-events:${disabled?'none':'auto'};align-items:flex-start;padding:12px 14px;min-height:84px;" onclick="gpSetChoice('${group}', '${item.id}')">
+              <div class="p-av" style="${active?'background:var(--blue);color:#fff;':'background:rgba(255,255,255,0.1);color:#fff;'}">${group}</div>
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:13px;font-weight:800;color:#fff;line-height:1.5;word-break:keep-all;">${escapeHtml(item.name)}</div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.62);margin-top:4px;">남은 수량 ${item.stock}</div>
+                ${active?`<div style="font-size:10px;color:#8bf0c7;margin-top:4px;">선택됨</div>`:''}
               </div>
             </button>`;
           }).join('')}
@@ -3178,11 +3328,23 @@ function renderGPGiftList(){
   }).join('');
 }
 
-window.gpSetChoice=function(slot, prizeId){
+window.gpSetChoice=function(group, prizeId){
   const catalog=getSelectionPrizeCatalog(prizes);
   const prize=catalog.find(item=>item.id===prizeId);
   if(!prize) return;
-  gpChoiceBySlot[slot-1]={slot,id:prize.id,name:prize.name,tier:prize.tier};
+  const rules=GIFT_SLOT_RULES.filter(rule=>rule.group===group);
+  const existingIdx=gpChoiceBySlot.findIndex(item=>item?.id===prize.id && rules.some(rule=>rule.slot===item.slot));
+  if(existingIdx>=0){
+    gpChoiceBySlot[existingIdx]=null;
+  }else{
+    const emptyRule=rules.find(rule=>!gpChoiceBySlot[rule.slot-1]);
+    if(!emptyRule){
+      const replaceRule=rules[0];
+      gpChoiceBySlot[replaceRule.slot-1]={slot:replaceRule.slot,group,id:prize.id,name:prize.name,tier:prize.tier};
+    }else{
+      gpChoiceBySlot[emptyRule.slot-1]={slot:emptyRule.slot,group,id:prize.id,name:prize.name,tier:prize.tier};
+    }
+  }
   gpSelectedGifts=getChoiceArrayFromSlots();
   renderGPGiftList();
   renderGPSelected();
@@ -3206,7 +3368,7 @@ function renderGpMessageForm(){
 function gpUpdateSubmitState(){
   const btn=document.getElementById('gp-submit-btn');
   if(!btn) return;
-  const hasAllSlots=gpChoiceBySlot.every(Boolean);
+  const hasAllSlots=GIFT_SLOT_RULES.every(rule=>gpChoiceBySlot[rule.slot-1]);
   btn.disabled=!hasAllSlots || gpMessageText.trim().length<2;
 }
 
@@ -3231,11 +3393,12 @@ async function gpGoStep2(){
   prizes=catalog;
   const savedGift=giftSnap.val();
   const savedMsg=msgSnap.val();
-  gpChoiceBySlot=[null,null,null];
+  gpChoiceBySlot=[null,null,null,null,null];
   if(Array.isArray(savedGift?.choices)){
     savedGift.choices.forEach(choice=>{
-      if(choice?.slot>=1 && choice.slot<=3){
-        gpChoiceBySlot[choice.slot-1]={slot:choice.slot,id:choice.prizeId,name:choice.name,tier:choice.tier};
+      if(choice?.slot>=1 && choice.slot<=GIFT_SLOT_RULES.length){
+        const rule=GIFT_SLOT_RULES.find(item=>item.slot===choice.slot);
+        gpChoiceBySlot[choice.slot-1]={slot:choice.slot,group:choice.group||rule?.group||'',id:choice.prizeId,name:choice.name,tier:choice.tier};
       }
     });
   }
@@ -3247,7 +3410,7 @@ async function gpGoStep2(){
 }
 
 async function submitGiftPick(){
-  if(!gpSelectedPerson||!gpChoiceBySlot.every(Boolean)||gpMessageText.trim().length<2) return;
+  if(!gpSelectedPerson||!GIFT_SLOT_RULES.every(rule=>gpChoiceBySlot[rule.slot-1])||gpMessageText.trim().length<2) return;
   const btn=document.getElementById('gp-submit-btn');
   btn.disabled=true;
   btn.textContent='저장 중..';
@@ -3287,11 +3450,12 @@ function gpShowDone(){
   const savedMessage=saved.messageData||saved;
   const visibilityLabel=savedMessage.displayMode==='anonymous' ? '익명 공개' : '실명 공개';
   const choices=saved.choices||getChoiceArrayFromSlots();
+  const choiceLabelMap=new Map(GIFT_SLOT_RULES.map(rule=>[rule.slot, `그룹 ${rule.group}`]));
   document.getElementById('gp-done-list').innerHTML=`
     <div style="font-size:13px;color:var(--sub);margin-bottom:8px;">${escapeHtml(saved.name||gpSelectedPerson?.name||'')}님의 희망 선물</div>
     ${choices.map(choice=>`
       <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(255,255,255,0.04);border-radius:8px;margin-bottom:4px;">
-        <div style="width:22px;height:22px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;">${choice.slot}</div>
+        <div style="padding:4px 8px;border-radius:999px;background:rgba(61,111,232,0.18);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;">${escapeHtml(choiceLabelMap.get(choice.slot)||`그룹 ${choice.group||''}`)}</div>
         <span style="font-size:13px;">${escapeHtml(choice.name)}</span>
       </div>`).join('')}
     <div style="margin-top:14px;padding:14px;border-radius:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);">
@@ -3331,10 +3495,11 @@ function enterGiftPick(){
     try{
       const data=JSON.parse(saved);
       gpSelectedPerson=data.name?{id:data.personId||'',name:data.name}:null;
-      gpChoiceBySlot=[null,null,null];
+      gpChoiceBySlot=[null,null,null,null,null];
       (data.choices||[]).forEach(choice=>{
-        if(choice?.slot>=1 && choice.slot<=3){
-          gpChoiceBySlot[choice.slot-1]={slot:choice.slot,id:choice.prizeId,name:choice.name,tier:choice.tier};
+        if(choice?.slot>=1 && choice.slot<=GIFT_SLOT_RULES.length){
+          const rule=GIFT_SLOT_RULES.find(item=>item.slot===choice.slot);
+          gpChoiceBySlot[choice.slot-1]={slot:choice.slot,group:choice.group||rule?.group||'',id:choice.prizeId,name:choice.name,tier:choice.tier};
         }
       });
       gpSelectedGifts=getChoiceArrayFromSlots();
@@ -3743,10 +3908,10 @@ async function initLottery(){
     snapVal=snap.val();
     finalDrawVal=finalDrawSnap.val();
   }catch(e){}
-  if(snapVal&&snapVal.length>0){
+  if(snapVal&&snapVal.length>0 && !isLegacyLotteryPrizeList(snapVal)){
     lotteryPrizes=snapVal;
-  } else if(lotteryPrizes.length===0){
-    lotteryPrizes=DEFAULT_PRIZES.map(name=>({name,done:false,type:'normal'}));
+  } else if(lotteryPrizes.length===0 || isLegacyLotteryPrizeList(lotteryPrizes) || isLegacyLotteryPrizeList(snapVal)){
+    lotteryPrizes=buildDefaultLotteryPrizes();
     try{ await set(ref(db,'settings/prizes'),lotteryPrizes); }catch(e){}
   }
   renderPrizeList();
@@ -3767,7 +3932,7 @@ async function initLottery(){
 }
 
 function listenToHostState(){
-  replaceListener('hostState', onValue(ref(db,'state'),(snap)=>{
+  replaceListener('hostState', onValue(ref(db,'state'), async (snap)=>{
     const participant=getAuthenticatedParticipant();
     if(!participant){ showP('auth'); return; }
     const s=snap.val()||{};
@@ -3781,7 +3946,25 @@ function listenToHostState(){
 
     if(mode==='draft'){
       if(closed){ showP('closed'); }
-      else if(myVotedQs[qIdx]){ showP('done'); }
+      else if(myVotedQs[qIdx]){
+        let stillHasVote=true;
+        try{
+          const voteSnap=await get(ref(db,`votes/q${qIdx}`));
+          const currentVotes=Object.values(voteSnap.val()||{});
+          stillHasVote=currentVotes.some(v=>String(v?.voterId||'')===String(participant.id));
+        }catch(e){}
+        if(stillHasVote){
+          showP('done');
+        } else {
+          delete myVotedQs[qIdx];
+          try{
+            localStorage.setItem('tt_voted', JSON.stringify(myVotedQs));
+            localStorage.removeItem('tt_voted_name_'+qIdx);
+          }catch(e){}
+          showP('voting');
+          loadVoteQ(qIdx);
+        }
+      }
       else { showP('voting'); loadVoteQ(qIdx); }
     } else if(mode==='race'){
       const eligibleIds=Array.isArray(s.eligibleIds)?s.eligibleIds:[];
