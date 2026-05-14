@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>테크타카 6주년 🎉</title>
+<title>테크타카 6주년</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=DM+Sans:wght@400;700;900&family=Press+Start+2P&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
@@ -17,7 +17,7 @@
 body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-height:100vh;}
 .hidden{display:none!important;}
 
-/* ══ MAIN HUB ══ */
+/* ?먥븧 MAIN HUB ?먥븧 */
 #hub{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;background:linear-gradient(135deg,#0C2340 0%,#0d1f3c 60%,#1a1035 100%);position:relative;overflow:hidden;}
 #hub::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 70% 20%,rgba(61,111,232,0.15) 0%,transparent 60%);pointer-events:none;}
 .hub-year{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;letter-spacing:4px;color:var(--bl);text-transform:uppercase;margin-bottom:12px;}
@@ -37,7 +37,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
 .hub-card p{font-size:11px;color:rgba(255,255,255,0.4);line-height:1.6;}
 .hub-card .hc-badge{position:absolute;top:12px;right:12px;background:var(--green);color:#fff;font-size:9px;font-weight:700;padding:2px 8px;border-radius:100px;}
 
-/* ══ PIN MODAL ══ */
+/* ?먥븧 PIN MODAL ?먥븧 */
 #pin-modal{position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:200;display:flex;align-items:center;justify-content:center;}
 .pin-box{background:#0d1a2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:40px;text-align:center;width:320px;}
 .pin-box h3{font-size:18px;font-weight:700;margin-bottom:6px;}
@@ -48,7 +48,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
 .pin-btn:hover{background:var(--bl);}
 .pin-err{font-size:12px;color:var(--red);margin-top:8px;}
 
-/* ══ SHARED LAYOUT ══ */
+/* ?먥븧 SHARED LAYOUT ?먥븧 */
 .view-wrap{height:100vh;display:flex;flex-direction:column;overflow:hidden;}
 .top-bar{background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.07);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
 .top-bar .logo{font-family:'DM Sans',sans-serif;font-size:16px;font-weight:900;color:#fff;letter-spacing:0.02em;}
@@ -65,7 +65,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
 .nb-red{background:var(--red);color:#fff;}
 .nb-amber{background:var(--amber);color:#fff;}
 
-/* ══ PARTICIPANT ══ */
+/* ?먥븧 PARTICIPANT ?먥븧 */
 #p-view{background:var(--bg);color:var(--text);}
 #p-view .top-bar{background:var(--navy);border-bottom:none;}
 .p-body{max-width:480px;margin:0 auto;padding:20px;}
@@ -98,7 +98,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
 .status-sc h2{font-size:20px;font-weight:700;color:var(--text);margin-bottom:8px;}
 .status-sc p{font-size:13px;color:var(--sub);line-height:1.6;}
 
-/* ══ HOST DRAFT ══ */
+/* ?먥븧 HOST DRAFT ?먥븧 */
 #h-draft-view .h-body{padding:20px 24px;}
 .q-tabs{display:flex;gap:7px;margin-bottom:20px;flex-wrap:wrap;}
 .q-tab{padding:7px 16px;border-radius:100px;border:1.5px solid rgba(255,255,255,0.1);background:transparent;color:rgba(255,255,255,0.35);font-size:11px;font-weight:600;font-family:'Noto Sans KR',sans-serif;cursor:pointer;transition:all 0.2s;}
@@ -136,7 +136,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
 @keyframes fadeUp{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0);}}
 @keyframes slideDown{from{opacity:0;transform:translateY(-100%);}to{opacity:1;transform:translateY(0);}}
 
-/* 설정 패널 */
+/* ?ㅼ젙 ?⑤꼸 */
 .settings-panel{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:18px;margin-bottom:16px;}
 .settings-panel h3{font-size:11px;font-weight:700;color:rgba(255,255,255,0.4);letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;}
 .setting-row{display:flex;gap:8px;margin-bottom:8px;align-items:flex-start;}
@@ -164,8 +164,8 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
 .particle{position:absolute;border-radius:2px;animation:fall linear forwards;}
 @keyframes fall{0%{transform:translateY(-20px) rotate(0deg);opacity:1;}100%{transform:translateY(110vh) rotate(720deg);opacity:0;}}
 
-/* ══ RACE VIEW ══ */
-#h-race-view{background:#000080;} /* 하이퍼올림픽 진한 파랑 배경 */
+/* ?먥븧 RACE VIEW ?먥븧 */
+#h-race-view{background:#000080;} /* ?섏씠?쇱삱由쇳뵿 吏꾪븳 ?뚮옉 諛곌꼍 */
 #h-race-view .race-hub{flex:1;}
 .race-hub{padding:0;max-width:100%;display:flex;flex-direction:column;height:calc(100vh - 49px);}
 .race-round-tabs{display:flex;gap:8px;padding:8px 16px;background:#000060;}
@@ -173,7 +173,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
 .rt.active{background:#0000cc;border-color:#ffff00;color:#ffff00;}
 .rt.done{background:#000040;border-color:#222266;color:#333366;}
 
-/* ─ 하이퍼올림픽 스코어보드 ─ */
+/* ? ?섏씠?쇱삱由쇳뵿 ?ㅼ퐫?대낫??? */
 .scoreboard{background:#000000;border:3px solid #cccc00;border-bottom:none;display:flex;gap:0;font-family:'Press Start 2P',monospace;}
 .sb-left{flex:1;border-right:2px solid #444400;padding:10px 16px;}
 .sb-right{width:320px;padding:10px 16px;}
@@ -186,43 +186,43 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
 .sb-rank-name{color:#ffffff;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .sb-bet-count{font-size:9px;color:#00ff88;margin-top:6px;}
 
-/* ─ 아레나 (트랙 영역) ─ */
+/* ? ?꾨젅??(?몃옓 ?곸뿭) ? */
 .race-arena{flex:1;background:#000000;border:3px solid #cccc00;overflow:hidden;position:relative;}
 .race-track-area{padding:12px 0 8px 0;height:100%;display:flex;flex-direction:column;justify-content:space-around;}
 
-/* ─ 레인 ─ */
+/* ? ?덉씤 ? */
 .race-lane{display:flex;align-items:center;height:60px;position:relative;}
 .lane-label{width:130px;flex-shrink:0;text-align:right;padding-right:10px;font-family:'Press Start 2P',monospace;}
 .lane-name{font-size:9px;font-weight:700;color:#ffffff;line-height:1.6;}
 .lane-vehicle{font-size:8px;color:#8888ff;}
 
-/* ─ 트랙 ─ */
+/* ? ?몃옓 ? */
 .track{flex:1;height:52px;position:relative;overflow:hidden;
   background:linear-gradient(180deg,#006000 0%,#004400 45%,#003300 46%,#005000 100%);
   border-top:3px solid #ffffff;border-bottom:3px solid #ffffff;}
-/* 흰색 레인 라인 */
+/* ?곗깋 ?덉씤 ?쇱씤 */
 .track::before{content:'';position:absolute;inset:0;
   background:repeating-linear-gradient(90deg,transparent,transparent 79px,rgba(255,255,255,0.15) 79px,rgba(255,255,255,0.15) 80px);}
 
-/* 결승선 */
+/* 寃곗듅??*/
 .finish-line{position:absolute;right:0;top:0;bottom:0;width:20px;
   background:repeating-linear-gradient(180deg,#fff 0px,#fff 6px,#000 6px,#000 12px);
   opacity:1;z-index:5;}
 
-/* 레이서 이모지 */
+/* ?덉씠???대え吏 */
 .racer{position:absolute;top:50%;transform:translateY(-50%);font-size:30px;line-height:1;
   transition:left 0.25s linear;left:2%;z-index:3;filter:drop-shadow(0 0 4px rgba(255,255,0,0.6));}
 .racer.walking{font-size:22px;}
 
-/* 순위 배지 */
+/* ?쒖쐞 諛곗? */
 .rank-badge-lane{position:absolute;right:24px;top:50%;transform:translateY(-50%);
   width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;
   font-family:'Press Start 2P',monospace;font-size:11px;font-weight:900;
   opacity:0;transition:opacity 0.3s;z-index:10;border:2px solid #000;}
 .rank-badge-lane.show{opacity:1;}
 
-/* ─ 베팅 현황 (스코어보드 안에 통합) ─ */
-.betting-area{display:none;} /* 스코어보드로 통합, 별도 영역 제거 */
+/* ? 踰좏똿 ?꾪솴 (?ㅼ퐫?대낫???덉뿉 ?듯빀) ? */
+.betting-area{display:none;} /* ?ㅼ퐫?대낫?쒕줈 ?듯빀, 蹂꾨룄 ?곸뿭 ?쒓굅 */
 .bet-bars{display:flex;flex-direction:column;gap:3px;}
 .bet-bar-item{display:flex;align-items:center;gap:6px;font-family:'Press Start 2P',monospace;font-size:7px;}
 .bet-name{width:70px;color:#aaaaff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -230,10 +230,10 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
 .bet-fill{height:100%;background:linear-gradient(90deg,#0000cc,#4444ff);transition:width 0.5s ease;}
 .bet-cnt{width:20px;text-align:right;color:#ffff00;}
 
-/* 레이스 컨트롤 */
+/* ?덉씠??而⑦듃濡?*/
 .race-controls{padding:6px 16px;background:#000060;}
 
-/* ─ 결과 오버레이 ─ */
+/* ? 寃곌낵 ?ㅻ쾭?덉씠 ? */
 #race-result-ov{position:fixed;inset:0;background:#000000;z-index:150;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;border:4px solid #cccc00;}
 .rr-inner{text-align:center;max-width:600px;width:100%;font-family:'Press Start 2P',monospace;}
 .rr-title{font-size:18px;color:#FFD700;margin-bottom:24px;animation:blink 0.8s step-end infinite;}
@@ -245,7 +245,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
 .rr-better-tag{background:#000033;border:1px solid #4444ff;border-radius:3px;padding:6px 14px;font-size:11px;font-weight:600;font-family:'Noto Sans KR',sans-serif;}
 .rr-nav{display:flex;gap:10px;justify-content:center;}
 
-/* 참여자 레이스 베팅 화면 */
+/* 李몄뿬???덉씠??踰좏똿 ?붾㈃ */
 .race-bet-card{background:#000040;border:2px solid #4444ff;border-radius:4px;padding:20px;margin-bottom:14px;}
 .race-bet-title{font-family:'Press Start 2P',monospace;font-size:9px;color:#8888ff;margin-bottom:14px;line-height:1.8;}
 .racer-options{display:flex;flex-direction:column;gap:8px;}
@@ -257,7 +257,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
 .racer-opt .ro-name{font-size:14px;font-weight:700;}
 .racer-opt .ro-title{font-size:11px;color:#8888ff;}
 
-/* 진행자 레이서 설정 */
+/* 吏꾪뻾???덉씠???ㅼ젙 */
 .racer-setup{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
 .racer-row{display:flex;gap:6px;align-items:center;background:rgba(255,255,255,0.04);border-radius:8px;padding:8px 10px;}
 .racer-row .rv-emoji-sel{font-size:20px;width:32px;text-align:center;}
@@ -265,7 +265,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
 .racer-row input:focus{border-bottom-color:var(--bl);}
 .racer-row input::placeholder{color:rgba(255,255,255,0.25);}
 
-/* ══ LOTTERY ══ */
+/* ?먥븧 LOTTERY ?먥븧 */
 #lottery-view{background:#0d0d1a;}
 .lottery-body{padding:24px;max-width:800px;margin:0 auto;}
 .lottery-ball-area{background:radial-gradient(ellipse at center,#1a1a2e 0%,#0d0d1a 100%);border:2px solid rgba(255,255,255,0.08);border-radius:16px;padding:32px;text-align:center;margin-bottom:20px;min-height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
@@ -287,7 +287,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
 .prize-item.active{background:rgba(30,77,183,0.2);border-color:var(--bl);}
 .lottery-side{display:flex;flex-direction:column;gap:12px;}
 
-/* ══ MESSAGE ══ */
+/* ?먥븧 MESSAGE ?먥븧 */
 .msg-section{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:16px;margin-top:18px;}
 .msg-title{font-size:11px;font-weight:800;color:rgba(255,255,255,0.9);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;}
 .msg-help{font-size:12px;color:rgba(255,255,255,0.42);line-height:1.6;margin-bottom:12px;}
@@ -342,7 +342,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
   .message-stage-card{padding:30px 26px;}
 }
 
-/* 경품 추가 */
+/* 寃쏀뭹 異붽? */
 .add-prize{display:flex;gap:6px;margin-bottom:10px;}
 .add-prize input{flex:1;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:7px;color:#fff;font-family:'Noto Sans KR',sans-serif;font-size:12px;padding:8px 10px;outline:none;}
 .add-prize input:focus{border-color:var(--bl);}
@@ -357,63 +357,63 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
 </head>
 <body>
 
-<!-- ══ MAIN HUB ══ -->
+<!-- ?먥븧 MAIN HUB ?먥븧 -->
 <div id="hub">
   <div class="hub-year">TECHTAKA · 창립 6주년</div>
-  <div class="hub-title">To keep the<br><span>world in motion</span> 🎉</div>
-  <div class="hub-sub">TECHTAKA · 2020 → 2026</div>
+  <div class="hub-title">To keep the<br><span>world in motion</span></div>
+  <div class="hub-sub">TECHTAKA · 2020 ~ 2026</div>
   <div class="hub-cards">
     <div class="hub-card hub-card-large" onclick="enterParticipantHub()">
-      <div class="hc-icon">👥</div>
+      <div class="hc-icon">🙋</div>
       <h2>참여자</h2>
-      <p>투표·베팅·선물 선택</p>
+      <p>투표 · 베팅 · 선물 선택</p>
     </div>
     <div class="hub-card hub-card-large" onclick="enterAdminPin()">
-      <div class="hc-icon">⚙️</div>
+      <div class="hc-icon">🎛️</div>
       <h2>관리자</h2>
-      <p>행사 운영·설정</p>
+      <p>행사 운영 · 설정</p>
       <div class="hc-badge">PIN</div>
     </div>
   </div>
 </div>
 
-<!-- ══ PARTICIPANT HUB ══ -->
+<!-- ?먥븧 PARTICIPANT HUB ?먥븧 -->
 <div id="participant-hub" class="hidden">
   <div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;background:linear-gradient(135deg,#0C2340 0%,#0d1f3c 60%,#1a1035 100%);">
-    <div style="font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;letter-spacing:4px;color:var(--bl);text-transform:uppercase;margin-bottom:12px;">TECHTAKA · 6TH</div>
+    <div style="font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;letter-spacing:4px;color:var(--bl);text-transform:uppercase;margin-bottom:12px;">TECHTAKA 쨌 6TH</div>
     <div style="font-family:'DM Sans',sans-serif;font-size:36px;font-weight:900;text-align:center;margin-bottom:32px;">참여자 메뉴</div>
     <div class="hub-cards">
       <div class="hub-card" onclick="enterParticipant()">
-        <div class="hc-icon">🎮</div>
+        <div class="hc-icon">🗳️</div>
         <h2>지금 참여하기</h2>
-        <p>투표·베팅<br>진행 중인 세션 참여</p>
+        <p>투표 · 베팅<br>진행 중인 세션 참여</p>
       </div>
       <div class="hub-card" onclick="enterGiftPick()">
         <div class="hc-icon">🎁</div>
         <h2>선물 선택</h2>
-        <p>희망 선물을<br>미리 골라두세요</p>
-        <div class="hc-badge" style="background:var(--purple);">사전오픈</div>
+        <p>희망 선물<br>미리 골라주세요</p>
+        <div class="hc-badge" style="background:var(--green);">사전 선택</div>
       </div>
     </div>
     <button class="back-btn" onclick="goHome()" style="margin-top:24px;padding:10px 24px;">← 홈으로</button>
   </div>
 </div>
 
-<!-- ══ ADMIN HUB ══ -->
+<!-- ?먥븧 ADMIN HUB ?먥븧 -->
 <div id="admin-hub" class="hidden">
   <div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;background:linear-gradient(135deg,#0C2340 0%,#0d1f3c 60%,#1a1035 100%);">
     <div style="font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;letter-spacing:4px;color:var(--bl);text-transform:uppercase;margin-bottom:8px;">TECHTAKA · 관리자</div>
-    <!-- 세션 상태 표시 -->
+    <!-- ?몄뀡 ?곹깭 ?쒖떆 -->
     <div id="admin-session-status" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:12px 24px;margin-bottom:24px;text-align:center;min-width:280px;">
       <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:4px;">현재 세션 상태</div>
       <div id="admin-status-text" style="font-size:14px;font-weight:700;color:#FFD700;">확인 중...</div>
     </div>
-    <!-- 세션 시작/종료 -->
+    <!-- ?몄뀡 ?쒖옉/醫낅즺 -->
     <div style="display:flex;gap:10px;margin-bottom:28px;">
       <button onclick="adminStartSession()" style="padding:12px 28px;background:var(--green);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;font-family:'Noto Sans KR',sans-serif;cursor:pointer;">▶ 세션 시작</button>
       <button onclick="adminEndSession()" style="padding:12px 28px;background:var(--red);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;font-family:'Noto Sans KR',sans-serif;cursor:pointer;">■ 세션 종료</button>
     </div>
-    <!-- 기능 카드 -->
+    <!-- 湲곕뒫 移대뱶 -->
     <div class="hub-cards">
       <div class="hub-card" onclick="show('h-draft-view');initDraftHost();">
         <div class="hc-icon">🗳️</div>
@@ -423,7 +423,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
       <div class="hub-card" onclick="show('h-race-view');initRaceHost();">
         <div class="hc-icon">🏇</div>
         <h2>레이스</h2>
-        <p>레트로 레이스<br>진행자 화면</p>
+        <p>베팅형 레이스<br>진행자 화면</p>
       </div>
       <div class="hub-card" onclick="show('lottery-view');initLottery();">
         <div class="hc-icon">🎰</div>
@@ -436,9 +436,9 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
         <p>회차별 결과<br>베팅 성공자 확인</p>
       </div>
       <div class="hub-card" onclick="enterMessagesView()">
-        <div class="hc-icon">💌</div>
+        <div class="hc-icon">💬</div>
         <h2>한마디</h2>
-        <p>6주년 메시지<br>모아보기/행사 화면</p>
+        <p>6주년 메시지<br>모아보기 / 행사 화면</p>
       </div>
     </div>
     <button class="back-btn" onclick="goHome()" style="margin-top:24px;padding:10px 24px;">← 홈으로</button>
@@ -448,80 +448,80 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
 <!-- PIN MODAL -->
 <div id="pin-modal" class="hidden">
   <div class="pin-box">
-    <h3>🔐 진행자 인증</h3>
+    <h3>관리자 접근</h3>
     <p>PIN 번호를 입력해주세요</p>
     <input class="pin-input" id="pin-input" type="password" maxlength="4" placeholder="••••" oninput="checkPin()">
     <div class="pin-err hidden" id="pin-err">PIN이 올바르지 않습니다</div>
   </div>
 </div>
 
-<!-- ══ PARTICIPANT VIEW ══ -->
+<!-- ?먥븧 PARTICIPANT VIEW ?먥븧 -->
 <div id="p-view" class="hidden view-wrap">
   <div class="top-bar">
     <div class="logo">TECHTAKA <span>6TH</span></div>
     <button class="back-btn" onclick="goParticipantHome()">← 홈</button>
   </div>
   <div class="p-body">
-    <!-- 대기 -->
+    <!-- ?湲?-->
     <div id="p-waiting" class="status-sc">
       <div class="bi">⏳</div>
       <h2>잠시만 기다려주세요</h2>
       <p>진행자가 세션을 시작하면<br>화면이 나타납니다</p>
     </div>
-    <!-- 드래프트 투표 -->
+    <!-- ?쒕옒?꾪듃 ?ы몴 -->
     <div id="p-voting" class="hidden">
       <div class="q-card">
         <div class="q-num" id="p-q-num">QUESTION 1</div>
         <div class="q-text" id="p-q-text"></div>
       </div>
-      <div class="sec-lbl">동료를 선택하세요</div>
+      <div class="sec-lbl">동료를 선택해주세요</div>
       <div class="search-w"><span class="si">🔍</span><input type="text" id="search-input" placeholder="이름 검색..." oninput="filterPeople(this.value)"></div>
       <div class="ppl-list" id="people-list"></div>
-      <div id="sel-prev" class="sel-prev hidden">✅ <span id="sel-name"></span>을(를) 선택했습니다</div>
+      <div id="sel-prev" class="sel-prev hidden"><span id="sel-name"></span> 님을 선택했습니다</div>
       <div class="sec-lbl">선택 이유 <span style="font-weight:400;color:var(--sub);letter-spacing:0;">(선택사항)</span></div>
       <textarea class="reason-ta" id="reason-input" placeholder="왜 이 동료를 선택했나요?"></textarea>
       <button class="sub-btn" id="submit-btn" onclick="submitVote()" disabled>투표하기</button>
     </div>
-    <!-- 드래프트 완료 -->
+    <!-- ?쒕옒?꾪듃 ?꾨즺 -->
     <div id="p-done" class="status-sc hidden">
-      <div class="bi">🎉</div><h2>투표 완료!</h2>
-      <p>진행자 화면에서<br>결과를 함께 확인해주세요</p>
+      <div class="bi">✅</div><h2>투표 완료!</h2>
+      <p>진행자 화면에서<br>결과 공개를 확인해주세요</p>
     </div>
-    <!-- 마감 -->
+    <!-- 留덇컧 -->
     <div id="p-closed" class="status-sc hidden">
-      <div class="bi">🔒</div><h2>투표가 마감됐습니다</h2>
+      <div class="bi">🔒</div><h2>투표가 마감되었습니다</h2>
       <p>잠시 후 결과가 공개됩니다</p>
     </div>
-    <!-- 레이스 베팅 -->
+    <!-- ?덉씠??踰좏똿 -->
     <div id="p-race" class="hidden">
       <div class="race-bet-card">
-        <div class="race-bet-title">🏁 WHO WILL WIN?<br>1등할 레이서를 선택하세요!</div>
+        <div class="race-bet-title">🏁 WHO WILL WIN?<br>1등할 레이서를 선택해주세요</div>
         <div class="racer-options" id="racer-options"></div>
       </div>
       <div id="race-name-wrap" style="margin-bottom:12px;">
         <div class="sec-lbl">내 이름</div>
-        <input type="text" id="race-name-input" class="reason-ta" style="height:44px;resize:none;" placeholder="이름을 입력하세요">
+        <input type="text" id="race-name-input" class="reason-ta" style="height:44px;resize:none;" placeholder="이름을 입력해주세요">
       </div>
       <button class="sub-btn" id="race-bet-btn" onclick="submitRaceBet()" disabled>베팅하기</button>
     </div>
-    <!-- 레이스 완료 -->
+    <!-- ?덉씠???꾨즺 -->
     <div id="p-race-done" class="status-sc hidden">
       <div class="bi">🏁</div><h2>베팅 완료!</h2>
-      <p>화면을 보면서<br>레이스를 응원해주세요! 🎉</p>
+      <p>화면을 보면서<br>레이스를 응원해주세요!</p>
     </div>
-    <!-- 종료 -->
+    <!-- 醫낅즺 -->
     <div id="p-ended" class="status-sc hidden">
-      <div class="bi">🏁</div><h2>모든 세션이 끝났습니다</h2>
-      <p>테크타카 6주년을<br>함께해주셔서 감사합니다! 🎊</p>
+      <div class="bi">🎉</div><h2>모든 세션이 종료되었습니다</h2>
+      <p>테크타카 6주년 행사에<br>함께해주셔서 감사합니다</p>
     </div>
   </div>
 </div>
 
-<!-- ══ HOST DRAFT VIEW ══ -->
+<!-- ?먥븧 HOST DRAFT VIEW ?먥븧 -->
 <div id="h-draft-view" class="hidden view-wrap" style="background:#0A0F1A;">
   <div class="top-bar">
     <div class="logo">TECHTAKA <span>DRAFT</span></div>
-    <div class="nav-btns">
+      <div class="nav-btns">
       <button class="nb nb-ghost" onclick="resetCurrentQ()">초기화</button>
       <button class="nb nb-primary" onclick="startQuestion()">▶ 시작</button>
       <button class="nb nb-amber" onclick="closeVoting()">🔒 마감</button>
@@ -530,31 +530,31 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
     </div>
   </div>
   <div class="h-body">
-    <!-- 설정 패널 -->
+    <!-- ?ㅼ젙 ?⑤꼸 -->
     <div class="settings-panel">
-      <h3>⚙️ 설정</h3>
+      <h3>운영 설정</h3>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
         <div>
           <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-bottom:6px;">전체 참석자 명단 (줄바꿈)</div>
-          <div style="font-size:9px;color:rgba(255,255,255,0.25);margin-bottom:4px;">이름 선택·추첨·선물 선택에 사용</div>
+          <div style="font-size:9px;color:rgba(255,255,255,0.25);margin-bottom:4px;">이름 선택 · 추첨 · 선물 선택에 사용</div>
           <div class="setting-row">
-            <textarea id="people-textarea" rows="5" placeholder="김민준&#10;이서연&#10;박지훈&#10;..."></textarea>
+            <textarea id="people-textarea" rows="5" placeholder="김민준|4821&#10;이서연|1934&#10;박지훈|7720&#10;..."></textarea>
             <button class="save-btn" onclick="savePeople()">저장</button>
           </div>
         </div>
         <div>
           <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-bottom:6px;">드래프트 투표 후보 (줄바꿈)</div>
-          <div style="font-size:9px;color:rgba(255,255,255,0.25);margin-bottom:4px;">투표에 나타날 후보 인물</div>
+          <div style="font-size:9px;color:rgba(255,255,255,0.25);margin-bottom:4px;">투표 대상이 되는 후보 명단</div>
           <div class="setting-row">
             <textarea id="candidates-textarea" rows="5" placeholder="김민준&#10;이서연&#10;박지훈&#10;..."></textarea>
             <button class="save-btn" onclick="saveCandidates()">저장</button>
           </div>
         </div>
         <div>
-          <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-bottom:6px;">질문 목록 (줄바꿈, 최대 5개)</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-bottom:6px;">질문 목록 (줄바꿈 · 최대 5개)</div>
           <div style="font-size:9px;color:rgba(255,255,255,0.25);margin-bottom:4px;">&nbsp;</div>
           <div class="setting-row">
-            <textarea id="questions-textarea" rows="5" placeholder="좀비 아포칼립스에서 살아남을 것 같은 동료는?&#10;무인도에 데려갈 동료는?&#10;다음 CEO가 될 것 같은 동료는?"></textarea>
+            <textarea id="questions-textarea" rows="5" placeholder="좀비 아포칼립스에서 마지막까지 살아남을 것 같은 동료는?&#10;무인도에 데려가고 싶은 동료는?&#10;다음 CEO가 될 것 같은 동료는?"></textarea>
             <button class="save-btn" onclick="saveQuestions()">저장</button>
           </div>
         </div>
@@ -564,7 +564,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
     <div class="hd-grid">
       <div class="panel">
         <div class="hq-lbl" id="hq-lbl">QUESTION 1</div>
-        <div class="hq-txt" id="hq-txt">질문을 시작하세요</div>
+        <div class="hq-txt" id="hq-txt">질문을 시작해주세요</div>
         <div class="stats-row">
           <div class="stat-box"><div class="stat-num" id="total-h">0</div><div class="stat-lbl">총 투표</div></div>
           <div class="stat-box"><div class="stat-num" id="unique-h">0</div><div class="stat-lbl">후보 인원</div></div>
@@ -590,55 +590,55 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
     <div class="rv-votes" id="rv-votes"></div>
     <div class="rv-reasons" id="rv-reasons"></div>
     <div class="rv-nav">
-      <button class="rv-btn rv-btn-p" id="rv-next-btn" onclick="revealNext()">다음 순위</button>
+       <button class="rv-btn rv-btn-p" id="rv-next-btn" onclick="revealNext()">다음 순위</button>
     </div>
   </div>
 </div>
 <div id="confetti-wrap"></div>
 
-<!-- ══ HOST RACE VIEW ══ -->
+<!-- ?먥븧 HOST RACE VIEW ?먥븧 -->
 <div id="h-race-view" class="hidden" style="background:#000080;height:100vh;display:flex;flex-direction:column;overflow:hidden;">
-  <!-- 상단 컨트롤 바 -->
+  <!-- ?곷떒 而⑦듃濡?諛?-->
   <div style="background:#000060;border-bottom:3px solid #cccc00;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
-    <div style="font-family:'Press Start 2P',monospace;font-size:11px;color:#ffff00;">🏁 TECHTAKA RACE</div>
+    <div style="font-family:'Press Start 2P',monospace;font-size:11px;color:#ffff00;">TECHTAKA RACE</div>
     <div style="display:flex;gap:8px;">
-      <button class="nb nb-ghost" onclick="openRacerSettings()">⚙️ 레이서 설정</button>
+      <button class="nb nb-ghost" onclick="openRacerSettings()">⚙ 레이서 설정</button>
       <button class="nb nb-primary" onclick="openRaceBetting()">🎯 베팅 시작</button>
       <button class="nb nb-amber" onclick="closeRaceBetting()">🔒 베팅 마감</button>
       <button class="nb nb-green" onclick="startRace()">🏁 레이스 시작</button>
-      <button class="nb nb-red" onclick="resetRaceSession()">🗑 초기화</button>
+      <button class="nb nb-red" onclick="resetRaceSession()">🧹 초기화</button>
       <button class="back-btn" onclick="goHub()">← 홈</button>
     </div>
   </div>
 
-  <!-- 레이서 설정 패널 -->
+  <!-- ?덉씠???ㅼ젙 ?⑤꼸 -->
   <div id="racer-settings-panel" class="settings-panel hidden" style="flex-shrink:0;">
-    <h3>🏇 레이서 설정 (5명)</h3>
+    <h3>레이서 설정</h3>
     <div class="racer-setup" id="racer-setup-rows"></div>
     <button class="save-btn" style="width:100%" onclick="saveRacers()">레이서 저장</button>
   </div>
 
-  <!-- 캔버스 영역 -->
+  <!-- 罹붾쾭???곸뿭 -->
   <div style="flex:1;position:relative;overflow:auto;background:#000080;">
     <canvas id="race-canvas" style="display:block;image-rendering:pixelated;image-rendering:crisp-edges;"></canvas>
-    <!-- 이벤트 배너 -->
+    <!-- ?대깽??諛곕꼫 -->
     <div id="race-event-banner" style="display:none;position:absolute;top:45%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.92);border:3px solid #ffff00;padding:14px 28px;font-family:'Press Start 2P',monospace;font-size:16px;color:#ffff00;text-align:center;z-index:20;white-space:nowrap;pointer-events:none;"></div>
-    <!-- 스코어보드 오버레이 -->
+    <!-- ?ㅼ퐫?대낫???ㅻ쾭?덉씠 -->
     <div id="race-scoreboard" style="position:absolute;top:8px;right:8px;background:rgba(0,0,20,0.88);border:2px solid #cccc00;padding:10px 14px;font-family:'Press Start 2P',monospace;min-width:180px;z-index:15;pointer-events:none;">
       <div id="sb-logos" style="margin-bottom:5px;"></div>
       <div id="race-timer" style="font-size:20px;color:#FFD700;letter-spacing:3px;margin-bottom:6px;">READY</div>
       <div style="font-size:7px;color:#888800;letter-spacing:1px;margin-bottom:4px;">RANKING</div>
       <div id="sb-rank-board"></div>
     </div>
-    <!-- 베팅 오버레이 -->
+    <!-- 踰좏똿 ?ㅻ쾭?덉씠 -->
     <div id="race-bet-overlay" style="position:absolute;bottom:8px;left:8px;background:rgba(0,0,20,0.88);border:2px solid #cccc00;padding:8px 12px;font-family:'Press Start 2P',monospace;min-width:160px;z-index:15;pointer-events:none;">
-      <div style="font-size:7px;color:#888800;margin-bottom:4px;">BETTING · <span id="bet-total-count" style="color:#00ff88;">0</span>명</div>
+      <div style="font-size:7px;color:#888800;margin-bottom:4px;">BETTING 쨌 <span id="bet-total-count" style="color:#00ff88;">0</span>紐?/div>
       <div id="bet-bars"></div>
     </div>
   </div>
 </div>
 
-<!-- ══ RACE HISTORY VIEW ══ -->
+<!-- ?먥븧 RACE HISTORY VIEW ?먥븧 -->
 <div id="race-history-view" class="hidden view-wrap" style="background:#0A0F1A;">
   <div class="top-bar">
     <div class="logo">TECHTAKA <span>RACE 기록</span></div>
@@ -648,7 +648,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
   </div>
   <div style="max-width:700px;margin:0 auto;padding:20px;">
     <div style="display:flex;justify-content:flex-end;margin-bottom:12px;">
-      <button onclick="clearRaceHistory()" style="padding:8px 16px;background:rgba(217,48,37,0.15);border:1px solid var(--red);color:var(--red);border-radius:8px;font-size:12px;font-weight:700;font-family:'Noto Sans KR',sans-serif;cursor:pointer;">🗑 기록 초기화</button>
+      <button onclick="clearRaceHistory()" style="padding:8px 16px;background:rgba(217,48,37,0.15);border:1px solid var(--red);color:var(--red);border-radius:8px;font-size:12px;font-weight:700;font-family:'Noto Sans KR',sans-serif;cursor:pointer;">🧹 기록 초기화</button>
     </div>
     <div id="race-history-list" style="display:flex;flex-direction:column;gap:14px;">
       <div style="text-align:center;padding:40px;color:rgba(255,255,255,0.2);font-size:13px;">레이스 기록이 없습니다</div>
@@ -656,14 +656,14 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
   </div>
 </div>
 
-<!-- ══ GIFT PICK VIEW ══ -->
+<!-- ?먥븧 GIFT PICK VIEW ?먥븧 -->
 <div id="gift-pick-view" class="hidden view-wrap" style="background:#0A0F1A;">
   <div class="top-bar">
     <div class="logo">TECHTAKA <span>선물 선택</span></div>
     <button class="back-btn" onclick="goParticipantHome()">← 홈</button>
   </div>
   <div class="p-body" style="max-width:520px;">
-    <!-- 이름 선택 단계 -->
+    <!-- ?대쫫 ?좏깮 ?④퀎 -->
     <div id="gp-step-name">
       <div class="q-card" style="margin-bottom:16px;">
         <div class="q-num">STEP 1</div>
@@ -677,12 +677,12 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
       <button class="sub-btn" id="gp-next-btn" onclick="gpGoStep2()" disabled>다음 →</button>
     </div>
 
-    <!-- 선물 선택 단계 -->
+    <!-- ?좊Ъ ?좏깮 ?④퀎 -->
     <div id="gp-step-gifts" class="hidden">
       <div class="q-card" style="margin-bottom:16px;">
         <div class="q-num">STEP 2</div>
-        <div class="q-text" id="gp-title">희망 선물을 순서대로 선택하고 6주년 한마디를 남겨주세요</div>
-        <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:6px;">최대 5개 · 먼저 선택할수록 우선 적용</div>
+        <div class="q-text" id="gp-title">희망 선물을 우선순위대로 선택하고 6주년 메시지를 남겨주세요</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:6px;">1~3순위 기준으로 우선 배정됩니다</div>
       </div>
       <div id="gp-selected-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:14px;min-height:40px;"></div>
       <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.3);letter-spacing:1px;margin-bottom:8px;">선택 가능한 선물</div>
@@ -701,7 +701,6 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
         <div class="msg-options">
           <label class="msg-option"><input type="radio" name="gp-display-mode" value="named" onchange="gpSetDisplayMode(this.value)" checked> 실명 공개</label>
           <label class="msg-option"><input type="radio" name="gp-display-mode" value="anonymous" onchange="gpSetDisplayMode(this.value)"> 익명 공개</label>
-          <label class="msg-option"><input type="radio" name="gp-display-mode" value="private" onchange="gpSetDisplayMode(this.value)"> 비공개 저장</label>
         </div>
       </div>
       <div style="display:flex;gap:8px;">
@@ -710,7 +709,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
       </div>
     </div>
 
-    <!-- 완료 단계 -->
+    <!-- ?꾨즺 ?④퀎 -->
     <div id="gp-step-done" class="hidden">
       <div class="status-sc">
         <div class="bi">🎁</div>
@@ -723,13 +722,13 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
   </div>
 </div>
 
-<!-- ══ MESSAGE ADMIN VIEW ══ -->
+<!-- ?먥븧 MESSAGE ADMIN VIEW ?먥븧 -->
 <div id="messages-view" class="hidden view-wrap" style="background:#0A0F1A;">
   <div class="top-bar">
     <div class="logo">TECHTAKA <span>한마디</span></div>
     <div class="nav-btns">
-      <button class="nb nb-primary" onclick="showRandomMessageStage()">🎲 랜덤 카드</button>
-      <button class="nb nb-ghost" onclick="showKeywordCloudStage()">☁️ 키워드 월</button>
+      <button class="nb nb-primary" onclick="showRandomMessageStage()">랜덤 카드</button>
+      <button class="nb nb-ghost" onclick="showKeywordCloudStage()">키워드 보기</button>
       <button class="back-btn" onclick="goHub()">← 홈</button>
     </div>
   </div>
@@ -749,25 +748,25 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
         </div>
         <div class="message-preview" id="message-preview"></div>
         <div class="message-admin-actions">
-          <button class="nb nb-ghost" id="msg-feature-btn" onclick="toggleSelectedMessageFeatured()">⭐ 진행자 픽</button>
-          <button class="nb nb-red" id="msg-hide-btn" onclick="toggleSelectedMessageHidden()">🙈 숨기기</button>
-          <button class="nb nb-primary" onclick="showSelectedMessageStage()">🖥️ 행사 화면</button>
-          <button class="nb nb-green" onclick="showRandomMessageStage()">🎉 랜덤 뽑기</button>
+          <button class="nb nb-ghost" id="msg-feature-btn" onclick="toggleSelectedMessageFeatured()">진행자 픽</button>
+          <button class="nb nb-red" id="msg-hide-btn" onclick="toggleSelectedMessageHidden()">숨기기</button>
+          <button class="nb nb-primary" onclick="showSelectedMessageStage()">행사 화면 보기</button>
+          <button class="nb nb-green" onclick="showRandomMessageStage()">랜덤 메시지</button>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══ MESSAGE STAGE VIEW ══ -->
+<!-- ?먥븧 MESSAGE STAGE VIEW ?먥븧 -->
 <div id="message-stage-view" class="hidden">
   <div class="message-stage">
     <div class="top-bar" style="background:rgba(0,0,0,0.24);border-bottom:none;">
       <div class="logo">TECHTAKA <span>MESSAGE</span></div>
       <div class="nav-btns">
-        <button class="nb nb-primary" onclick="showRandomMessageStage()">🎲 랜덤 카드</button>
-        <button class="nb nb-ghost" onclick="showNextRandomStageMessage()">➡️ 다음</button>
-        <button class="nb nb-ghost" onclick="showKeywordCloudStage()">☁️ 키워드 월</button>
+        <button class="nb nb-primary" onclick="showRandomMessageStage()">랜덤 카드</button>
+        <button class="nb nb-ghost" onclick="showNextRandomStageMessage()">다음 메시지</button>
+        <button class="nb nb-ghost" onclick="showKeywordCloudStage()">키워드 보기</button>
         <button class="back-btn" onclick="backToMessagesView()">← 목록</button>
       </div>
     </div>
@@ -775,7 +774,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
   </div>
 </div>
 
-<!-- ══ LOTTERY VIEW ══ -->
+<!-- ?먥븧 LOTTERY VIEW ?먥븧 -->
 <div id="lottery-view" class="hidden view-wrap">
   <div class="top-bar" style="background:rgba(0,0,0,0.5);">
     <div class="logo">TECHTAKA <span>추첨</span></div>
@@ -786,24 +785,24 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
   <div class="lottery-body">
     <div class="lottery-grid">
       <div>
-        <!-- 당첨 화면 -->
+        <!-- ?뱀꺼 ?붾㈃ -->
         <div class="lottery-ball-area" id="lottery-display">
           <div style="font-size:48px;margin-bottom:12px;">🎰</div>
           <div style="font-size:16px;color:rgba(255,255,255,0.3);">경품을 선택하고 추첨을 시작하세요</div>
         </div>
-        <!-- 스핀 슬롯 -->
+        <!-- ?ㅽ? ?щ’ -->
         <div class="lottery-spin" id="lottery-spin-wrap" style="display:none;">
           <div class="lottery-spin-inner" id="lottery-spin-inner"></div>
         </div>
         <div style="display:flex;gap:8px;margin-bottom:16px;">
           <button class="nb nb-green" style="flex:1;padding:14px;" onclick="startLottery()" id="lottery-start-btn" disabled>🎰 추첨 시작</button>
         </div>
-        <!-- 경품 목록 -->
+        <!-- 寃쏀뭹 紐⑸줉 -->
         <div class="panel">
           <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.4);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;">경품 목록</div>
           <div style="margin-bottom:10px;">
             <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-bottom:6px;">경품 일괄 입력 (줄바꿈으로 구분)</div>
-            <textarea id="prize-bulk-input" rows="5" style="width:100%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#fff;font-family:'Noto Sans KR',sans-serif;font-size:12px;padding:8px 10px;outline:none;resize:vertical;" placeholder="배민 상품권 3만원&#10;루메나 가습기 (중형) 💧&#10;저주파 마사지기 ⚡&#10;..."></textarea>
+            <textarea id="prize-bulk-input" rows="5" style="width:100%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#fff;font-family:'Noto Sans KR',sans-serif;font-size:12px;padding:8px 10px;outline:none;resize:vertical;" placeholder="올리브영 3만원권&#10;루메나 MIST POT&#10;저주파 마사지기&#10;..."></textarea>
             <div style="display:flex;gap:6px;margin-top:6px;">
               <select id="prize-type-select" style="padding:7px 10px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:7px;color:#fff;font-size:12px;font-family:'Noto Sans KR',sans-serif;cursor:pointer;">
                 <option value="normal">🎁 일반</option>
@@ -816,7 +815,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
         </div>
       </div>
       <div class="lottery-side">
-        <!-- 참여자 풀 -->
+        <!-- 李몄뿬??? -->
         <div class="panel">
           <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.4);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;">추첨 참여자 풀</div>
           <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:8px;"><span id="pool-count" style="color:var(--bl);font-weight:700;">0</span>명 등록됨</div>
@@ -825,7 +824,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
           </div>
           <div id="pool-preview" style="font-size:11px;color:rgba(255,255,255,0.3);max-height:120px;overflow-y:auto;line-height:2;"></div>
         </div>
-        <!-- 당첨 기록 -->
+        <!-- ?뱀꺼 湲곕줉 -->
         <div class="panel">
           <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.4);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;">당첨 기록</div>
           <div id="winner-log" style="display:flex;flex-direction:column;gap:6px;max-height:200px;overflow-y:auto;">
@@ -838,6 +837,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
 </div>
 
 <script>
+
 const firebaseConfig = {
   apiKey: "AIzaSyDHalgC6oJ27fW1qer7_QQaSXKV1uI7DZs",
   authDomain: "techtaka-draft.firebaseapp.com",
@@ -863,10 +863,10 @@ function onValue(r, cb){
 }
 
 
-// ── 로고 이미지 ──
+// ?? 濡쒓퀬 ?대?吏 ??
 const LOGO_TECHTAKA = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAO8AAAAwCAYAAAD5GC1DAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAZdEVYdFNvZnR3YXJlAEFkb2JlIEltYWdlUmVhZHlxyWU8AAAAIXRFWHRDcmVhdGlvbiBUaW1lADIwMjE6MTE6MjYgMDc6Mjg6NTI3NpoJAAADI0lEQVR4Xu3dgbXSMBTGcXQCN9ARdAOdRN1AJ9ANHEGdQDfQDXQEN9ANfPkoUay3lzZtk3D5/865BziUpC35gJe+wgEAAAAAAAAAAAAAAAAAACCWe6fLFr6cLi3PTpfRvUj1fLj6n++pXg9XV/P6+Zjqw3C1aw9SPU31+XgLTf126la8TWVtv8p7cVvK60f39U7B/ZbqGta1mvunS6BXCq5eyB4fb+EPwoueEVwH4UWvCO4FhBc9IrgzEF70huDO1Gt4rVlRlZ7Uud6nstq4VHv2oUMda2lQ/0xlta9a2sebVFY7qrltXVonr8Z9vEpVElw9b1b7qhrbUV3Ud16FSsc291SjjzENLg1SvTv1osd1KnF12xExvAS3HoLbULTwEtx6CG5jkcJLcOshuB2IEl6CWw/B7USE8EYN7qNUBPdfD1Np5tiqJesU5QWoGWu6PdcS1uNzTfH+Ud8KqbVcrjVKT0zQfdZjVBrIY1udmFBjfb0+SkonNIxDWro/rOVzVRdxtnmNl6mu4fQ4zKPTKnV66a/jrWAI718EN5bQwRXCOyC48eiLDMIGVwgvwY3qUypNTIV16+EluHFpkkoTZWED3PI7rLwZuqnvsNLHIP0tc66knfx9Tvr+prGt+rCo3fOPcprZ1IkBlq+pptrWoLRmlUWP0WPPef3oxcvaD7JkfbXs1HduvUs1FaLx+np9lND6P0n143hrULo/vBn1llmqTsdO8zT73LJ2ng7tWMuWlM4osQaZtezS0vaOaRBZy6q8gaL7rMeorFDrXUiHTKzlvdriMI769fpe0ofum7Jkn5Rsx6XxWl3Lj81bfWRVG2prLb1C611g/K67ha3WsdSe2+ZRf+r3/N37GrV+/kyt/+btJcCRg5vVDjDB3VkPE1atA3wLwc1qBZjgVtDLbHOrAN9ScLO9A0xwK+npUFHtAN9icLO9tp3gVtTj9LZ3WEGDY+5PgGgWeuonPkTtzB283szv2Fbr6LXj7aMl26VZaM2iTp1dM27LW18FVgPeCu6S9fX68H6aZas+vP3ujQO9aAEAAAAAAAAAAAAAACCWw+EOJaXr2yjsWfkAAAAASUVORK5CYII=';
 const LOGO_ARGO = 'data:image/png;base64,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';
-// ── 기본값 ──
+// ?? 湲곕낯媛???
 const PIN = "1124";
 
 const DEFAULT_QUESTIONS = [
@@ -876,28 +876,28 @@ const DEFAULT_QUESTIONS = [
 ];
 
 const DEFAULT_RACERS = [
-  {name:"레이서 1",title:"직책"},
-  {name:"레이서 2",title:"직책"},
-  {name:"레이서 3",title:"직책"},
-  {name:"레이서 4",title:"직책"},
-  {name:"레이서 5",title:"직책"}
+  {name:"레이서 1",title:"직원"},
+  {name:"레이서 2",title:"직원"},
+  {name:"레이서 3",title:"직원"},
+  {name:"레이서 4",title:"직원"},
+  {name:"레이서 5",title:"직원"}
 ];
 
-// ── 상태 ──
+// ?? ?곹깭 ??
 let currentMode = null;
 let pendingMode = null;
 let currentQIdx = 0;
 let questions = [...DEFAULT_QUESTIONS];
-let people = [];       // 전체 참석자 (이름 선택, 추첨, 선물)
-let candidates = [];   // 드래프트 투표 후보
+let people = [];       // ?꾩껜 李몄꽍??(?대쫫 ?좏깮, 異붿꺼, ?좊Ъ)
+let candidates = [];   // ?쒕옒?꾪듃 ?ы몴 ?꾨낫
 let selectedPerson = null;
-// 로컬스토리지에서 투표 기록 복원
+// 濡쒖뺄?ㅽ넗由ъ??먯꽌 ?ы몴 湲곕줉 蹂듭썝
 let myVotedQs = JSON.parse(localStorage.getItem('tt_voted')||'{}');
 let myBetQLocal = JSON.parse(localStorage.getItem('tt_bets')||'{}');
 let firstReason = true;
 let revealData = [], revealStep = 0, revealQIdx = 0;
 let racers = [...DEFAULT_RACERS];
-let raceSession = 0; // 누적 회차 (초기화 전까지 증가)
+let raceSession = 0; // ?꾩쟻 ?뚯감 (珥덇린???꾧퉴吏 利앷?)
 let selectedRacer = null;
 let myBetQ = myBetQLocal;
 let raceRunning = false;
@@ -912,10 +912,9 @@ const MESSAGE_FILTERS = [
   {key:'all', label:'전체'},
   {key:'displayable', label:'공개 가능'},
   {key:'anonymous', label:'익명'},
-  {key:'private', label:'비공개'},
   {key:'featured', label:'진행자 픽'}
 ];
-const MESSAGE_STOPWORDS = new Set(['테크타카','6주년','정말','너무','같이','우리','그리고','모든','더','이','가','을','를','은','는','에','의','도','요']);
+const MESSAGE_STOPWORDS = new Set(['테크타카','6주년','정말','너무','같이','우리','그리고','모든','이','그','가','을','를','은','는','도','에','의']);
 let gpSelectedTags = [];
 let gpDisplayMode = 'named';
 let gpMessageText = '';
@@ -1004,6 +1003,7 @@ function getPersonKey(person){
 
 function normalizeMessageRecord(key, raw){
   const value=raw||{};
+  const displayMode=value.displayMode==='anonymous' ? 'anonymous' : 'named';
   return {
     key,
     personId:value.personId||'',
@@ -1011,7 +1011,7 @@ function normalizeMessageRecord(key, raw){
     shortMessage:String(value.shortMessage||'').trim(),
     tags:Array.isArray(value.tags) ? value.tags.filter(Boolean).map(String) : [],
     extraAnswer:String(value.extraAnswer||'').trim(),
-    displayMode:value.displayMode||'named',
+    displayMode,
     adminHidden:Boolean(value.adminHidden),
     featured:Boolean(value.featured),
     ts:Number(value.ts)||0,
@@ -1020,7 +1020,7 @@ function normalizeMessageRecord(key, raw){
 }
 
 function isDisplayableMessage(msg){
-  return Boolean(msg && msg.shortMessage && msg.displayMode!=='private' && !msg.adminHidden);
+  return Boolean(msg && msg.shortMessage && !msg.adminHidden);
 }
 
 function getMessageAuthorLabel(msg){
@@ -1032,7 +1032,6 @@ function getFilteredAdminMessages(){
   if(messageAdminFilter==='all') return adminMessages;
   if(messageAdminFilter==='displayable') return adminMessages.filter(isDisplayableMessage);
   if(messageAdminFilter==='anonymous') return adminMessages.filter(msg=>msg.displayMode==='anonymous');
-  if(messageAdminFilter==='private') return adminMessages.filter(msg=>msg.displayMode==='private');
   if(messageAdminFilter==='featured') return adminMessages.filter(msg=>msg.featured);
   return adminMessages;
 }
@@ -1062,7 +1061,7 @@ function pickRandomDisplayableMessage(excludeKey){
 
 
 
-// ── 네비게이션 ──
+// ?? ?ㅻ퉬寃뚯씠????
 function goHub(){
   hideAllViews();
   if(window._adminUnlocked){
@@ -1093,7 +1092,7 @@ function showNewQBanner(qIdx){
   const b=document.createElement('div');
   b.id='new-q-banner';
   b.style.cssText='position:fixed;top:0;left:0;right:0;background:var(--blue);color:#fff;text-align:center;padding:14px;font-size:15px;font-weight:700;z-index:100;animation:slideDown 0.4s ease;';
-  b.innerHTML=`🆕 ${qIdx+1}번째 질문이 시작됐어요!`;
+  b.innerHTML=`?넅 ${qIdx+1}踰덉㎏ 吏덈Ц???쒖옉?먯뼱??`;
   document.body.appendChild(b);
   setTimeout(()=>b.remove(), 3000);
 }
@@ -1132,20 +1131,20 @@ function enterParticipant(){
   show('p-view'); listenToHostState();
 }
 
-// QR 파라미터 자동 진입
+// QR ?뚮씪誘명꽣 ?먮룞 吏꾩엯
 if(new URLSearchParams(window.location.search).get('p')==='1'){
   document.addEventListener('DOMContentLoaded',()=>enterParticipant());
 } else if(new URLSearchParams(window.location.search).get('hub')==='1'){
   document.addEventListener('DOMContentLoaded',()=>enterParticipantHub());
 }
 
-// 참여자 허브
+// 李몄뿬???덈툕
 function enterParticipantHub(){
   hideAllViews();
   document.getElementById('participant-hub').classList.remove('hidden');
 }
 
-// 관리자 PIN
+// 愿由ъ옄 PIN
 function enterAdminPin(){
   pendingMode='admin';
   document.getElementById('pin-modal').classList.remove('hidden');
@@ -1154,10 +1153,10 @@ function enterAdminPin(){
   setTimeout(()=>document.getElementById('pin-input').focus(),100);
 }
 
-// 하위 호환 (레이스/드래프트 뷰 내부 뒤로가기용)
+// ?섏쐞 ?명솚 (?덉씠???쒕옒?꾪듃 酉??대? ?ㅻ줈媛湲곗슜)
 function enterHostPin(mode){
   if(window._adminUnlocked){ 
-    // 이미 인증됐으면 바로 이동
+    // ?대? ?몄쬆?먯쑝硫?諛붾줈 ?대룞
     pendingMode=mode;
     checkPin_navigate();
     return;
@@ -1176,7 +1175,7 @@ function checkPin(){
       document.getElementById('pin-modal').classList.add('hidden');
       window._adminUnlocked=true;
       if(pendingMode==='admin'){
-        // 관리자 허브 진입
+        // 愿由ъ옄 ?덈툕 吏꾩엯
         hideAllViews();
         document.getElementById('admin-hub').classList.remove('hidden');
         watchAdminStatus();
@@ -1197,7 +1196,7 @@ function checkPin_navigate(){
   else if(pendingMode==='messages'){ show('messages-view'); initMessagesAdmin(); }
 }
 
-// 관리자 세션 상태 감시
+// 愿由ъ옄 ?몄뀡 ?곹깭 媛먯떆
 function watchAdminStatus(){
   replaceListener('adminStatus', onValue(ref(db,'state'),(snap)=>{
     const s=snap.val()||{};
@@ -1222,18 +1221,18 @@ function watchAdminStatus(){
   }));
 }
 
-// 세션 시작 (초기화 후 대기 상태)
+// ?몄뀡 ?쒖옉 (珥덇린?????湲??곹깭)
 async function adminStartSession(){
-  if(!confirm('새 세션을 시작할까요? 기존 투표/베팅 데이터는 유지됩니다.')) return;
+  if(!confirm('세션을 시작할까요? 기존 투표와 베팅 데이터는 유지됩니다.')) return;
   await set(ref(db,'state'),{active:false,standby:true,mode:'idle'});
-  alert('세션이 대기 상태로 시작됐습니다. 이제 드래프트/레이스에서 각 세션을 시작하세요.');
+  alert('세션이 대기 상태로 시작되었습니다. 이제 드래프트나 레이스에서 세션을 진행해주세요.');
 }
 
-// 세션 종료
+// ?몄뀡 醫낅즺
 async function adminEndSession(){
-  if(!confirm('세션을 종료할까요? 참여자 화면이 종료 화면으로 바뀝니다.')) return;
+  if(!confirm('세션을 종료할까요? 참여자 화면은 종료 화면으로 전환됩니다.')) return;
   await set(ref(db,'state'),{active:false,ended:true});
-  alert('세션이 종료됐습니다.');
+  alert('세션이 종료되었습니다.');
 }
 
 function show(id){
@@ -1251,7 +1250,7 @@ function backToMessagesView(){
   initMessagesAdmin();
 }
 
-// ── DRAFT HOST ──
+// ?? DRAFT HOST ??
 function initDraftHost(){
   loadSettingsFromDB();
   listenToVotes();
@@ -1263,8 +1262,7 @@ async function loadSettingsFromDB(){
   if(s.questions) questions = s.questions;
   if(s.people) people = s.people;
   if(s.candidates) candidates = s.candidates;
-  else candidates = [...people]; // 후보 없으면 전체 명단으로 초기화
-  document.getElementById('questions-textarea').value = questions.join('\n');
+  else candidates = [...people]; // ?꾨낫 ?놁쑝硫??꾩껜 紐낅떒?쇰줈 珥덇린??  document.getElementById('questions-textarea').value = questions.join('\n');
   document.getElementById('people-textarea').value = people.join('\n');
   document.getElementById('candidates-textarea').value = candidates.join('\n');
   initTabs();
@@ -1280,7 +1278,7 @@ async function savePeople(){
     alert(people.length+'명 저장됐어요!');
   } catch(e) {
     people = prevPeople;
-    alert('참석자 명단 저장에 실패했어요. 네트워크/Firebase 상태를 확인한 뒤 다시 시도해주세요.\n\n오류: '+e.message);
+    alert('참석자 명단 저장에 실패했어요. 네트워크 또는 Firebase 상태를 확인한 뒤 다시 시도해주세요.\n\n오류: '+e.message);
   }
 }
 
@@ -1290,7 +1288,7 @@ async function saveCandidates(){
   try{
     await set(ref(db,'settings/candidates'), nextCandidates);
     candidates = nextCandidates;
-    alert(candidates.length+'명 후보가 저장됐어요!');
+    alert(candidates.length+'명의 후보가 저장됐어요!');
   }catch(e){
     alert('드래프트 후보 저장에 실패했어요.\n\n오류: '+e.message);
   }
@@ -1333,7 +1331,7 @@ async function closeVoting(){
   try{
     await update(ref(db,'state'),{closed:true});
   } catch(e){
-    alert('Firebase 오류: '+e.message);
+    alert('Firebase ?ㅻ쪟: '+e.message);
   }
 }
 
@@ -1341,8 +1339,8 @@ async function resetCurrentQ(){
   if(!confirm(`Q${currentQIdx+1} 데이터를 삭제할까요?`)) return;
   await remove(ref(db,`votes/q${currentQIdx}`));
   firstReason=true;
-  document.getElementById('reason-feed').innerHTML='<p style="font-size:11px;color:rgba(255,255,255,0.2)">투표가 들어오면 여기에 표시됩니다</p>';
-  document.getElementById('bar-area').innerHTML='<div class="waiting-msg"><div class="wi">📊</div><p>투표가 시작되면 실시간으로 집계됩니다</p></div>';
+  document.getElementById('reason-feed').innerHTML='<p style="font-size:11px;color:rgba(255,255,255,0.2)">투표가 들어오면 여기에 표시됩니다.</p>';
+  document.getElementById('bar-area').innerHTML='<div class="waiting-msg"><div class="wi">🗳️</div><p>투표가 시작되면 실시간으로 집계됩니다.</p></div>';
   document.getElementById('total-h').textContent='0';
   document.getElementById('unique-h').textContent='0';
 }
@@ -1398,7 +1396,7 @@ async function showReveal(){
     if(v.reason) reasons[key].push(v.reason);
   });
   revealData=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([key,cnt])=>({name:labels[key]||key,cnt,reasons:reasons[key]||[]}));
-  if(!revealData.length){alert('투표 데이터가 없습니다');return;}
+  if(!revealData.length){alert('투표 데이터가 없습니다.');return;}
   revealQIdx=currentQIdx; revealStep=revealData.length-1;
   document.getElementById('reveal-ov').classList.remove('hidden');
   showRevealStep();
@@ -1407,7 +1405,7 @@ async function showReveal(){
 function showRevealStep(){
   const item=revealData[revealStep];
   const emojis=['🥇','🥈','🥉'],ranks=['1위','2위','3위'];
-  document.getElementById('rv-qlbl').textContent=`Q${revealQIdx+1} · ${ranks[revealStep]}`;
+  document.getElementById('rv-qlbl').textContent=`Q${revealQIdx+1} 쨌 ${ranks[revealStep]}`;
   document.getElementById('rv-emoji').textContent=emojis[revealStep];
   const ne=document.getElementById('rv-name');
   ne.textContent=item.name; ne.style.animation='none'; ne.offsetHeight; ne.style.animation='';
@@ -1415,7 +1413,7 @@ function showRevealStep(){
   document.getElementById('rv-reasons').innerHTML=item.reasons.map(r=>`<div class="rv-reason-item">"${escapeHtml(r)}"</div>`).join('');
   const btn=document.getElementById('rv-next-btn');
   if(revealStep===0){btn.textContent='닫기';btn.onclick=closeReveal;launchConfetti();}
-  else{btn.textContent=`← ${['1위','2위','3위'][revealStep-1]} 공개`;btn.onclick=revealNext;}
+  else{btn.textContent=`다음 ${['1위','2위','3위'][revealStep-1]} 공개`;btn.onclick=revealNext;}
 }
 
 function revealNext(){revealStep--;showRevealStep();}
@@ -1431,7 +1429,7 @@ function launchConfetti(){
   }
 }
 
-// ── PARTICIPANT ──
+// ?? PARTICIPANT ??
 function listenToHostState(){
   replaceListener('hostState', onValue(ref(db,'state'),(snap)=>{
     const s=snap.val()||{};
@@ -1446,7 +1444,7 @@ function listenToHostState(){
     if(mode==='draft'){
       if(closed){showP('closed');}
       else if(myVotedQs[qIdx]){
-        // 이미 투표한 질문 - 완료 화면에 내가 뽑은 사람 표시
+        // ?대? ?ы몴??吏덈Ц - ?꾨즺 ?붾㈃???닿? 戮묒? ?щ엺 ?쒖떆
         const votedName=localStorage.getItem('tt_voted_name_'+qIdx)||'';
         const doneEl=document.getElementById('p-done');
         if(doneEl){
@@ -1455,18 +1453,18 @@ function listenToHostState(){
           if(votedName){
             const strong=document.createElement('strong');
             strong.style.color='var(--blue)';
-            strong.textContent=`${votedName}님`;
+            strong.textContent=`${votedName}`;
             p.appendChild(strong);
-            p.appendChild(document.createTextNode('을 선택했어요'));
+            p.appendChild(document.createTextNode(' 님을 선택했어요.'));
             p.appendChild(document.createElement('br'));
             p.appendChild(document.createElement('br'));
           }
-          appendSafeLineBreaks(p,['진행자 화면에서','결과를 함께 확인해주세요']);
+          appendSafeLineBreaks(p,['진행자 화면에서','결과를 곧 확인해주세요']);
         }
         showP('done');
       }
       else{
-        // 새 질문 전환 안내
+        // ??吏덈Ц ?꾪솚 ?덈궡
         if(window._lastQIdx!==undefined && window._lastQIdx!==qIdx){
           showNewQBanner(qIdx);
         }
@@ -1476,7 +1474,7 @@ function listenToHostState(){
     } else if(mode==='race'){
       if(closed){showP('race-done');}
       else if(myBetQ[s.raceSession]){
-        // 이미 베팅한 회차 - 내가 베팅한 레이서 표시
+        // ?대? 踰좏똿???뚯감 - ?닿? 踰좏똿???덉씠???쒖떆
         const savedBet=localStorage.getItem('tt_bet_racer_'+s.raceSession)||'';
         const raceDoneEl=document.getElementById('p-race-done');
         if(raceDoneEl && savedBet){
@@ -1488,21 +1486,21 @@ function listenToHostState(){
             strong.style.color='var(--blue)';
             strong.textContent=parts[1];
             p.appendChild(strong);
-            p.appendChild(document.createTextNode('에게 베팅했어요!'));
+            p.appendChild(document.createTextNode('에게 베팅했어요.'));
             p.appendChild(document.createElement('br'));
             p.appendChild(document.createElement('br'));
-            appendSafeLineBreaks(p,['화면을 보면서','레이스를 응원해주세요! 🎉']);
+            appendSafeLineBreaks(p,['화면을 보면서','레이스를 응원해주세요!']);
           }
         }
         showP('race-done');
       }
       else{
-        // 새 회차 안내
+        // ???뚯감 ?덈궡
         if(s.raceSession>1 && window._lastRaceSession!==undefined && window._lastRaceSession!==s.raceSession){
           const b=document.getElementById('new-q-banner')||document.createElement('div');
           b.id='new-q-banner';
           b.style.cssText='position:fixed;top:0;left:0;right:0;background:#1E4DB7;color:#fff;text-align:center;padding:14px;font-size:15px;font-weight:700;z-index:100;';
-          b.innerHTML=`🏁 ${s.raceSession}회차 레이스가 시작됐어요!`;
+          b.innerHTML=`🏁 ${s.raceSession}회차 레이스가 시작됐어요`;
           document.body.appendChild(b);
           setTimeout(()=>b.remove(),3000);
         }
@@ -1519,8 +1517,8 @@ function listenToHostState(){
     if(s.candidates) candidates=s.candidates;
     if(s.people){
       people=s.people;
-      if(!s.candidates) candidates=s.people; // 후보 없으면 전체 명단
-      // 투표 화면이 열려있으면 즉시 명단 반영
+      if(!s.candidates) candidates=s.people; // ?꾨낫 ?놁쑝硫??꾩껜 紐낅떒
+      // ?ы몴 ?붾㈃???대젮?덉쑝硫?利됱떆 紐낅떒 諛섏쁺
       const pVoting=document.getElementById('p-voting');
       if(pVoting && !pVoting.classList.contains('hidden')){
         renderPeople('');
@@ -1550,7 +1548,7 @@ function loadVoteQ(qIdx){
 }
 
 function renderPeople(filter){
-  // 드래프트 투표는 candidates, 그 외는 people 사용
+  // ?쒕옒?꾪듃 ?ы몴??candidates, 洹??몃뒗 people ?ъ슜
   const pool = candidates.length ? getNameEntries(candidates,'candidate') : getNameEntries(people,'person');
   const filtered=pool.filter(entry=>entry.name.includes(filter));
   window._peopleViewEntries=filtered;
@@ -1578,31 +1576,31 @@ async function submitVote(){
   const reason=document.getElementById('reason-input').value.trim();
   const qIdx=window._voteQ;
   const btn=document.getElementById('submit-btn');
-  btn.disabled=true;btn.textContent='제출 중...';
+  btn.disabled=true;btn.textContent='제출 중..';
   try{
   await push(ref(db,`votes/q${qIdx}`),{person:selectedPerson.name,personId:selectedPerson.id,reason,ts:Date.now()});
   } catch(e){ btn.disabled=false; btn.textContent='투표하기'; alert('오류: '+e.message); return; }
   myVotedQs[qIdx]=true;
   localStorage.setItem('tt_voted', JSON.stringify(myVotedQs));
   localStorage.setItem('tt_voted_name_'+qIdx, selectedPerson.name);
-  // 완료 화면에 내가 뽑은 사람 표시
+  // ?꾨즺 ?붾㈃???닿? 戮묒? ?щ엺 ?쒖떆
   const doneEl=document.getElementById('p-done');
   if(doneEl){
     const p=doneEl.querySelector('p');
     p.textContent='';
     const strong=document.createElement('strong');
     strong.style.color='var(--blue)';
-    strong.textContent=`${selectedPerson.name}님`;
+    strong.textContent=`${selectedPerson.name}`;
     p.appendChild(strong);
-    p.appendChild(document.createTextNode('을 선택했어요'));
+    p.appendChild(document.createTextNode(' 님을 선택했어요.'));
     p.appendChild(document.createElement('br'));
     p.appendChild(document.createElement('br'));
-    appendSafeLineBreaks(p,['진행자 화면에서','결과를 함께 확인해주세요']);
+    appendSafeLineBreaks(p,['진행자 화면에서','결과를 곧 확인해주세요']);
   }
   showP('done');
 }
 
-// ── RACE HOST (Canvas Engine) ──
+// ?? RACE HOST (Canvas Engine) ??
 
 let raceCanvas=null, raceCtx=null, raceRaf=null;
 let raceFrame=0, raceStartTime=0;
@@ -1613,24 +1611,24 @@ let racerStates=[];
 let raceFinishOrder=[];
 let raceEventLog='';
 
-// ── 이벤트 정의 ──
+// ?? ?대깽???뺤쓽 ??
 const EVENTS=[
-  {key:'FALL', name:'넘어짐! 😵', desc:'가 달리다가 넘어졌습니다!',
+  {key:'FALL', name:'넘어짐!', desc:'가가 갑자기 넘어졌습니다!',
    duration:110, onStart(s){s.speed=0; s.anim='fall';},
    onEnd(s){s.speed=s.baseSpeed*(0.9+Math.random()*0.3); s.anim='';}},
-  {key:'REVERSE', name:'역주행! 🔄', desc:'가 반대로 달리기 시작했습니다!',
+  {key:'REVERSE', name:'역주행!', desc:'가가 반대로 달리기 시작했습니다!',
    duration:80, onStart(s){s.speed=-s.baseSpeed*1.5; s.anim='reverse';},
    onEnd(s){s.speed=s.baseSpeed*(1+Math.random()*0.5); s.anim='';}},
-  {key:'BOOST', name:'로켓 부스터! 🚀', desc:'가 갑자기 부스터를 켰습니다!',
+  {key:'BOOST', name:'로켓 부스터! 🚀', desc:'가가 갑자기 부스터를 켰습니다!',
    duration:70, onStart(s){s.speed=s.baseSpeed*5; s.anim='boost';},
    onEnd(s){s.speed=s.baseSpeed*0.8; s.anim='';}},
-  {key:'SLEEP', name:'졸음! 😴', desc:'가 달리다가 잠들었습니다!',
+  {key:'SLEEP', name:'졸음! 😴', desc:'가가 달리다 잠들었습니다!',
    duration:140, onStart(s){s.speed=0; s.anim='sleep';},
    onEnd(s){s.speed=s.baseSpeed*(0.8+Math.random()*0.4); s.anim='';}},
-  {key:'TRIP', name:'돌부리! 🪨', desc:'가 돌부리에 걸려 미끄러졌습니다!',
+  {key:'TRIP', name:'돌부리!', desc:'가가 돌부리에 걸려 비틀거립니다!',
    duration:60, onStart(s){s.speed=-s.baseSpeed*0.5; s.anim='fall';},
    onEnd(s){s.speed=s.baseSpeed*(1.2+Math.random()*0.5); s.anim='';}},
-  {key:'WARP', name:'순간이동! ✨', desc:'가 갑자기 순간이동했습니다!',
+   {key:'WARP', name:'시간이동! ⏱', desc:'갑자기 뒤로 순간이동합니다!',
    duration:1, onStart(s,FINISH){s.pos=Math.max(4, s.pos - FINISH*0.25); s.anim='warp';},
    onEnd(s){s.anim=''; s.speed=s.baseSpeed;}},
 ];
@@ -1644,7 +1642,7 @@ function showBanner(text, dur=2500){
   b._t=setTimeout(()=>b.style.display='none', dur);
 }
 
-// ── 픽셀 캐릭터 (8열x12행, 0=투명 1=옷 2=피부 3=어두운) ──
+// ?? ?쎌? 罹먮┃??(8?큫12?? 0=?щ챸 1=??2=?쇰? 3=?대몢?? ??
 const PF=[
   [[0,1,1,0,0,0,0,0],[1,1,1,1,0,0,0,0],[0,1,1,0,0,0,0,0],
    [0,2,2,0,0,0,0,0],[2,2,2,2,0,0,0,0],[0,2,2,0,2,0,0,0],
@@ -1674,31 +1672,29 @@ function drawPix(x,y,frame,color,sc=6,flip=false){
   }
 }
 
-// 스크롤 배너 오프셋
-let bannerOffset=0;
+// ?ㅽ겕濡?諛곕꼫 ?ㅽ봽??let bannerOffset=0;
 
 function drawCanvas(){
   if(!raceCanvas||!raceCtx) return;
   const W=raceCanvas.width, H=raceCanvas.height;
   const N=racers.length;
 
-  // ── 레이아웃 계산 ──
-  const CROWD_H=Math.round(H*0.06);   // 관중석: 화면 6%
-  const BANNER_H=Math.round(H*0.04);  // 배너: 화면 4%
-  const TOP_H=CROWD_H+BANNER_H;       // 상단 영역
-  const LANE_H=Math.floor((H-TOP_H)/N); // 레인: 나머지를 N등분
-  const LW=Math.round(W*0.1);          // 레이블 너비: 화면 10%
-  const FINISH=W-LW-Math.round(W*0.02); // 결승선 위치
+  // ?? ?덉씠?꾩썐 怨꾩궛 ??
+  const CROWD_H=Math.round(H*0.06);   // 愿以묒꽍: ?붾㈃ 6%
+  const BANNER_H=Math.round(H*0.04);  // 諛곕꼫: ?붾㈃ 4%
+  const TOP_H=CROWD_H+BANNER_H;       // ?곷떒 ?곸뿭
+  const LANE_H=Math.floor((H-TOP_H)/N); // ?덉씤: ?섎㉧吏瑜?N?깅텇
+  const LW=Math.round(W*0.1);          // ?덉씠釉??덈퉬: ?붾㈃ 10%
+  const FINISH=W-LW-Math.round(W*0.02); // 寃곗듅???꾩튂
 
-  // sc: 캐릭터가 레인의 85% 높이가 되도록
-  const sc=Math.max(3,Math.round(LANE_H*0.85/12));
+  // sc: 罹먮┃?곌? ?덉씤??85% ?믪씠媛 ?섎룄濡?  const sc=Math.max(3,Math.round(LANE_H*0.85/12));
   const charH=12*sc, charW=8*sc;
 
-  // ── 배경 ──
+  // ?? 諛곌꼍 ??
   raceCtx.fillStyle='#00003a';
   raceCtx.fillRect(0,0,W,H);
 
-  // ── 관중석 ──
+  // ?? 愿以묒꽍 ??
   raceCtx.fillStyle='#000055';
   raceCtx.fillRect(LW,0,W-LW,CROWD_H);
   const cc6=['#ff4444','#ffaa00','#44ff88','#44aaff','#ff44ff','#ffff44'];
@@ -1714,11 +1710,11 @@ function drawCanvas(){
     raceCtx.fillRect(cx,jump?hh:hh+2,hw+2,bh);
   }
 
-  // ── 배너 ──
+  // ?? 諛곕꼫 ??
   raceCtx.fillStyle='#0a0a00';
   raceCtx.fillRect(LW,CROWD_H,W-LW,BANNER_H);
   bannerOffset=(bannerOffset+1.5)%((W-LW)*2);
-  const bTxt='  🏁 TECHTAKA 6TH ANNIVERSARY   ✨ TO KEEP THE WORLD IN MOTION   🚀 POWERED BY ARGO  ';
+  const bTxt='  TECHTAKA 6TH ANNIVERSARY   ·· TO KEEP THE WORLD IN MOTION   ·· POWERED BY ARGO  ';
   const bFont=Math.max(8,Math.round(BANNER_H*0.55));
   raceCtx.font=`bold ${bFont}px "Courier New"`;
   raceCtx.fillStyle='#cccc00';
@@ -1731,12 +1727,12 @@ function drawCanvas(){
   raceCtx.fillText(bTxt,bx+bw,CROWD_H+BANNER_H-Math.round(BANNER_H*0.2));
   raceCtx.restore();
 
-  // ── 레인 ──
+  // ?? ?덉씤 ??
   for(let i=0;i<N;i++){
     const s=racerStates[i]||{pos:4,anim:''};
     const y=TOP_H+i*LANE_H;
 
-    // 레인 배경 (줄무늬 잔디)
+    // ?덉씤 諛곌꼍 (以꾨Т???붾뵒)
     const tc1=i%2===0?'#004800':'#003c00';
     const tc2=i%2===0?'#005800':'#004800';
     raceCtx.fillStyle=tc1;
@@ -1747,17 +1743,16 @@ function drawCanvas(){
       raceCtx.fillRect(LW+sx,y,stripeW,LANE_H);
     }
 
-    // 레인 구분선
-    raceCtx.fillStyle='rgba(255,255,255,0.18)';
+    // ?덉씤 援щ텇??    raceCtx.fillStyle='rgba(255,255,255,0.18)';
     raceCtx.fillRect(LW,y,W-LW,1);
 
-    // 레이블 배경
+    // ?덉씠釉?諛곌꼍
     raceCtx.fillStyle='#00003a';
     raceCtx.fillRect(0,y,LW,LANE_H);
     raceCtx.fillStyle='rgba(100,100,200,0.25)';
     raceCtx.fillRect(LW-1,y,1,LANE_H);
 
-    // 레이서 이름
+    // ?덉씠???대쫫
     const nFont=Math.max(9,Math.round(LANE_H*0.18));
     raceCtx.fillStyle='#ccccff';
     raceCtx.font=`bold ${nFont}px "Courier New"`;
@@ -1767,7 +1762,7 @@ function drawCanvas(){
     raceCtx.font=`${Math.round(nFont*0.8)}px "Courier New"`;
     raceCtx.fillText(racers[i].title||'',LW-5,y+Math.round(LANE_H*0.68));
 
-    // 결승선 체크무늬
+    // 寃곗듅??泥댄겕臾대뒳
     const fSize=Math.max(5,Math.round(LANE_H/8));
     for(let fy=0;fy<LANE_H;fy+=fSize){
       for(let fc=0;fc<Math.round(W*0.015);fc+=fSize){
@@ -1776,7 +1771,7 @@ function drawCanvas(){
       }
     }
 
-    // 결승선 깃발 (첫 레인 위에)
+    // 寃곗듅??源껊컻 (泥??덉씤 ?꾩뿉)
     if(i===0){
       raceCtx.fillStyle='#FFD700';
       raceCtx.fillRect(FINISH+Math.round(W*0.005),y-TOP_H,3,TOP_H+Math.round(LANE_H*0.1));
@@ -1792,8 +1787,7 @@ function drawCanvas(){
       }
     }
 
-    // 레이서 캐릭터
-    const px=LW+Math.max(0,Math.min(s.pos,FINISH-charW));
+    // ?덉씠??罹먮┃??    const px=LW+Math.max(0,Math.min(s.pos,FINISH-charW));
     const py=y+Math.floor((LANE_H-charH)/2);
     const fi=Math.floor(raceFrame/6)%2;
 
@@ -1803,7 +1797,7 @@ function drawCanvas(){
         raceCtx.fillStyle='#ffff00';
         raceCtx.font=`${sc*3}px serif`;
         raceCtx.textAlign='left';
-        raceCtx.fillText('★',px+charW,py);
+        raceCtx.fillText('💫',px+charW,py);
       }
     } else if(s.anim==='sleep'){
       drawPix(px,py,PF[0],RACER_COLORS[i],sc);
@@ -1826,7 +1820,7 @@ function drawCanvas(){
       drawPix(px,py,PF[fi],RACER_COLORS[i],sc,s.speed<0);
     }
 
-    // 순위 배지
+    // ?쒖쐞 諛곗?
     const rank=raceFinishOrder.indexOf(i);
     if(rank>=0){
       const bSize=Math.round(LANE_H*0.28);
@@ -1842,7 +1836,7 @@ function drawCanvas(){
     }
   }
 
-  // ── 외곽선 ──
+  // ?? ?멸낸????
   raceCtx.strokeStyle='#cccc00';
   raceCtx.lineWidth=2;
   raceCtx.strokeRect(1,1,W-2,H-2);
@@ -1870,7 +1864,7 @@ function raceLoop(){
     const s=racerStates[i];
     if(s.finished) continue;
 
-    // 이벤트 타이머
+    // ?대깽????대㉧
     if(s.event && s.eventTimer>0){
       s.eventTimer--;
       if(s.eventTimer===0){
@@ -1879,55 +1873,55 @@ function raceLoop(){
       }
     }
 
-    // 이벤트 간격 체크 (최소 240프레임=4초)
+    // ?대깽??媛꾧꺽 泥댄겕 (理쒖냼 240?꾨젅??4珥?
     const canEvent = (raceFrame - (s.lastEventFrame||0)) > 240;
 
-    // 개그 레이서 강제 이벤트 (40~65% 지점에서 100% 발동)
+    // 媛쒓렇 ?덉씠??媛뺤젣 ?대깽??(40~65% 吏?먯뿉??100% 諛쒕룞)
     if(!s.event && s.isGagRacer && !s.gagFired && s.pos/FINISH>0.40 && s.pos/FINISH<0.65 && canEvent){
       const ev=EVENTS[Math.floor(Math.random()*EVENTS.length)];
       s.event=ev; s.eventTimer=ev.duration; s.gagFired=true;
       ev.onStart(s, FINISH);
       s.lastEventFrame=raceFrame;
       raceEventLog=racers[i].name+ev.desc;
-      showBanner('⚡ '+racers[i].name+' '+ev.name, 3000);
+      showBanner('💥 '+racers[i].name+' '+ev.name, 3000);
       sfx('event');
     }
 
-    // 일반 레이서도 낮은 확률로 소소한 이벤트 (FALL/TRIP만)
+    // ?쇰컲 ?덉씠?쒕룄 ??? ?뺣쪧濡??뚯냼???대깽??(FALL/TRIP留?
     if(!s.event && !s.isGagRacer && !s.finished && s.pos/FINISH>0.2 && canEvent && Math.random()<0.006){
       const minorEvs=[EVENTS[0], EVENTS[4]]; // FALL, TRIP
       const ev=minorEvs[Math.floor(Math.random()*minorEvs.length)];
       s.event=ev; s.eventTimer=Math.floor(ev.duration*0.6);
       ev.onStart(s, FINISH);
       s.lastEventFrame=raceFrame;
-      showBanner('😮 '+racers[i].name+' '+ev.name, 2000);
+      showBanner('⚠️ '+racers[i].name+' '+ev.name, 2000);
       sfx('event');
     }
 
-    // 막판 스퍼트 (80% 지점에서 랜덤 1~2명 가속)
+    // 留됲뙋 ?ㅽ띁??(80% 吏?먯뿉???쒕뜡 1~2紐?媛??
     if(!s.spurted && !s.event && s.pos/FINISH>0.80){
       if(Math.random()<0.4){
         s.speed=s.baseSpeed*(2.2+Math.random()*1.0);
         s.spurted=true;
-        showBanner('💨 '+racers[i].name+' 스퍼트!', 1500);
+        showBanner('🔥 '+racers[i].name+' 스퍼트!', 1500);
       } else {
-        s.spurted=true; // 스퍼트 없이도 플래그 세팅
+        s.spurted=true; // ?ㅽ띁???놁씠???뚮옒洹??명똿
       }
     }
 
-    // 고유 리듬으로 지속 속도 변동 (사인파 기반)
+    // 怨좎쑀 由щ벉?쇰줈 吏???띾룄 蹂??(?ъ씤??湲곕컲)
     if(!s.event){
       const t=raceFrame*0.03*s.rhythm + s.phase;
       s.speed=s.baseSpeed*(1 + Math.sin(t)*s.wobble + Math.sin(t*2.3)*s.wobble*0.4);
     }
 
-    // 위치 업데이트
+    // ?꾩튂 ?낅뜲?댄듃
     if(!s.event || s.anim==='boost' || s.anim==='reverse' || s.anim==='trip'){
       s.pos+=s.speed*(0.8+Math.random()*0.4);
     }
     s.pos=Math.max(0, s.pos);
 
-    // 결승
+    // 寃곗듅
     if(s.pos>=FINISH && !s.finished){
       s.finished=true; s.pos=FINISH;
       raceFinishOrder.push(i);
@@ -1959,7 +1953,7 @@ function raceLoop(){
 function initRaceCanvas(){
   raceCanvas=document.getElementById('race-canvas');
   if(!raceCanvas) return;
-  // 행사용 고정 사이즈 (1920x1080 최적화)
+  // ?됱궗??怨좎젙 ?ъ씠利?(1920x1080 理쒖쟻??
   const W=1920, H=880;
   raceCanvas.width=W;
   raceCanvas.height=H;
@@ -1979,7 +1973,7 @@ async function initRaceHost(){
   renderBetBars();
   setTimeout(()=>{
     initRaceCanvas();
-    // 스코어보드 로고 설정
+    // ?ㅼ퐫?대낫??濡쒓퀬 ?ㅼ젙
     const sbLogos=document.getElementById('sb-logos');
     if(sbLogos) sbLogos.innerHTML=
       '<img src="'+LOGO_TECHTAKA+'" style="height:14px;margin-right:6px;vertical-align:middle;">'
@@ -1990,7 +1984,7 @@ async function initRaceHost(){
     await loadRacersFromDB();
     listenToBets();
   }catch(e){
-    // file:// 또는 Firebase 일시 오류여도 기본 레이스 화면은 바로 보이게 유지
+    // file:// ?먮뒗 Firebase ?쇱떆 ?ㅻ쪟?щ룄 湲곕낯 ?덉씠???붾㈃? 諛붾줈 蹂댁씠寃??좎?
     if(raceCanvas) drawCanvas();
   }
 }
@@ -2000,8 +1994,7 @@ async function loadRacersFromDB(){
     const snap=await get(ref(db,'settings/racers'));
     if(snap.val()) racers=snap.val();
   }catch(e){
-    // 기본 레이서로 진행 가능
-  }
+    // 湲곕낯 ?덉씠?쒕줈 吏꾪뻾 媛??  }
   renderRacerSetupRows();
   renderBetBars();
   setTimeout(()=>{if(raceCanvas) drawCanvas();}, 100);
@@ -2011,8 +2004,8 @@ function renderRacerSetupRows(){
   document.getElementById('racer-setup-rows').innerHTML=racers.map((r,i)=>`
     <div class="racer-row">
       <div class="rv-emoji-sel" style="background:${RACER_COLORS[i]};width:14px;height:14px;border-radius:50%;margin-right:4px;"></div>
-      <input type="text" value="${r.name}" placeholder="이름" id="racer-name-${i}">
-      <input type="text" value="${r.title||''}" placeholder="직책" id="racer-title-${i}" style="max-width:100px;">
+      <input type="text" value="${r.name}" placeholder="?대쫫" id="racer-name-${i}">
+      <input type="text" value="${r.title||''}" placeholder="吏곸콉" id="racer-title-${i}" style="max-width:100px;">
     </div>`).join('');
 }
 
@@ -2041,7 +2034,7 @@ function openRacerSettings(){
   setTimeout(initRaceCanvas, 60);
 }
 
-function selectRound(){} // 더미 (라운드 제거됨)
+function selectRound(){} // ?붾? (?쇱슫???쒓굅??
 
 function renderRaceTrack(){ if(raceCanvas) drawCanvas(); }
 
@@ -2080,19 +2073,19 @@ async function openRaceBetting(){
   const stateSnap=await get(ref(db,'state'));
   const currentState=stateSnap.val()||{};
   if(currentState.mode==='race' && currentState.active && !currentState.closed){
-    alert('이미 진행 중인 레이스 베팅이 있어요. 먼저 베팅을 마감하거나 레이스를 마무리해주세요.');
+    alert('이미 진행 중인 레이스 베팅이 있어요. 먼저 베팅을 마감하거나 현재 레이스를 마무리해주세요.');
     return;
   }
   raceSession=(await getRaceSessionBaseline())+1;
   await set(ref(db,'state'),{active:true,closed:false,standby:false,mode:'race',raceSession,racers:racers.map(r=>({name:r.name,title:r.title||''}))});
   renderBetBars();
   listenToBets();
-  alert('🏁 '+raceSession+'회차 베팅이 시작됐습니다!');
+  alert('🏁 '+raceSession+'회차 베팅이 시작되었습니다!');
 }
 
 async function closeRaceBetting(){
   await update(ref(db,'state'),{closed:true});
-  alert('베팅이 마감됐습니다.');
+  alert('베팅이 마감되었습니다.');
 }
 
 async function resetRaceSession(){
@@ -2101,7 +2094,7 @@ async function resetRaceSession(){
   await set(ref(db,'state'),{active:false,standby:true,mode:'idle'});
   raceSession=0;
   renderBetBars();
-  alert('초기화됐습니다.');
+  alert('초기화되었습니다.');
 }
 
 async function startRace(){
@@ -2127,7 +2120,7 @@ async function startRace(){
 
   const gagIdx=Math.floor(Math.random()*racers.length);
   racerStates=racers.map((_,i)=>{
-    const base=1.1+Math.random()*0.6; // 20초 레이스 기준 속도
+    const base=1.1+Math.random()*0.6; // 20珥??덉씠??湲곗? ?띾룄
     return {pos:4, speed:base, baseSpeed:base, event:null, eventTimer:0,
             anim:'', finished:false, isGagRacer:i===gagIdx, gagFired:false,
             lastEventFrame:0, spurted:false,
@@ -2147,12 +2140,12 @@ async function showRaceResult(finishOrder){
   const winnerIdx=finishOrder[0];
   const winner=racers[winnerIdx];
 
-  // 베팅 맞힌 사람
+  // 踰좏똿 留욏엺 ?щ엺
   const snap=await get(ref(db,'bets/s'+raceSession));
   const bets=snap.val()||{};
   const betters=Object.values(bets).filter(b=>b.racerIdx===winnerIdx).map(b=>b.name);
 
-  // 기록 Firebase에 저장
+  // 기록 Firebase 저장
   const record={
     session:raceSession,
     ts:Date.now(),
@@ -2170,7 +2163,7 @@ async function showRaceResult(finishOrder){
   document.getElementById('rr-event-desc').textContent=raceEventLog||'';
   document.getElementById('rr-betters').innerHTML=betters.length
     ?betters.map(n=>'<div class="rr-better-tag">'+escapeHtml(n)+'</div>').join('')
-    :'<div style="font-size:12px;color:rgba(255,255,255,0.3)">베팅한 사람이 없습니다</div>';
+    :'<div style="font-size:12px;color:rgba(255,255,255,0.3)">踰좏똿???щ엺???놁뒿?덈떎</div>';
   document.getElementById('race-result-ov').classList.remove('hidden');
   launchConfetti();
 }
@@ -2188,7 +2181,7 @@ function closeRaceResult(){
   if(raceCanvas) drawCanvas();
 }
 
-// ── 레이스 기록 ──
+// ?? ?덉씠??湲곕줉 ??
 function enterRaceHistory(){
   show('race-history-view');
   loadRaceHistory();
@@ -2199,7 +2192,7 @@ async function clearRaceHistory(){
   if(!confirm('레이스 기록을 모두 삭제할까요?')) return;
   await remove(ref(db,'race_history'));
   document.getElementById('race-history-list').innerHTML='<div style="text-align:center;padding:40px;color:rgba(255,255,255,0.2);font-size:13px;">레이스 기록이 없습니다</div>';
-  alert('기록이 삭제됐습니다.');
+  alert('기록이 삭제되었습니다.');
 }
 async function loadRaceHistory(){
   const snap=await get(ref(db,'race_history'));
@@ -2223,17 +2216,17 @@ async function loadRaceHistory(){
           <div style="font-size:11px;color:rgba(255,255,255,0.4);">1위</div>
         </div>
       </div>
-      ${r.eventLog?`<div style="font-size:11px;color:#ff8800;margin-bottom:8px;">⚡ ${escapeHtml(r.eventLog)}</div>`:''}
+      ${r.eventLog?`<div style="font-size:11px;color:#ff8800;margin-bottom:8px;">이벤트: ${escapeHtml(r.eventLog)}</div>`:''}
       <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-bottom:6px;">완주 순서: ${escapeHtml((r.finishOrder||[]).join(' → '))}</div>
       ${r.betters&&r.betters.length?`
       <div style="border-top:1px solid rgba(255,255,255,0.07);padding-top:8px;margin-top:8px;">
-        <div style="font-size:10px;font-weight:700;color:var(--green);margin-bottom:6px;">🎯 베팅 성공 (${r.betters.length}명)</div>
+        <div style="font-size:10px;font-weight:700;color:var(--green);margin-bottom:6px;">적중 베팅 성공 (${r.betters.length}명)</div>
         <div style="display:flex;flex-wrap:wrap;gap:6px;">${r.betters.map(n=>`<div style="background:rgba(10,158,110,0.15);border:1px solid rgba(10,158,110,0.3);border-radius:100px;padding:4px 12px;font-size:12px;font-weight:600;">${escapeHtml(n)}</div>`).join('')}</div>
-      </div>`:`<div style="font-size:11px;color:rgba(255,255,255,0.2);padding-top:8px;border-top:1px solid rgba(255,255,255,0.07);">베팅 성공자 없음</div>`}
+      </div>`:`<div style="font-size:11px;color:rgba(255,255,255,0.2);padding-top:8px;border-top:1px solid rgba(255,255,255,0.07);">베팅 성공자가 없습니다</div>`}
     </div>`).join('');
 }
 
-// ── PARTICIPANT RACE ──
+// ?? PARTICIPANT RACE ??
 function loadRaceBet(raceRacers, sessionIdx){
   selectedRacer=null;
   document.getElementById('race-bet-btn').disabled=true;
@@ -2247,7 +2240,7 @@ function loadRaceBet(raceRacers, sessionIdx){
     </div>`).join('');
   window._betSession=sessionIdx;
   window._betRacers=raceRacers;
-  // 저장된 이름 자동 입력
+  // ??λ맂 ?대쫫 ?먮룞 ?낅젰
   const savedName=localStorage.getItem('tt_myname');
   const nameInp=document.getElementById('race-name-input');
   if(savedName && nameInp) nameInp.value=savedName;
@@ -2262,8 +2255,8 @@ window.selectRacer=function(idx){
 async function submitRaceBet(){
   if(selectedRacer===null) return;
   const btn=document.getElementById('race-bet-btn');
-  btn.disabled=true; btn.textContent='제출 중...';
-  // 이름 선택: 로컬스토리지에 저장된 이름 사용, 없으면 팝업
+  btn.disabled=true; btn.textContent='제출 중..';
+  // ?대쫫 ?좏깮: 濡쒖뺄?ㅽ넗由ъ?????λ맂 ?대쫫 ?ъ슜, ?놁쑝硫??앹뾽
   const nameInput=document.getElementById('race-name-input');
   let betterName=(nameInput?.value.trim())||localStorage.getItem('tt_myname')||'익명';
   if(betterName!=='익명') localStorage.setItem('tt_myname', betterName);
@@ -2273,7 +2266,7 @@ async function submitRaceBet(){
   myBetQLocal[window._betSession]=true;
   localStorage.setItem('tt_bets', JSON.stringify(myBetQLocal));
   localStorage.setItem('tt_bet_racer_'+window._betSession, betterName+'|'+(window._betRacers[selectedRacer]?.name||''));
-  // 완료 화면에 내가 베팅한 레이서 표시
+  // ?꾨즺 ?붾㈃???닿? 踰좏똿???덉씠???쒖떆
   const racerName=window._betRacers[selectedRacer]?.name||'';
   const raceDoneEl=document.getElementById('p-race-done');
   if(raceDoneEl){
@@ -2283,39 +2276,42 @@ async function submitRaceBet(){
     strong.style.color='var(--blue)';
     strong.textContent=racerName;
     p.appendChild(strong);
-    p.appendChild(document.createTextNode('에게 베팅했어요!'));
+    p.appendChild(document.createTextNode('에게 베팅했어요.'));
     p.appendChild(document.createElement('br'));
     p.appendChild(document.createElement('br'));
-    appendSafeLineBreaks(p,['화면을 보면서','레이스를 응원해주세요! 🎉']);
+    appendSafeLineBreaks(p,['화면을 보면서','레이스를 응원해주세요!']);
   }
   showP('race-done');
 }
 
-// ── LOTTERY ──
+// ?? LOTTERY ??
 const DEFAULT_PRIZES = [
-  '배민/쿠팡이츠 3만원권 🍕',
-  '배민/쿠팡이츠 3만원권 🍕',
-  '배민/쿠팡이츠 3만원권 🍕',
-  '배민/쿠팡이츠 3만원권 🍕',
-  '배민/쿠팡이츠 3만원권 🍕',
-  '루메나 가습기 (중형) 💧',
-  '루메나 가습기 (소형) 💧',
-  '스테나 가습기 🌊',
-  'KORIN 백팩 🎒',
-  'KORIN 클릭슬링 👜',
-  'KORIN 클릭슬링 👜',
-  'KORIN 클릭슬링 👜',
+  '올리브영 3만원 기프트카드',
+  '올리브영 3만원 기프트카드',
+  '올리브영 3만원 기프트카드',
+  '올리브영 3만원 기프트카드',
+  '올리브영 3만원 기프트카드',
+  '루메나 MIST TOWER PLUS',
+  '루메나 MIST POT',
+  '스테나 STN100A',
+  'KORIN HubPack X',
+  'KORIN HubSling X',
+  'KORIN ClickSling S',
+  'KORIN ClickSling S',
   '저주파 마사지기 ⚡',
   '저주파 마사지기 ⚡',
   '저주파 마사지기 ⚡',
   '저주파 마사지기 ⚡',
   '저주파 마사지기 ⚡',
-  '홍삼정 에브리데이 🌿',
+  '홍삼정 에브리데이',
 ];
 
 async function initLottery(){
-  // Firebase에서 경품 로드
-  const snap=await get(ref(db,'settings/prizes'));
+  // Firebase?먯꽌 寃쏀뭹 濡쒕뱶
+  const [snap,finalDrawSnap]=await Promise.all([
+    get(ref(db,'settings/prizes')),
+    get(ref(db,FINAL_DRAW_LOG_PATH))
+  ]);
   if(snap.val()&&snap.val().length>0){
     prizes=snap.val();
   } else if(prizes.length===0){
@@ -2323,19 +2319,24 @@ async function initLottery(){
     await set(ref(db,'settings/prizes'),prizes);
   }
   renderPrizeList();
-  loadPeopleToPool();
-}
-
-function loadPeopleToPool(){
-  if(people.length){
-    lotteryPool=getNameEntries(people,'person');
-  } else {
-    get(ref(db,'settings/people')).then(snap=>{
-      lotteryPool=getNameEntries(snap.val()||[],'person');
-      updatePoolDisplay();
-    });
+  if(finalDrawSnap.val()?.completed){
+    lotteryPool=[];
+    updatePoolDisplay();
+    document.getElementById('lottery-start-btn').disabled=true;
     return;
   }
+  await loadPeopleToPool();
+}
+
+async function loadPeopleToPool(){
+  if(!people.length){
+    const snap=await get(ref(db,'settings/people'));
+    people=normalizePeopleList(snap.val()||[]);
+  }
+  lotteryPool=(await getFinalDrawEligiblePeople()).map(person=>({
+    id:person.id,
+    name:person.name
+  }));
   updatePoolDisplay();
 }
 
@@ -2367,16 +2368,16 @@ async function addPrizeBulk(){
   ta.value='';
   await set(ref(db,'settings/prizes'),prizes);
   renderPrizeList();
-  alert(lines.length+'개 경품이 추가됐어요!');
+  alert(lines.length+'개 경품이 추가됐어요.');
 }
 
 function renderPrizeList(){
   document.getElementById('prize-list').innerHTML=prizes.map((p,i)=>`
     <div class="prize-item${p.done?' done':''}${activePrizeIdx===i?' active':''}">
-      <div class="pi-name">${p.done?'✅ ':''} ${p.name}${p.winner?' → '+p.winner:''}</div>
+      <div class="pi-name">${p.done?'✓':''} ${p.name}${p.winner?' · '+p.winner:''}</div>
       <div style="display:flex;gap:4px;align-items:center;">
         ${!p.done?`<button class="pi-select" onclick="selectPrize(${i})">선택</button>`:'<span style="font-size:10px;color:var(--green)">완료</span>'}
-        <button onclick="deletePrize(${i})" style="padding:4px 7px;background:rgba(217,48,37,0.2);border:none;border-radius:5px;color:var(--red);font-size:10px;cursor:pointer;">✕</button>
+        <button onclick="deletePrize(${i})" style="padding:4px 7px;background:rgba(217,48,37,0.2);border:none;border-radius:5px;color:var(--red);font-size:10px;cursor:pointer;">삭제</button>
       </div>
     </div>`).join('');
 }
@@ -2396,7 +2397,7 @@ function selectPrize(idx){
   document.getElementById('lottery-display').innerHTML=`
     <div style="font-size:14px;color:rgba(255,255,255,0.4);margin-bottom:8px;">현재 경품</div>
     <div style="font-size:24px;font-weight:700;margin-bottom:16px;">${prizes[idx].name}</div>
-    <div style="font-size:13px;color:rgba(255,255,255,0.3)">추첨 시작 버튼을 눌러주세요</div>`;
+    <div style="font-size:13px;color:rgba(255,255,255,0.3)">추첨 시작 버튼을 눌러주세요.</div>`;
 }
 
 async function startLottery(){
@@ -2406,19 +2407,18 @@ async function startLottery(){
   const donePrizeIdx=activePrizeIdx;
   const selectedPrize=prizes[donePrizeIdx];
 
-  // 스핀 애니메이션
-  const spinWrap=document.getElementById('lottery-spin-wrap');
+  // ?ㅽ? ?좊땲硫붿씠??  const spinWrap=document.getElementById('lottery-spin-wrap');
   const spinInner=document.getElementById('lottery-spin-inner');
   spinWrap.style.display='block';
 
-  // 셔플된 이름들로 스핀
+  // ?뷀뵆???대쫫?ㅻ줈 ?ㅽ?
   const shuffled=[...lotteryPool].sort(()=>Math.random()-0.5);
   spinInner.innerHTML=[...shuffled,...shuffled,...shuffled].map(entry=>`<div class="spin-item">${escapeHtml(entry.name)}</div>`).join('');
 
   let speed=50,pos=0;
   const winnerEntry=shuffled[Math.floor(Math.random()*shuffled.length)];
   const winner=winnerEntry.name;
-  // 매칭 경품이면 사전 선택 확인
+  // 留ㅼ묶 寃쏀뭹?대㈃ ?ъ쟾 ?좏깮 ?뺤씤
   const isMatch=selectedPrize?.type==='match';
   let matchedPrize=null;
   if(isMatch) matchedPrize=await getGiftMatch(winnerEntry);
@@ -2430,16 +2430,16 @@ async function startLottery(){
     if(speed<=2.1){
       clearInterval(spin);
       spinWrap.style.display='none';
-      // 결과 표시 (매칭이면 희망 선물로 표시)
+      // 寃곌낵 ?쒖떆 (留ㅼ묶?대㈃ ?щ쭩 ?좊Ъ濡??쒖떆)
       const displayPrize=matchedPrize?matchedPrize.name:selectedPrize.name;
       document.getElementById('lottery-display').innerHTML=`
-        <div style="font-size:13px;color:rgba(255,255,255,0.3);margin-bottom:8px;">${matchedPrize?'⭐ 희망 선물 매칭':'🎁 '+escapeHtml(selectedPrize.name)}</div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.3);margin-bottom:8px;">${matchedPrize?'개인 희망 선물 매칭':'🎁 '+escapeHtml(selectedPrize.name)}</div>
         <div class="lottery-winner">${escapeHtml(winner)}</div>
         <div style="font-size:20px;font-weight:800;color:#FFD700;margin:8px 0;">${escapeHtml(displayPrize)}</div>
-        <div style="font-size:13px;color:var(--green);font-weight:600;">🎊 당첨!</div>`;
+        <div style="font-size:13px;color:var(--green);font-weight:600;">축하합니다!</div>`;
       if(matchedPrize){ matchedPrize.done=true; matchedPrize.winner=winner; }
 
-      // 당첨 기록
+      // ?뱀꺼 湲곕줉
       prizes[donePrizeIdx].done=true;
       prizes[donePrizeIdx].winner=winner;
       lotteryPool=lotteryPool.filter(p=>p.id!==winnerEntry.id);
@@ -2448,10 +2448,10 @@ async function startLottery(){
       updatePoolDisplay();
       renderPrizeList();
 
-      // 로그 추가
+      // 濡쒓렇 異붽?
       const log=document.getElementById('winner-log');
       if(log.querySelector('p')) log.innerHTML='';
-      log.innerHTML=`<div style="background:rgba(10,158,110,0.1);border:1px solid rgba(10,158,110,0.3);border-radius:7px;padding:8px 10px;font-size:11px;"><span style="font-weight:700;color:var(--green)">${escapeHtml(winner)}</span> — ${escapeHtml(displayPrize)}</div>`+log.innerHTML;
+      log.innerHTML=`<div style="background:rgba(10,158,110,0.1);border:1px solid rgba(10,158,110,0.3);border-radius:7px;padding:8px 10px;font-size:11px;"><span style="font-weight:700;color:var(--green)">${escapeHtml(winner)}</span> · ${escapeHtml(displayPrize)}</div>`+log.innerHTML;
 
       launchConfetti();
       btn.disabled=false;
@@ -2460,7 +2460,7 @@ async function startLottery(){
 }
 
 
-// ── WEB AUDIO ENGINE ──
+// ?? WEB AUDIO ENGINE ??
 let audioCtx=null;
 let bgmNodes=[];
 let bgmPlaying=false;
@@ -2471,7 +2471,7 @@ function getACtx(){
   return audioCtx;
 }
 
-// 단순 비프 생성
+// ?⑥닚 鍮꾪봽 ?앹꽦
 function beep(freq,dur,type='square',vol=0.15,delay=0){
   const ac=getACtx();
   const o=ac.createOscillator();
@@ -2485,22 +2485,19 @@ function beep(freq,dur,type='square',vol=0.15,delay=0){
   o.stop(ac.currentTime+delay+dur+0.05);
 }
 
-// 효과음
-function sfx(type){
+// ?④낵??function sfx(type){
   switch(type){
     case 'start':
-      // 팡파레: 도미솔도
+      // ?≫뙆?? ?꾨??붾룄
       [262,330,392,523].forEach((f,i)=>beep(f,0.12,'square',0.2,i*0.1));
       break;
     case 'event':
-      // 경보음
-      beep(880,0.08,'square',0.15,0);
+      // 寃쎈낫??      beep(880,0.08,'square',0.15,0);
       beep(440,0.08,'square',0.15,0.09);
       beep(880,0.08,'square',0.15,0.18);
       break;
     case 'winner':
-      // 우승 팡파레
-      [523,659,784,1047].forEach((f,i)=>beep(f,0.18,'square',0.2,i*0.12));
+      // ?곗듅 ?≫뙆??      [523,659,784,1047].forEach((f,i)=>beep(f,0.18,'square',0.2,i*0.12));
       setTimeout(()=>[784,1047].forEach((f,i)=>beep(f,0.3,'square',0.25,i*0.15)),600);
       break;
     case 'fall':
@@ -2511,7 +2508,7 @@ function sfx(type){
   }
 }
 
-// BGM — 8비트 레이스 멜로디 루프
+// BGM ??8鍮꾪듃 ?덉씠??硫쒕줈??猷⑦봽
 const BGM_NOTES=[
   [659,0.12],[659,0.12],[0,0.06],[659,0.12],[0,0.06],[523,0.12],[659,0.12],
   [784,0.25],[0,0.25],[392,0.25],[0,0.25],
@@ -2544,7 +2541,7 @@ function playBGMLoop(){
     }
     t+=dur;
   });
-  // 루프
+  // 猷⑦봽
   const loopDur=BGM_NOTES.reduce((a,[,d])=>a+d,0)*1000;
   bgmNodes._loopTimer=setTimeout(()=>{
     if(bgmPlaying) playBGMLoop();
@@ -2559,19 +2556,19 @@ function stopBGM(){
 }
 
 
-// ── GIFT PICK ──
+// ?? GIFT PICK ??
 let gpSelectedPerson=null;
-let gpSelectedGifts=[]; // [{id, name}] 우선순위 순서
+let gpSelectedGifts=[]; // [{id, name}] ?곗꽑?쒖쐞 ?쒖꽌
 
 function enterGiftPick(){
   show('gift-pick-view');
-  // 기존 선택 확인
+  // 湲곗〈 ?좏깮 ?뺤씤
   const saved=localStorage.getItem('tt_gift_pick');
   if(saved){
     const data=JSON.parse(saved);
     gpSelectedPerson=data.name?{id:data.personId||'',name:data.name}:null;
     gpSelectedGifts=data.gifts||[];
-    // 완료 화면으로 바로
+    // ?꾨즺 ?붾㈃?쇰줈 諛붾줈
     gpShowDone();
   } else {
     gpGoStep1();
@@ -2592,7 +2589,7 @@ function renderGPPeople(filter){
   document.getElementById('gp-people-list').innerHTML=ppl.length
     ?ppl.map((entry,i)=>`<div class="p-item${gpSelectedPerson?.id===entry.id?' sel':''}" onclick="gpSelectNameByIndex(${i})">
         <div class="p-av">${escapeHtml(entry.name[0]||'?')}</div>${escapeHtml(entry.name)}</div>`).join('')
-    :'<div style="padding:16px;text-align:center;font-size:12px;color:var(--sub)">검색 결과가 없습니다</div>';
+    :'<div style="padding:16px;text-align:center;font-size:12px;color:var(--sub)">寃??寃곌낵媛 ?놁뒿?덈떎</div>';
 }
 
 function filterGPPeople(v){ renderGPPeople(v); }
@@ -2619,8 +2616,8 @@ async function gpGoStep2(){
   document.getElementById('gp-step-name').classList.add('hidden');
   document.getElementById('gp-step-gifts').classList.remove('hidden');
   document.getElementById('gp-step-done').classList.add('hidden');
-  document.getElementById('gp-title').textContent=gpSelectedPerson.name+'님의 희망 선물';
-  // Firebase에서 매칭 경품만 로드
+  document.getElementById('gp-title').textContent=gpSelectedPerson.name+'?섏쓽 ?щ쭩 ?좊Ъ';
+  // Firebase?먯꽌 留ㅼ묶 寃쏀뭹留?濡쒕뱶
   const snap=await get(ref(db,'settings/prizes'));
   const allPrizes=snap.val()||DEFAULT_PRIZES.map(n=>({name:n,type:'normal',done:false}));
   window._gpPrizes=allPrizes.filter(p=>p.type==='match'&&!p.done);
@@ -2639,7 +2636,7 @@ function renderGPGiftList(){
         ${escapeHtml(p.name)}
       </div>`;
     }).join('')
-    :'<div style="padding:16px;text-align:center;font-size:12px;color:var(--sub)">매칭 선물이 없습니다<br>진행자에게 문의하세요</div>';
+    :'<div style="padding:16px;text-align:center;font-size:12px;color:var(--sub)">매칭 가능한 선물이 없습니다<br>진행자에게 문의해주세요</div>';
 }
 
 function gpToggleGift(id){
@@ -2664,15 +2661,15 @@ function renderGPSelected(){
       <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(61,111,232,0.1);border:1px solid rgba(61,111,232,0.3);border-radius:8px;">
         <div style="width:22px;height:22px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">${i+1}</div>
         <span style="flex:1;font-size:13px;">${escapeHtml(g.name)}</span>
-        <span onclick="gpToggleGift(${g.id})" style="color:rgba(255,255,255,0.3);cursor:pointer;font-size:16px;">✕</span>
+        <span onclick="gpToggleGift(${g.id})" style="color:rgba(255,255,255,0.3);cursor:pointer;font-size:16px;">×</span>
       </div>`).join('')
-    :'<div style="font-size:12px;color:rgba(255,255,255,0.2);padding:8px 0;">아래 목록에서 선물을 선택하세요</div>';
+    :'<div style="font-size:12px;color:rgba(255,255,255,0.2);padding:8px 0;">아래 목록에서 선물을 선택해주세요</div>';
 }
 
 async function submitGiftPick(){
   if(!gpSelectedPerson||gpSelectedGifts.length===0) return;
   const btn=document.getElementById('gp-submit-btn');
-  btn.disabled=true; btn.textContent='저장 중...';
+  btn.disabled=true; btn.textContent='저장 중..';
   const data={personId:gpSelectedPerson.id,name:gpSelectedPerson.name,gifts:gpSelectedGifts,ts:Date.now()};
   await set(ref(db,'gift_preferences/'+safeFirebaseKey(gpSelectedPerson.id||gpSelectedPerson.name)), data);
   localStorage.setItem('tt_gift_pick', JSON.stringify(data));
@@ -2730,7 +2727,7 @@ async function savePeople(){
     alert(people.length+'명이 저장됐어요!');
   } catch(e) {
     people = prevPeople;
-    alert('참석자 명단 저장에 실패했어요. 네트워크/Firebase 상태를 확인한 뒤 다시 시도해주세요.\n\n오류: '+e.message);
+    alert('참석자 명단 저장에 실패했어요. 네트워크 또는 Firebase 상태를 확인한 뒤 다시 시도해주세요.\n\n오류: '+e.message);
   }
 }
 
@@ -2849,7 +2846,7 @@ async function gpGoStep2(){
   document.getElementById('gp-step-name').classList.add('hidden');
   document.getElementById('gp-step-gifts').classList.remove('hidden');
   document.getElementById('gp-step-done').classList.add('hidden');
-  document.getElementById('gp-title').textContent=gpSelectedPerson.name+'?섏쓽 ?щ쭩 ?좊Ъ';
+  document.getElementById('gp-title').textContent=gpSelectedPerson.name+'님의 선물을 골라주세요';
   const personKey=getPersonKey(gpSelectedPerson);
   const [prizeSnap,giftSnap,msgSnap]=await Promise.all([
     get(ref(db,'settings/prizes')),
@@ -2891,7 +2888,7 @@ async function submitGiftPick(){
   if(!gpSelectedPerson||gpSelectedGifts.length===0||gpMessageText.trim().length<2) return;
   const btn=document.getElementById('gp-submit-btn');
   btn.disabled=true;
-  btn.textContent='???以?..';
+  btn.textContent='저장 중..';
   const personKey=getPersonKey(gpSelectedPerson);
   const now=Date.now();
   const giftData={personId:gpSelectedPerson.id,name:gpSelectedPerson.name,gifts:gpSelectedGifts,ts:now};
@@ -2913,7 +2910,7 @@ async function submitGiftPick(){
   ]);
   gpExistingMessageMeta=messageData;
   localStorage.setItem('tt_gift_pick', JSON.stringify({...giftData, messageData}));
-  btn.textContent='?좊Ъ ?좏깮 ?꾨즺';
+  btn.textContent='선물 + 메시지 저장';
   gpShowDone();
 }
 
@@ -2923,9 +2920,9 @@ function gpShowDone(){
   document.getElementById('gp-step-done').classList.remove('hidden');
   const saved=JSON.parse(localStorage.getItem('tt_gift_pick')||'{}');
   const savedMessage=saved.messageData||saved;
-  const visibilityLabel=savedMessage.displayMode==='anonymous' ? '익명 공개' : (savedMessage.displayMode==='private' ? '비공개' : '실명 공개');
+  const visibilityLabel=savedMessage.displayMode==='anonymous' ? '익명 공개' : '실명 공개';
   document.getElementById('gp-done-list').innerHTML=`
-    <div style="font-size:13px;color:var(--sub);margin-bottom:8px;">${escapeHtml(saved.name||gpSelectedPerson?.name||'')}?섏쓽 ?щ쭩 ?좊Ъ</div>
+    <div style="font-size:13px;color:var(--sub);margin-bottom:8px;">${escapeHtml(saved.name||gpSelectedPerson?.name||'')}님의 희망 선물과 메시지</div>
     ${(saved.gifts||gpSelectedGifts).map((g,i)=>`
       <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(255,255,255,0.04);border-radius:8px;margin-bottom:4px;">
         <div style="width:22px;height:22px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;">${i+1}</div>
@@ -2935,7 +2932,7 @@ function gpShowDone(){
       <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-bottom:8px;">6주년 메시지 · ${escapeHtml(visibilityLabel)}</div>
       <div style="font-size:14px;line-height:1.6;">"${escapeHtml(savedMessage.shortMessage||gpMessageText)}"</div>
       ${(savedMessage.tags||gpSelectedTags).length ? `<div style="margin-top:10px;font-size:12px;color:#8fb1ff;">${(savedMessage.tags||gpSelectedTags).map(tag=>`#${escapeHtml(tag)}`).join(' ')}</div>` : ''}
-      ${(savedMessage.extraAnswer||gpExtraAnswer) ? `<div style="margin-top:10px;font-size:12px;color:rgba(255,255,255,0.55);">7주년 답변: ${escapeHtml(savedMessage.extraAnswer||gpExtraAnswer)}</div>` : ''}
+      ${(savedMessage.extraAnswer||gpExtraAnswer) ? `<div style="margin-top:10px;font-size:12px;color:rgba(255,255,255,0.55);">7주년 응답: ${escapeHtml(savedMessage.extraAnswer||gpExtraAnswer)}</div>` : ''}
     </div>
   `;
 }
@@ -2949,7 +2946,7 @@ function gpEdit(){
   renderGPPeople('');
 }
 
-// ── 추첨 매칭 로직 ──
+// ?? 異붿꺼 留ㅼ묶 濡쒖쭅 ??
 async function getGiftMatch(winnerEntry){
   const keys=[winnerEntry?.id, winnerEntry?.name].filter(Boolean).map(safeFirebaseKey);
   let prefs=[];
@@ -2961,7 +2958,7 @@ async function getGiftMatch(winnerEntry){
     }
   }
   if(!prefs.length) return null;
-  // 남은 매칭 경품 확인
+  // ?⑥? 留ㅼ묶 寃쏀뭹 ?뺤씤
   for(const pref of prefs){
     const prize=prizes.find(p=>p.name===pref.name&&p.type==='match'&&!p.done);
     if(prize) return prize;
@@ -3009,7 +3006,7 @@ function renderMessageList(){
   }
   listEl.innerHTML=list.map(msg=>{
     const badges=[
-      msg.displayMode==='anonymous' ? '익명' : (msg.displayMode==='private' ? '비공개' : '실명'),
+      msg.displayMode==='anonymous' ? '익명' : '실명',
       msg.featured ? '진행자 픽' : '',
       msg.adminHidden ? '숨김' : ''
     ].filter(Boolean);
@@ -3022,7 +3019,7 @@ function renderMessageList(){
           </div>
         </div>
         <div class="message-body">${escapeHtml(msg.shortMessage || '(메시지 없음)')}</div>
-        ${msg.extraAnswer ? `<div class="message-extra">7주년 답변: ${escapeHtml(msg.extraAnswer)}</div>` : ''}
+        ${msg.extraAnswer ? `<div class="message-extra">7주년 응답: ${escapeHtml(msg.extraAnswer)}</div>` : ''}
         ${msg.tags.length ? `<div class="message-tags-line">${msg.tags.map(tag=>`#${escapeHtml(tag)}`).join(' ')}</div>` : ''}
       </button>
     `;
@@ -3052,9 +3049,9 @@ function renderSelectedMessagePreview(){
   el.innerHTML=`
     <div class="message-preview-title">${escapeHtml(getMessageAuthorLabel(msg))}</div>
     <div class="message-preview-quote">"${escapeHtml(msg.shortMessage || '(메시지 없음)')}"</div>
-    ${msg.extraAnswer ? `<div class="message-preview-footer">7주년 답변: ${escapeHtml(msg.extraAnswer)}</div>` : ''}
+    ${msg.extraAnswer ? `<div class="message-preview-footer">7주년 응답: ${escapeHtml(msg.extraAnswer)}</div>` : ''}
     ${msg.tags.length ? `<div class="message-tags-line">${msg.tags.map(tag=>`#${escapeHtml(tag)}`).join(' ')}</div>` : ''}
-    <div class="message-preview-footer">공개 방식: ${msg.displayMode==='anonymous' ? '익명 공개' : (msg.displayMode==='private' ? '비공개' : '실명 공개')}</div>
+    <div class="message-preview-footer">공개 방식: ${msg.displayMode==='anonymous' ? '익명 공개' : '실명 공개'}</div>
   `;
 }
 
@@ -3082,7 +3079,7 @@ function renderMessageStageCard(msg){
       <div class="message-stage-label">TECHTAKA 6TH MESSAGE</div>
       <div class="message-stage-quote">"${escapeHtml(msg.shortMessage)}"</div>
       <div class="message-stage-author">- ${escapeHtml(getMessageAuthorLabel(msg))}</div>
-      ${msg.extraAnswer ? `<div class="message-stage-extra">7주년 답변: ${escapeHtml(msg.extraAnswer)}</div>` : ''}
+      ${msg.extraAnswer ? `<div class="message-stage-extra">7주년 응답: ${escapeHtml(msg.extraAnswer)}</div>` : ''}
       ${msg.tags.length ? `<div class="message-stage-tags">${msg.tags.map(tag=>`<span class="message-badge">#${escapeHtml(tag)}</span>`).join('')}</div>` : ''}
     </div>
   `;
@@ -3175,7 +3172,1339 @@ function initMessagesAdmin(){
   }));
 }
 
-// 일반 script - 전역 노출 불필요
+const EXECUTIVE_NAMES=['Soo','Chris','John'];
+const DEFAULT_SELECTION_PRIZES=[
+  {id:'stena_stn100a',name:'스테나 아키텍 가열식 가습기 STN100A',tier:'S',stock:1,bundleSize:1},
+  {id:'lumena_mist_tower_plus',name:'루메나 MIST TOWER PLUS',tier:'S',stock:1,bundleSize:1},
+  {id:'lumena_mist_pot',name:'루메나 MIST POT',tier:'S',stock:1,bundleSize:1},
+  {id:'korin_hubpack_x',name:'KORIN HubPack X',tier:'S',stock:1,bundleSize:1},
+  {id:'korin_hubsling_x',name:'KORIN HubSling X',tier:'A',stock:1,bundleSize:1},
+  {id:'korin_clicksling_s',name:'KORIN ClickSling S',tier:'A',stock:1,bundleSize:1},
+  {id:'red_ginseng_box',name:'홍삼정 에브리데이 100포 1BOX',tier:'A',stock:1,bundleSize:1},
+  {id:'lumena_warmer_pad',name:'루메나 WARMER PAD 발난로',tier:'A',stock:1,bundleSize:1},
+  {id:'inthome_stand',name:'INTHome 맥북 프로 노트북 거치대 IH-LS001',tier:'A',stock:1,bundleSize:1},
+  {id:'doctor_ryan',name:'카카오프렌즈 닥터라이언 피규어',tier:'A',stock:3,bundleSize:1},
+  {id:'biodance_2box',name:'바이오던스 마스크팩 2BOX 세트 (10ea)',tier:'A',stock:12,bundleSize:2},
+  {id:'lf_0324',name:'이야 충전식 저주파 마사지기 LF-0324',tier:'B',stock:20,bundleSize:1,fallbackLabel:'저주파 마사지기 1개'},
+  {id:'choonsik_glass_set',name:'카카오프렌즈 춘식이 유리볼 2ea 세트',tier:'B',stock:10,bundleSize:2,fallbackLabel:'춘식이 유리볼 2ea'},
+  {id:'volvik_v10_box',name:'볼빅 소닉 V10 소프트 트랙 골프공 12개입',tier:'B',stock:9,bundleSize:1,fallbackLabel:'볼빅 골프공 1박스'},
+  {id:'reselbio_cica_5ea',name:'리셀바이오 PDRN 시카 크림 5ea 세트',tier:'B',stock:1,bundleSize:5,fallbackLabel:'리셀바이오 시카크림 5ea'}
+];
+const GIFT_SLOT_RULES=[
+  {slot:1,label:'1순위',tiers:['S','A']},
+  {slot:2,label:'2순위',tiers:['A']},
+  {slot:3,label:'3순위',tiers:['B']}
+];
+const FALLBACK_PRIZE_IDS=['lf_0324','choonsik_glass_set','volvik_v10_box','reselbio_cica_5ea'];
+let currentParticipant=null;
+let authSelectedPerson=null;
+let gpChoiceBySlot=[null,null,null];
+
+function isExecutiveName(name){
+  return EXECUTIVE_NAMES.includes(String(name||'').trim());
+}
+
+function normalizePeopleList(raw){
+  return (raw||[]).map((entry,idx)=>{
+    if(typeof entry==='string'){
+      const parts=entry.split('|');
+      const name=String(parts[0]||'').trim();
+      const verifyCode=String(parts[1]||'').trim().replace(/\D/g,'').slice(-4);
+      if(!name) return null;
+      return {id:`person:${safeFirebaseKey(name)}:${idx}`,name,verifyCode};
+    }
+    if(!entry || typeof entry!=='object') return null;
+    const name=String(entry.name||'').trim();
+    if(!name) return null;
+    return {
+      id:String(entry.id||`person:${safeFirebaseKey(name)}:${idx}`),
+      name,
+      verifyCode:String(entry.verifyCode||'').trim().replace(/\D/g,'').slice(-4)
+    };
+  }).filter(Boolean);
+}
+
+function serializePeopleList(list){
+  return normalizePeopleList(list).map(person=>({
+    id:person.id,
+    name:person.name,
+    verifyCode:person.verifyCode
+  }));
+}
+
+function peopleToTextareaValue(list){
+  return normalizePeopleList(list).map(person=>`${person.name}|${person.verifyCode||''}`).join('\n');
+}
+
+function getPeopleMap(list){
+  const map=new Map();
+  normalizePeopleList(list).forEach(person=>map.set(person.id, person));
+  return map;
+}
+
+function getAuthenticatedParticipant(){
+  if(currentParticipant) return currentParticipant;
+  try{
+    const saved=JSON.parse(localStorage.getItem('tt_auth_person')||'null');
+    if(saved?.id && saved?.name){
+      currentParticipant=saved;
+      return currentParticipant;
+    }
+  }catch(e){}
+  return null;
+}
+
+function setAuthenticatedParticipant(person){
+  currentParticipant={id:person.id,name:person.name};
+  localStorage.setItem('tt_auth_person', JSON.stringify(currentParticipant));
+}
+
+function ensureParticipantAuthUI(){
+  const pBody=document.querySelector('#p-view .p-body');
+  if(!pBody || document.getElementById('p-auth')) return;
+  const wrap=document.createElement('div');
+  wrap.id='p-auth';
+  wrap.className='hidden';
+  wrap.innerHTML=`
+    <div class="q-card" style="margin-bottom:16px;">
+      <div class="q-num">STEP 1</div>
+      <div class="q-text">이름을 선택하고 확인값 4자리를 입력해주세요</div>
+    </div>
+    <div class="search-w"><span class="si">🔎</span><input type="text" id="auth-search" placeholder="이름 검색.." oninput="filterAuthPeople(this.value)"></div>
+    <div class="ppl-list" id="auth-people-list" style="margin-bottom:12px;"></div>
+    <div class="sec-lbl">확인값 4자리</div>
+    <input type="password" id="auth-code" class="reason-ta" style="height:48px;resize:none;" maxlength="4" inputmode="numeric" placeholder="예: 4821">
+    <div id="auth-selected" class="sel-prev hidden">선택한 이름: <span id="auth-selected-name"></span></div>
+    <button class="sub-btn" id="auth-submit-btn" onclick="verifyParticipantAuth()" disabled>본인 확인</button>
+  `;
+  pBody.prepend(wrap);
+}
+
+function ensureGiftVerifyUI(){
+  const step=document.getElementById('gp-step-name');
+  if(!step || document.getElementById('gp-verify-code')) return;
+  const block=document.createElement('div');
+  block.innerHTML=`
+    <div class="sec-lbl" style="margin-top:10px;">확인값 4자리</div>
+    <input type="password" id="gp-verify-code" class="reason-ta" style="height:44px;resize:none;" maxlength="4" inputmode="numeric" placeholder="확인값 4자리를 입력해주세요">
+  `;
+  const nextBtn=document.getElementById('gp-next-btn');
+  step.insertBefore(block, nextBtn);
+}
+
+function ensureDraftSafetyPanel(){
+  const grid=document.querySelector('#h-draft-view .hd-grid');
+  if(!grid || document.getElementById('draft-safety-panel')) return;
+  const panel=document.createElement('div');
+  panel.id='draft-safety-panel';
+  panel.className='panel';
+  panel.style.marginTop='16px';
+  panel.innerHTML=`
+    <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.35);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;">Draft Safety</div>
+    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;">
+      <div class="stat-box"><div class="stat-num" id="draft-remaining-stock">0</div><div class="stat-lbl">남은 선택형 재고</div></div>
+      <div class="stat-box"><div class="stat-num" id="draft-projected-count">0</div><div class="stat-lbl">현재 회차 예상 지급</div></div>
+      <div class="stat-box"><div class="stat-num" id="draft-round3-guard">OK</div><div class="stat-lbl">3회차 진행 여부</div></div>
+    </div>
+    <div id="draft-safety-note" style="font-size:12px;color:rgba(255,255,255,0.55);margin-top:10px;line-height:1.6;">드래프트 3회차는 남은 선택형 재고 15개 이상, 직전 1위 득표 15표 이하일 때 권장합니다.</div>
+    <div id="draft-reward-summary" style="margin-top:12px;font-size:12px;color:rgba(255,255,255,0.72);line-height:1.7;"></div>
+  `;
+  grid.parentElement.appendChild(panel);
+}
+
+function showP(screen){
+  ['auth','waiting','voting','done','closed','race','race-done','ended'].forEach(s=>{
+    const el=document.getElementById(`p-${s}`);
+    if(el) el.classList.add('hidden');
+  });
+  document.getElementById(`p-${screen}`)?.classList.remove('hidden');
+}
+
+function getSelectionPrizeCatalog(catalog){
+  return (catalog||prizes||[]).filter(item=>item && item.selectionActive!==false);
+}
+
+function normalizePrizeCatalog(raw){
+  const fallbackMap=new Map(DEFAULT_SELECTION_PRIZES.map(item=>[item.id,item]));
+  const base=(raw&&raw.length?raw:DEFAULT_SELECTION_PRIZES).map(item=>{
+    const seed=fallbackMap.get(item.id)||{};
+    return {
+      id:String(item.id||seed.id||safeFirebaseKey(item.name)),
+      name:String(item.name||seed.name||'').trim(),
+      tier:String(item.tier||seed.tier||'B'),
+      stock:Math.max(0, Number(item.stock ?? seed.stock ?? 0)),
+      bundleSize:Number(item.bundleSize ?? seed.bundleSize ?? 1),
+      selectionActive:item.selectionActive!==false,
+      fallbackLabel:String(item.fallbackLabel||seed.fallbackLabel||item.name||seed.name||'')
+    };
+  });
+  const existing=new Set(base.map(item=>item.id));
+  DEFAULT_SELECTION_PRIZES.forEach(item=>{
+    if(!existing.has(item.id)) base.push({...item});
+  });
+  return base;
+}
+
+async function ensureSelectionPrizeCatalog(){
+  try{
+    const snap=await get(ref(db,'settings/selection_prizes'));
+    let catalog=normalizePrizeCatalog(snap.val());
+    if(!snap.val() || !Array.isArray(snap.val()) || snap.val().length!==catalog.length){
+      await set(ref(db,'settings/selection_prizes'), catalog);
+    }
+    prizes=catalog;
+    return catalog;
+  }catch(e){
+    prizes=normalizePrizeCatalog(prizes);
+    return prizes;
+  }
+}
+
+async function saveSelectionPrizeCatalog(catalog){
+  prizes=normalizePrizeCatalog(catalog);
+  await set(ref(db,'settings/selection_prizes'), prizes);
+  return prizes;
+}
+
+function getDraftRewardedSet(allRewards){
+  const set=new Set();
+  Object.values(allRewards||{}).forEach(round=>{
+    (round?.assignedRewards||[]).forEach(item=>{
+      if(item?.personId) set.add(item.personId);
+    });
+  });
+  return set;
+}
+
+async function getDraftRewardContext(){
+  const [catalog,rewardsSnap]=await Promise.all([
+    ensureSelectionPrizeCatalog(),
+    get(ref(db,'draft_rewards'))
+  ]);
+  return {
+    catalog,
+    allRewards:rewardsSnap.val()||{},
+    rewardedSet:getDraftRewardedSet(rewardsSnap.val()||{})
+  };
+}
+
+function getAllowedPrizesForSlot(catalog, slot){
+  const rule=GIFT_SLOT_RULES.find(item=>item.slot===slot);
+  if(!rule) return [];
+  return getSelectionPrizeCatalog(catalog).filter(prize=>rule.tiers.includes(prize.tier) && prize.stock>0);
+}
+
+function getRemainingSelectionStock(catalog){
+  return getSelectionPrizeCatalog(catalog).reduce((sum,item)=>sum+Math.max(0, Number(item.stock)||0),0);
+}
+
+function getFallbackPrize(catalog){
+  for(const prizeId of FALLBACK_PRIZE_IDS){
+    const found=catalog.find(item=>item.id===prizeId && item.stock>0);
+    if(found) return found;
+  }
+  return null;
+}
+
+function getPersonGiftChoices(personId, prefMap){
+  const pref=prefMap.get(personId)||{};
+  const choices=Array.isArray(pref.choices) ? pref.choices.filter(Boolean).map(choice=>{
+    if(typeof choice==='string') return choice;
+    return choice?.prizeId||choice?.id||'';
+  }).filter(Boolean) : [];
+  return choices;
+}
+
+function allocatePrizeToPerson(person, prefMap, catalog){
+  const choices=getPersonGiftChoices(person.personId||person.id, prefMap);
+  for(const prizeId of choices){
+    const found=catalog.find(item=>item.id===prizeId && item.stock>0);
+    if(found){
+      found.stock-=1;
+      return {prizeId:found.id, prizeName:found.name, source:'choice'};
+    }
+  }
+  const fallback=getFallbackPrize(catalog);
+  if(fallback){
+    fallback.stock-=1;
+    return {prizeId:fallback.id, prizeName:fallback.fallbackLabel||fallback.name, source:'fallback'};
+  }
+  return null;
+}
+
+async function getGiftPreferenceMap(){
+  const snap=await get(ref(db,'gift_preferences'));
+  const raw=snap.val()||{};
+  const map=new Map();
+  Object.entries(raw).forEach(([key,value])=>{
+    const personId=value?.personId || key;
+    map.set(personId, value||{});
+  });
+  return map;
+}
+
+function updateDraftSafetyUI(remainingStock, projectedCount, round3Allowed, summaryText){
+  const remainingEl=document.getElementById('draft-remaining-stock');
+  const projectedEl=document.getElementById('draft-projected-count');
+  const guardEl=document.getElementById('draft-round3-guard');
+  const summaryEl=document.getElementById('draft-reward-summary');
+  if(remainingEl) remainingEl.textContent=String(remainingStock ?? 0);
+  if(projectedEl) projectedEl.textContent=String(projectedCount ?? 0);
+  if(guardEl){
+    guardEl.textContent=round3Allowed?'OK':'WARN';
+    guardEl.style.color=round3Allowed?'#44ff88':'#ffb366';
+  }
+  if(summaryEl) summaryEl.innerHTML=summaryText||'아직 드래프트 보상 로그가 없습니다.';
+}
+
+async function refreshDraftSafetyIndicators(currentVotes){
+  ensureDraftSafetyPanel();
+  const [catalog,rewardsSnap]=await Promise.all([
+    ensureSelectionPrizeCatalog(),
+    get(ref(db,'draft_rewards'))
+  ]);
+  const allRewards=rewardsSnap.val()||{};
+  const remainingStock=getRemainingSelectionStock(catalog);
+  const counts={};
+  Object.values(currentVotes||{}).forEach(v=>{
+    const key=v.personId||v.person;
+    counts[key]=(counts[key]||0)+1;
+  });
+  const topVoteCount=Math.max(0,...Object.values(counts));
+  const projectedCount=topVoteCount ? topVoteCount+1 : 0;
+  const previousTop=Object.values(allRewards).reduce((max,round)=>Math.max(max, Number(round?.topVoteCount)||0),0);
+  const round3Allowed=remainingStock>=15 && previousTop<=15;
+  const summaryText=Object.entries(allRewards).sort((a,b)=>a[0].localeCompare(b[0])).map(([key,round])=>{
+    const granted=(round?.assignedRewards||[]).length;
+    return `<div>${escapeHtml(key.toUpperCase())}: 1위 ${escapeHtml(round?.winnerName||'-')} · 득표 ${Number(round?.topVoteCount)||0}표 · 지급 ${granted}건</div>`;
+  }).join('') || '아직 드래프트 보상 로그가 없습니다.';
+  updateDraftSafetyUI(remainingStock, projectedCount, round3Allowed, summaryText);
+  return {remainingStock,projectedCount,round3Allowed,previousTop};
+}
+
+async function processDraftRewardsForQuestion(qIdx, qv, winnerPersonId, winnerName){
+  const rewardPath=`draft_rewards/q${qIdx}`;
+  const existingSnap=await get(ref(db,rewardPath));
+  if(existingSnap.val()?.processed) return existingSnap.val();
+
+  const [prefMap,context] = await Promise.all([
+    getGiftPreferenceMap(),
+    getDraftRewardContext()
+  ]);
+  const peopleMap=getPeopleMap(people);
+  const catalog=context.catalog.map(item=>({...item}));
+  const winnerPerson=(winnerPersonId && peopleMap.get(winnerPersonId)) || [...peopleMap.values()].find(person=>person.name===winnerName) || null;
+  const winnerKey=winnerPerson?.id || winnerPersonId || winnerName || '';
+  const correctVoters=Object.values(qv||{})
+    .filter(v=>(v.personId||v.person)===winnerKey)
+    .filter(v=>(v.voterId||'')!==winnerKey)
+    .sort((a,b)=>{
+      const aTs=Number(a.ts)||Number(a.clientTs)||0;
+      const bTs=Number(b.ts)||Number(b.clientTs)||0;
+      return aTs-bTs;
+    });
+
+  const assignedRewards=[];
+  const roundRewarded=new Set();
+
+  if(winnerPerson && !context.rewardedSet.has(winnerPerson.id)){
+    const allocation=allocatePrizeToPerson({personId:winnerPerson.id,name:winnerPerson.name}, prefMap, catalog);
+    if(allocation){
+      assignedRewards.push({personId:winnerPerson.id,name:winnerPerson.name,role:'winner',...allocation});
+      roundRewarded.add(winnerPerson.id);
+    }
+  }
+
+  correctVoters.forEach(voter=>{
+    const personId=voter.personId||'';
+    if(!personId) return;
+    if(context.rewardedSet.has(personId) || roundRewarded.has(personId)) return;
+    const person=peopleMap.get(personId) || {id:personId,name:voter.voterName||voter.name||personId};
+    const allocation=allocatePrizeToPerson({personId:person.id,name:person.name}, prefMap, catalog);
+    if(!allocation) return;
+    assignedRewards.push({personId:person.id,name:person.name,role:'correct_voter',voteTs:Number(voter.ts)||0,...allocation});
+    roundRewarded.add(person.id);
+  });
+
+  const rewardLog={
+    processed:true,
+    qIdx,
+    winnerName:winnerName||'',
+    winnerPersonId:winnerPerson?.id||'',
+    topVoteCount:correctVoters.length,
+    assignedRewards,
+    projectedCount:correctVoters.length+1,
+    processedAt:Date.now()
+  };
+  await Promise.all([
+    set(ref(db,rewardPath), rewardLog),
+    saveSelectionPrizeCatalog(catalog)
+  ]);
+  return rewardLog;
+}
+
+function getDraftCandidatePool(){
+  const source=candidates.length ? candidates : people;
+  return getNameEntries(source, candidates.length?'candidate':'person')
+    .filter(entry=>!isExecutiveName(entry.name))
+    .filter(entry=>entry.id!==getAuthenticatedParticipant()?.id);
+}
+
+function renderPeople(filter){
+  const filtered=getDraftCandidatePool().filter(entry=>entry.name.includes(filter||''));
+  window._peopleViewEntries=filtered;
+  document.getElementById('people-list').innerHTML=filtered.length?filtered.map((entry,i)=>
+    `<div class="p-item${selectedPerson?.id===entry.id?' sel':''}" onclick="selectPersonByIndex(${i})"><div class="p-av">${escapeHtml(entry.name[0]||'?')}</div>${escapeHtml(entry.name)}</div>`
+  ).join(''):'<div style="padding:16px;text-align:center;font-size:12px;color:var(--sub)">寃??寃곌낵媛 ?놁뒿?덈떎</div>';
+}
+
+function loadVoteQ(qIdx){
+  document.getElementById('p-q-num').textContent=`QUESTION ${qIdx+1} / ${questions.length}`;
+  document.getElementById('p-q-text').textContent=questions[qIdx]||'';
+  selectedPerson=null;
+  document.getElementById('sel-prev').classList.add('hidden');
+  document.getElementById('reason-input').value='';
+  document.getElementById('submit-btn').disabled=true;
+  document.getElementById('search-input').value='';
+  renderPeople('');
+  window._voteQ=qIdx;
+}
+
+async function submitVote(){
+  const participant=getAuthenticatedParticipant();
+  if(!participant){ showP('auth'); return; }
+  if(!selectedPerson || participant.id===selectedPerson.id) return;
+  const reason=document.getElementById('reason-input').value.trim();
+  const qIdx=window._voteQ;
+  const btn=document.getElementById('submit-btn');
+  btn.disabled=true;
+  btn.textContent='?쒖텧 以?.';
+  try{
+    await push(ref(db,`votes/q${qIdx}`),{
+      voterName:participant.name,
+      voterId:participant.id,
+      person:selectedPerson.name,
+      personId:selectedPerson.id,
+      reason,
+      ts:firebase.database.ServerValue.TIMESTAMP,
+      clientTs:Date.now()
+    });
+  }catch(e){
+    btn.disabled=false;
+    btn.textContent='?ы몴?섍린';
+    alert('?ㅻ쪟: '+e.message);
+    return;
+  }
+  myVotedQs[qIdx]=true;
+  localStorage.setItem('tt_voted', JSON.stringify(myVotedQs));
+  localStorage.setItem('tt_voted_name_'+qIdx, selectedPerson.name);
+  showP('done');
+}
+
+function loadRaceBet(raceRacers, sessionIdx){
+  selectedRacer=null;
+  document.getElementById('race-bet-btn').disabled=true;
+  document.getElementById('racer-options').innerHTML=raceRacers.map((r,i)=>`
+    <div class="racer-opt" onclick="selectRacer(${i})">
+      <div style="width:14px;height:14px;border-radius:50%;background:${RACER_COLORS[i]};flex-shrink:0;"></div>
+      <div class="ro-info">
+        <div class="ro-name">${escapeHtml(r.name)}</div>
+        <div class="ro-title">${escapeHtml(r.title||'')}</div>
+      </div>
+    </div>`).join('');
+  window._betSession=sessionIdx;
+  window._betRacers=raceRacers;
+  const nameWrap=document.getElementById('race-name-wrap');
+  if(nameWrap) nameWrap.style.display='none';
+}
+
+async function submitRaceBet(){
+  const participant=getAuthenticatedParticipant();
+  if(!participant || selectedRacer===null) return;
+  const btn=document.getElementById('race-bet-btn');
+  btn.disabled=true;
+  btn.textContent='?쒖텧 以?.';
+  await push(ref(db,'bets/s'+window._betSession),{
+    racerIdx:selectedRacer,
+    name:participant.name,
+    personId:participant.id,
+    ts:firebase.database.ServerValue.TIMESTAMP
+  });
+  myBetQ[window._betSession]=true;
+  myBetQLocal[window._betSession]=true;
+  localStorage.setItem('tt_bets', JSON.stringify(myBetQLocal));
+  localStorage.setItem('tt_bet_racer_'+window._betSession, participant.name+'|'+(window._betRacers[selectedRacer]?.name||''));
+  showP('race-done');
+}
+
+function renderAuthPeople(filter){
+  const filtered=normalizePeopleList(people).filter(person=>person.name.includes(filter||''));
+  window._authPeopleEntries=filtered;
+  document.getElementById('auth-people-list').innerHTML=filtered.length?filtered.map((entry,i)=>`
+    <div class="p-item${authSelectedPerson?.id===entry.id?' sel':''}" onclick="selectAuthPersonByIndex(${i})">
+      <div class="p-av">${escapeHtml(entry.name[0]||'?')}</div>${escapeHtml(entry.name)}
+    </div>`).join(''):'<div style="padding:16px;text-align:center;font-size:12px;color:var(--sub)">검색 결과가 없습니다</div>';
+}
+
+function filterAuthPeople(val){ renderAuthPeople(val); }
+
+window.selectAuthPersonByIndex=function(idx){
+  const person=window._authPeopleEntries?.[idx];
+  if(!person) return;
+  authSelectedPerson=person;
+  document.getElementById('auth-selected').classList.remove('hidden');
+  document.getElementById('auth-selected-name').textContent=person.name;
+  document.getElementById('auth-submit-btn').disabled=false;
+  renderAuthPeople(document.getElementById('auth-search').value);
+};
+
+function verifyParticipantAuth(){
+  const code=document.getElementById('auth-code')?.value.trim().replace(/\D/g,'').slice(-4);
+  if(!authSelectedPerson || !code) return;
+  if((authSelectedPerson.verifyCode||'')!==code){
+    alert('확인값 4자리가 일치하지 않습니다.');
+    return;
+  }
+  setAuthenticatedParticipant(authSelectedPerson);
+  authSelectedPerson=null;
+  document.getElementById('auth-code').value='';
+  document.getElementById('auth-search').value='';
+  showP('waiting');
+  listenToHostState();
+}
+
+function enterParticipant(){
+  ensureParticipantAuthUI();
+  ensureGiftVerifyUI();
+  show('p-view');
+  const participant=getAuthenticatedParticipant();
+  if(participant){
+    showP('waiting');
+    listenToHostState();
+  } else {
+    renderAuthPeople('');
+    document.getElementById('auth-code').value='';
+    document.getElementById('auth-selected').classList.add('hidden');
+    document.getElementById('auth-submit-btn').disabled=true;
+    showP('auth');
+  }
+}
+
+async function loadSettingsFromDB(){
+  const [settingsSnap, catalog] = await Promise.all([
+    get(ref(db,'settings')),
+    ensureSelectionPrizeCatalog()
+  ]);
+  const s=settingsSnap.val()||{};
+  if(s.questions) questions=s.questions;
+  if(s.people) people=normalizePeopleList(s.people);
+  if(s.candidates) candidates=normalizePeopleList(s.candidates);
+  else candidates=[...people];
+  document.getElementById('questions-textarea').value=questions.join('\n');
+  document.getElementById('people-textarea').value=peopleToTextareaValue(people);
+  document.getElementById('candidates-textarea').value=normalizePeopleList(candidates).map(item=>item.name).join('\n');
+  prizes=catalog;
+  initTabs();
+  await refreshDraftSafetyIndicators();
+}
+
+async function savePeople(){
+  const prevPeople=[...people];
+  const raw=document.getElementById('people-textarea').value;
+  const nextPeople=normalizePeopleList(raw.split('\n'));
+  try{
+    await set(ref(db,'settings/people'), serializePeopleList(nextPeople));
+    people=nextPeople;
+    localStorage.setItem('tt_people_cache', JSON.stringify(serializePeopleList(nextPeople)));
+    alert(people.length+'명이 저장됐어요!');
+  }catch(e){
+    people=prevPeople;
+    alert('참석자 명단 저장에 실패했어요.\n\n오류: '+e.message);
+  }
+}
+
+async function saveCandidates(){
+  const raw=document.getElementById('candidates-textarea').value;
+  const nextCandidates=raw.split('\n').map(name=>String(name||'').trim()).filter(Boolean).map((name,idx)=>({id:`candidate:${safeFirebaseKey(name)}:${idx}`,name}));
+  try{
+    await set(ref(db,'settings/candidates'), nextCandidates);
+    candidates=nextCandidates;
+    alert(candidates.length+'명의 후보가 저장됐어요!');
+  }catch(e){
+    alert('후보 저장에 실패했어요.\n\n오류: '+e.message);
+  }
+}
+
+function getNameEntries(list, source='entry'){
+  return normalizePeopleList(list).map((entry,idx)=>({
+    id:entry.id||`${source}:${idx}`,
+    name:entry.name,
+    verifyCode:entry.verifyCode||''
+  }));
+}
+
+async function startQuestion(){
+  await refreshDraftSafetyIndicators();
+  if(currentQIdx===2){
+    const safety=await refreshDraftSafetyIndicators();
+    if(!safety.round3Allowed){
+      alert('3회차 드래프트는 남은 선택형 재고 15개 이상, 직전 1위 득표 15표 이하일 때 권장됩니다.');
+      return;
+    }
+  }
+  await set(ref(db,'state'),{currentQ:currentQIdx,active:true,closed:false,standby:false,mode:'draft'});
+  firstReason=true;
+}
+
+async function listenToVotes(){
+  replaceListener('votes', onValue(ref(db,'votes'), async (snap)=>{
+    const all=snap.val()||{};
+    const qv=all[`q${currentQIdx}`]||{};
+    const counts={},labels={};
+    Object.values(qv).forEach(v=>{
+      const key=v.personId||v.person;
+      counts[key]=(counts[key]||0)+1;
+      labels[key]=v.person||key;
+    });
+    renderBars(counts, labels);
+    renderReasons(qv);
+    document.getElementById('total-h').textContent=Object.keys(qv).length;
+    document.getElementById('unique-h').textContent=Object.keys(counts).length;
+    await refreshDraftSafetyIndicators(qv);
+  }));
+}
+
+async function showReveal(){
+  const snap=await get(ref(db,`votes/q${currentQIdx}`));
+  const qv=snap.val()||{};
+  const counts={},reasons={},labels={};
+  Object.values(qv).forEach(v=>{
+    const key=v.personId||v.person;
+    counts[key]=(counts[key]||0)+1;
+    labels[key]=v.person||key;
+    if(!reasons[key]) reasons[key]=[];
+    if(v.reason) reasons[key].push(v.reason);
+  });
+  const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  revealData=sorted.slice(0,3).map(([key,cnt])=>({personId:key,name:labels[key]||key,cnt,reasons:reasons[key]||[]}));
+  if(!revealData.length){ alert('투표 데이터가 없습니다.'); return; }
+  const rewardLog=await processDraftRewardsForQuestion(currentQIdx, qv, revealData[0].personId, revealData[0].name);
+  await refreshDraftSafetyIndicators(qv);
+  const summary=(rewardLog?.assignedRewards||[]).map(item=>`${item.name} ??${item.prizeName}`).join(', ');
+  const summaryEl=document.getElementById('draft-reward-summary');
+  if(summaryEl){
+    summaryEl.innerHTML=`<div>Q${currentQIdx+1} 1위 ${escapeHtml(revealData[0].name)}</div><div>보상 지급 ${rewardLog?.assignedRewards?.length||0}건${summary?` · ${escapeHtml(summary)}`:''}</div>`;
+  }
+  revealQIdx=currentQIdx;
+  revealStep=revealData.length-1;
+  document.getElementById('reveal-ov').classList.remove('hidden');
+  showRevealStep();
+}
+
+function gpResetMessageState(){
+  gpSelectedTags=[];
+  gpDisplayMode='named';
+  gpMessageText='';
+  gpExtraAnswer='';
+  gpExistingMessageMeta=null;
+  gpChoiceBySlot=[null,null,null];
+}
+
+function getCachedPeopleList(){
+  try{
+    return normalizePeopleList(JSON.parse(localStorage.getItem('tt_people_cache')||'[]'));
+  }catch(e){
+    return [];
+  }
+}
+
+async function loadGPPeople(){
+  let ppl=[];
+  try{
+    const snap=await get(ref(db,'settings/people'));
+    ppl=normalizePeopleList(snap.val());
+  }catch(e){}
+  if(!ppl.length) ppl=normalizePeopleList(people);
+  if(!ppl.length) ppl=getCachedPeopleList();
+  people=ppl.length ? ppl : people;
+  localStorage.setItem('tt_people_cache', JSON.stringify(serializePeopleList(people)));
+  window._gpPeople=people;
+  renderGPPeople(document.getElementById('gp-search')?.value||'');
+}
+
+function renderGPPeople(filter){
+  const list=normalizePeopleList(window._gpPeople||people).filter(entry=>entry.name.includes(filter||''));
+  window._gpPeopleEntries=list;
+  document.getElementById('gp-people-list').innerHTML=list.length?list.map((entry,i)=>`
+    <div class="p-item${gpSelectedPerson?.id===entry.id?' sel':''}" onclick="gpSelectNameByIndex(${i})">
+      <div class="p-av">${escapeHtml(entry.name[0]||'?')}</div>${escapeHtml(entry.name)}
+    </div>`).join(''):'<div style="padding:16px;text-align:center;font-size:12px;color:var(--sub)">검색 결과가 없습니다</div>';
+}
+
+window.gpSelectNameByIndex=function(idx){
+  const person=window._gpPeopleEntries?.[idx];
+  if(!person) return;
+  gpSelectedPerson=person;
+  document.getElementById('gp-next-btn').disabled=false;
+  renderGPPeople(document.getElementById('gp-search').value);
+};
+
+function getChoiceArrayFromSlots(){
+  return gpChoiceBySlot.filter(Boolean).map(item=>({slot:item.slot,prizeId:item.id,name:item.name,tier:item.tier}));
+}
+
+function renderGPSelected(){
+  const el=document.getElementById('gp-selected-list');
+  const choices=getChoiceArrayFromSlots();
+  el.innerHTML=GIFT_SLOT_RULES.map(rule=>{
+    const picked=choices.find(item=>item.slot===rule.slot);
+    return `<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(255,255,255,0.04);border-radius:8px;margin-bottom:4px;">
+      <div style="width:28px;height:28px;border-radius:50%;background:${picked?'var(--blue)':'rgba(255,255,255,0.12)'};color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">${rule.slot}</div>
+      <div style="flex:1;">
+        <div style="font-size:12px;color:rgba(255,255,255,0.5);">${rule.label}</div>
+        <div style="font-size:13px;">${escapeHtml(picked?.name||'아직 선택하지 않음')}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderGPGiftList(){
+  const catalog=getSelectionPrizeCatalog(prizes);
+  const wrap=document.getElementById('gp-gift-list');
+  wrap.innerHTML=GIFT_SLOT_RULES.map(rule=>{
+    const items=getAllowedPrizesForSlot(catalog, rule.slot);
+    return `
+      <div style="margin-bottom:16px;">
+        <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.42);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">${rule.label} 쨌 Tier ${rule.tiers.join('/')}</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          ${items.map(item=>{
+            const active=gpChoiceBySlot[rule.slot-1]?.id===item.id;
+            return `<button type="button" class="p-item${active?' sel':''}" style="width:100%;text-align:left;border:none;background:${active?'rgba(61,111,232,0.16)':'rgba(255,255,255,0.04)'};" onclick="gpSetChoice(${rule.slot}, '${item.id}')">
+              <div class="p-av" style="${active?'background:var(--blue);color:#fff;':''}">${item.tier}</div>
+              <div style="flex:1;">
+                <div style="font-size:13px;font-weight:700;">${escapeHtml(item.name)}</div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.45);margin-top:2px;">남은 수량 ${item.stock}</div>
+              </div>
+            </button>`;
+          }).join('')}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+window.gpSetChoice=function(slot, prizeId){
+  const catalog=getSelectionPrizeCatalog(prizes);
+  const prize=catalog.find(item=>item.id===prizeId);
+  if(!prize) return;
+  gpChoiceBySlot[slot-1]={slot,id:prize.id,name:prize.name,tier:prize.tier};
+  gpSelectedGifts=getChoiceArrayFromSlots();
+  renderGPGiftList();
+  renderGPSelected();
+  gpUpdateSubmitState();
+};
+
+function renderGpMessageForm(){
+  const msgInput=document.getElementById('gp-message-input');
+  const extraInput=document.getElementById('gp-extra-input');
+  if(msgInput) msgInput.value=gpMessageText;
+  if(extraInput) extraInput.value=gpExtraAnswer;
+  document.getElementById('gp-message-count').textContent=gpMessageText.trim().length;
+  document.getElementById('gp-extra-count').textContent=gpExtraAnswer.trim().length;
+  renderGpTags();
+  document.querySelectorAll('input[name="gp-display-mode"]').forEach(input=>{
+    input.checked=input.value===gpDisplayMode;
+  });
+  renderGPSelected();
+}
+
+function gpUpdateSubmitState(){
+  const btn=document.getElementById('gp-submit-btn');
+  if(!btn) return;
+  const hasAllSlots=gpChoiceBySlot.every(Boolean);
+  btn.disabled=!hasAllSlots || gpMessageText.trim().length<2;
+}
+
+async function gpGoStep2(){
+  if(!gpSelectedPerson) return;
+  const code=document.getElementById('gp-verify-code')?.value.trim().replace(/\D/g,'').slice(-4);
+  if((gpSelectedPerson.verifyCode||'')!==code){
+    alert('확인값 4자리가 일치하지 않습니다.');
+    return;
+  }
+  setAuthenticatedParticipant(gpSelectedPerson);
+  document.getElementById('gp-step-name').classList.add('hidden');
+  document.getElementById('gp-step-gifts').classList.remove('hidden');
+  document.getElementById('gp-step-done').classList.add('hidden');
+  document.getElementById('gp-title').textContent=gpSelectedPerson.name+'님의 희망 선물';
+  const personKey=getPersonKey(gpSelectedPerson);
+  const [catalog,giftSnap,msgSnap]=await Promise.all([
+    ensureSelectionPrizeCatalog(),
+    get(ref(db,'gift_preferences/'+personKey)).catch(()=>({val:()=>null})),
+    get(ref(db,'anniversary_messages/'+personKey)).catch(()=>({val:()=>null}))
+  ]);
+  prizes=catalog;
+  const savedGift=giftSnap.val();
+  const savedMsg=msgSnap.val();
+  gpChoiceBySlot=[null,null,null];
+  if(Array.isArray(savedGift?.choices)){
+    savedGift.choices.forEach(choice=>{
+      if(choice?.slot>=1 && choice.slot<=3){
+        gpChoiceBySlot[choice.slot-1]={slot:choice.slot,id:choice.prizeId,name:choice.name,tier:choice.tier};
+      }
+    });
+  }
+  gpSelectedGifts=getChoiceArrayFromSlots();
+  if(savedMsg) gpLoadSavedMessageState(savedMsg); else gpExistingMessageMeta=null;
+  renderGPGiftList();
+  renderGpMessageForm();
+  gpUpdateSubmitState();
+}
+
+async function submitGiftPick(){
+  if(!gpSelectedPerson||!gpChoiceBySlot.every(Boolean)||gpMessageText.trim().length<2) return;
+  const btn=document.getElementById('gp-submit-btn');
+  btn.disabled=true;
+  btn.textContent='???以?.';
+  const personKey=getPersonKey(gpSelectedPerson);
+  const now=Date.now();
+  const choices=getChoiceArrayFromSlots();
+  const giftData={personId:gpSelectedPerson.id,name:gpSelectedPerson.name,choices,ts:now};
+  const messageData={
+    personId:gpSelectedPerson.id,
+    name:gpSelectedPerson.name,
+    shortMessage:gpMessageText.trim(),
+    tags:gpSelectedTags,
+    extraAnswer:gpExtraAnswer.trim(),
+    displayMode:gpDisplayMode,
+    adminHidden:Boolean(gpExistingMessageMeta?.adminHidden),
+    featured:Boolean(gpExistingMessageMeta?.featured),
+    ts:gpExistingMessageMeta?.ts || now,
+    updatedAt:now
+  };
+  await Promise.all([
+    set(ref(db,'gift_preferences/'+personKey), giftData),
+    set(ref(db,'anniversary_messages/'+personKey), messageData)
+  ]);
+  gpExistingMessageMeta=messageData;
+  localStorage.setItem('tt_gift_pick', JSON.stringify({...giftData, messageData}));
+  btn.textContent='선물 + 메시지 저장';
+  gpShowDone();
+}
+
+function gpShowDone(){
+  document.getElementById('gp-step-name').classList.add('hidden');
+  document.getElementById('gp-step-gifts').classList.add('hidden');
+  document.getElementById('gp-step-done').classList.remove('hidden');
+  const saved=JSON.parse(localStorage.getItem('tt_gift_pick')||'{}');
+  const savedMessage=saved.messageData||saved;
+  const visibilityLabel=savedMessage.displayMode==='anonymous' ? '익명 공개' : '실명 공개';
+  const choices=saved.choices||getChoiceArrayFromSlots();
+  document.getElementById('gp-done-list').innerHTML=`
+    <div style="font-size:13px;color:var(--sub);margin-bottom:8px;">${escapeHtml(saved.name||gpSelectedPerson?.name||'')}님의 희망 선물</div>
+    ${choices.map(choice=>`
+      <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(255,255,255,0.04);border-radius:8px;margin-bottom:4px;">
+        <div style="width:22px;height:22px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;">${choice.slot}</div>
+        <span style="font-size:13px;">${escapeHtml(choice.name)}</span>
+      </div>`).join('')}
+    <div style="margin-top:14px;padding:14px;border-radius:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);">
+      <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-bottom:8px;">6주년 메시지 · ${escapeHtml(visibilityLabel)}</div>
+      <div style="font-size:14px;line-height:1.6;">"${escapeHtml(savedMessage.shortMessage||gpMessageText)}"</div>
+    </div>
+  `;
+}
+
+function gpEdit(){
+  localStorage.removeItem('tt_gift_pick');
+  gpSelectedPerson=getAuthenticatedParticipant()||null;
+  gpResetMessageState();
+  document.getElementById('gp-verify-code').value='';
+  gpGoStep1();
+  renderGPPeople(document.getElementById('gp-search')?.value||'');
+}
+
+function gpGoStep1(){
+  document.getElementById('gp-step-name').classList.remove('hidden');
+  document.getElementById('gp-step-gifts').classList.add('hidden');
+  document.getElementById('gp-step-done').classList.add('hidden');
+  if(currentParticipant){
+    const found=normalizePeopleList(window._gpPeople||people).find(person=>person.id===currentParticipant.id);
+    if(found){
+      gpSelectedPerson=found;
+      document.getElementById('gp-next-btn').disabled=false;
+    }
+  }
+}
+
+function enterGiftPick(){
+  ensureGiftVerifyUI();
+  show('gift-pick-view');
+  const saved=localStorage.getItem('tt_gift_pick');
+  if(saved){
+    try{
+      const data=JSON.parse(saved);
+      gpSelectedPerson=data.name?{id:data.personId||'',name:data.name}:null;
+      gpChoiceBySlot=[null,null,null];
+      (data.choices||[]).forEach(choice=>{
+        if(choice?.slot>=1 && choice.slot<=3){
+          gpChoiceBySlot[choice.slot-1]={slot:choice.slot,id:choice.prizeId,name:choice.name,tier:choice.tier};
+        }
+      });
+      gpSelectedGifts=getChoiceArrayFromSlots();
+      gpLoadSavedMessageState(data.messageData||data);
+      gpShowDone();
+    }catch(e){
+      localStorage.removeItem('tt_gift_pick');
+      gpSelectedPerson=getAuthenticatedParticipant()||null;
+      gpResetMessageState();
+      gpGoStep1();
+    }
+  } else {
+    gpSelectedPerson=getAuthenticatedParticipant()||null;
+    gpResetMessageState();
+    gpGoStep1();
+  }
+  loadGPPeople();
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  ensureParticipantAuthUI();
+  ensureGiftVerifyUI();
+  ensureDraftSafetyPanel();
+  getAuthenticatedParticipant();
+});
+
+const FIXED_RACE_RACERS=[
+  {name:'Soo',title:'Executive'},
+  {name:'Chris',title:'Executive'},
+  {name:'John',title:'Executive'}
+];
+const RACE_SET_PRIZES={1:'스타벅스 3만원 기프트카드',2:'올리브영 3만원 기프트카드'};
+
+const FINAL_DRAW_LOG_PATH='final_draw_log';
+
+function getRaceEligibleBaseIds(){
+  return normalizePeopleList(people).filter(person=>!isExecutiveName(person.name)).map(person=>person.id);
+}
+
+async function getRaceSetState(){
+  const snap=await get(ref(db,'race_set_state'));
+  return snap.val()||{};
+}
+
+async function saveRaceSetState(state){
+  await set(ref(db,'race_set_state'), state);
+  return state;
+}
+
+function getRaceSetLabel(setNumber){
+  return RACE_SET_PRIZES[setNumber] || '';
+}
+
+async function initRaceHost(){
+  racers=[...FIXED_RACE_RACERS];
+  renderRacerSetupRows();
+  renderBetBars();
+  setTimeout(()=>{
+    initRaceCanvas();
+    const sbLogos=document.getElementById('sb-logos');
+    if(sbLogos) sbLogos.innerHTML=
+      '<img src="'+LOGO_TECHTAKA+'" style="height:14px;margin-right:6px;vertical-align:middle;">'
+      +'<img src="'+LOGO_ARGO+'" style="height:14px;vertical-align:middle;">';
+  }, 100);
+  try{
+    await syncRaceSessionFromDB();
+    await listenToBets();
+  }catch(e){
+    if(raceCanvas) drawCanvas();
+  }
+}
+
+async function loadRacersFromDB(){
+  racers=[...FIXED_RACE_RACERS];
+  renderRacerSetupRows();
+  renderBetBars();
+  setTimeout(()=>{ if(raceCanvas) drawCanvas(); }, 100);
+}
+
+function renderRacerSetupRows(){
+  const wrap=document.getElementById('racer-setup-rows');
+  if(!wrap) return;
+  wrap.innerHTML=racers.map((r,i)=>`
+    <div class="racer-row">
+      <div class="rv-emoji-sel" style="background:${RACER_COLORS[i]};width:14px;height:14px;border-radius:50%;margin-right:4px;"></div>
+      <input type="text" value="${r.name}" disabled>
+      <input type="text" value="${r.title||''}" disabled style="max-width:120px;">
+    </div>`).join('');
+}
+
+async function saveRacers(){
+  racers=[...FIXED_RACE_RACERS];
+  renderRacerSetupRows();
+  renderBetBars();
+  document.getElementById('racer-settings-panel').classList.add('hidden');
+  alert('레이서는 Soo, Chris, John으로 고정됩니다.');
+}
+
+function openRacerSettings(){
+  const panel=document.getElementById('racer-settings-panel');
+  panel.classList.toggle('hidden');
+  renderRacerSetupRows();
+}
+
+async function openRaceBetting(){
+  const stateSnap=await get(ref(db,'state'));
+  const currentState=stateSnap.val()||{};
+  if(currentState.mode==='race' && currentState.active && !currentState.closed){
+    alert('이미 진행 중인 레이스 베팅이 있습니다. 먼저 베팅을 마감해주세요.');
+    return;
+  }
+  const meta=await getRaceSetState();
+  let nextMeta={...meta};
+  const baseEligible=getRaceEligibleBaseIds();
+  if(!nextMeta.setNumber){
+    nextMeta={setNumber:1,roundInSet:1,status:'betting',eligibleIds:baseEligible,survivorIds:[],prizeLabel:getRaceSetLabel(1)};
+  } else if(nextMeta.status==='awaiting_next_round' && nextMeta.survivorIds?.length>5){
+    nextMeta={...nextMeta,roundInSet:(nextMeta.roundInSet||1)+1,status:'betting',eligibleIds:[...nextMeta.survivorIds]};
+  } else if(nextMeta.status==='set_complete' && nextMeta.setNumber===1){
+    nextMeta={setNumber:2,roundInSet:1,status:'betting',eligibleIds:baseEligible,survivorIds:[],prizeLabel:getRaceSetLabel(2)};
+  } else if(nextMeta.status==='set_complete' && nextMeta.setNumber===2){
+    alert('레이스 두 세트가 모두 종료되었습니다.');
+    return;
+  } else if(nextMeta.status==='betting'){
+    alert('현재 레이스 세트가 이미 열려 있습니다.');
+    return;
+  } else {
+    nextMeta={setNumber:nextMeta.setNumber||1,roundInSet:(nextMeta.roundInSet||0)+1,status:'betting',eligibleIds:nextMeta.survivorIds?.length?nextMeta.survivorIds:baseEligible,survivorIds:nextMeta.survivorIds||[],prizeLabel:getRaceSetLabel(nextMeta.setNumber||1)};
+  }
+  raceSession=(await getRaceSessionBaseline())+1;
+  racers=[...FIXED_RACE_RACERS];
+  await Promise.all([
+    saveRaceSetState(nextMeta),
+    set(ref(db,'state'),{
+      active:true,
+      closed:false,
+      standby:false,
+      mode:'race',
+      raceSession,
+      raceSet:nextMeta.setNumber,
+      raceRoundInSet:nextMeta.roundInSet,
+      prizeLabel:nextMeta.prizeLabel,
+      eligibleIds:nextMeta.eligibleIds,
+      racers:racers.map(r=>({name:r.name,title:r.title||''}))
+    })
+  ]);
+  renderBetBars();
+  listenToBets();
+  alert(`레이스 ${nextMeta.setNumber}세트 ${nextMeta.roundInSet}라운드 베팅이 시작되었습니다.\n상품: ${nextMeta.prizeLabel}`);
+}
+
+async function closeRaceBetting(){
+  await update(ref(db,'state'),{closed:true});
+  alert('베팅이 마감되었습니다.');
+}
+
+async function resetRaceSession(){
+  if(!confirm('레이스 기록, 베팅, 세트 상태를 모두 초기화할까요?')) return;
+  await Promise.all([
+    remove(ref(db,'bets')),
+    remove(ref(db,'race_set_state')),
+    remove(ref(db,'race_reward_sets')),
+    set(ref(db,'state'),{active:false,standby:true,mode:'idle'})
+  ]);
+  raceSession=0;
+  renderBetBars();
+  alert('레이스 상태가 초기화되었습니다.');
+}
+
+function getRaceResultDescription(meta, survivorPeople){
+  if((meta?.survivorIds||[]).length<=5){
+    return `최종 생존 ${survivorPeople.length}명 · ${meta.prizeLabel} 지급`;
+  }
+  return `다음 라운드 진출 ${survivorPeople.length}명`;
+}
+
+async function showRaceResult(finishOrder){
+  if(!finishOrder.length) return;
+  const winnerIdx=finishOrder[0];
+  const winner=racers[winnerIdx];
+  const [betsSnap, meta] = await Promise.all([
+    get(ref(db,'bets/s'+raceSession)),
+    getRaceSetState()
+  ]);
+  const bets=betsSnap.val()||{};
+  const survivorPeople=Object.values(bets)
+    .filter(b=>b.racerIdx===winnerIdx && (b.personId||''))
+    .reduce((acc,b)=>{
+      if(!acc.some(item=>item.personId===b.personId)) acc.push({personId:b.personId,name:b.name});
+      return acc;
+    },[]);
+  const nextStatus=survivorPeople.length<=5 ? 'set_complete' : 'awaiting_next_round';
+  const nextMeta={
+    ...meta,
+    status:nextStatus,
+    survivorIds:survivorPeople.map(item=>item.personId)
+  };
+  const record={
+    session:raceSession,
+    raceSet:meta.setNumber||1,
+    roundInSet:meta.roundInSet||1,
+    ts:Date.now(),
+    winner:winner.name,
+    winnerIdx,
+    finishOrder:finishOrder.map(i=>racers[i].name),
+    eventLog:raceEventLog||'',
+    betters:survivorPeople.map(item=>item.name),
+    betPersonIds:survivorPeople.map(item=>item.personId),
+    betCount:Object.keys(bets).length,
+    resultDescription:getRaceResultDescription({...meta,survivorIds:survivorPeople.map(item=>item.personId)}, survivorPeople)
+  };
+  const ops=[
+    push(ref(db,'race_history'), record),
+    saveRaceSetState(nextMeta)
+  ];
+  if(nextStatus==='set_complete'){
+    ops.push(set(ref(db,`race_reward_sets/set${meta.setNumber}`),{
+      setNumber:meta.setNumber,
+      prizeLabel:meta.prizeLabel,
+      winners:survivorPeople,
+      completedAt:Date.now()
+    }));
+  }
+  ops.push(set(ref(db,'state'),{active:false,standby:true,mode:'idle'}));
+  await Promise.all(ops);
+  document.getElementById('rr-vehicle').innerHTML='<img src="'+LOGO_TECHTAKA+'" style="height:20px;vertical-align:middle;margin-right:8px;"><img src="'+LOGO_ARGO+'" style="height:20px;vertical-align:middle;">';
+  document.getElementById('rr-winner').textContent=winner.name;
+  document.getElementById('rr-event-desc').textContent=record.resultDescription;
+  document.getElementById('rr-betters').innerHTML=survivorPeople.length
+    ?survivorPeople.map(item=>'<div class="rr-better-tag">'+escapeHtml(item.name)+'</div>').join('')
+    :'<div style="font-size:12px;color:rgba(255,255,255,0.3)">생존자가 없습니다</div>';
+  document.getElementById('race-result-ov').classList.remove('hidden');
+  launchConfetti();
+}
+
+function listenToBets(){
+  replaceListener('bets', onValue(ref(db,'bets'), async (snap)=>{
+    const all=snap.val()||{};
+    const stateSnap=await get(ref(db,'state'));
+    const currentState=stateSnap.val()||{};
+    const sessionBets=all['s'+(currentState.raceSession||raceSession)]||{};
+    const counts=racers.map((_,i)=>Object.values(sessionBets).filter(b=>b.racerIdx===i).length);
+    const total=counts.reduce((a,b)=>a+b,0);
+    const el=document.getElementById('bet-total-count');
+    if(el) el.textContent=total;
+    const max=Math.max(...counts,1);
+    counts.forEach((cnt,i)=>{
+      const fill=document.getElementById('bet-fill-'+i);
+      const cntEl=document.getElementById('bet-cnt-'+i);
+      if(fill) fill.style.width=(cnt/max*100).toFixed(1)+'%';
+      if(cntEl) cntEl.textContent=cnt;
+    });
+  }));
+}
+
+function getAnyPrizeWinnerIdsFromLogs(draftRewards, raceRewardSets, finalDrawLog){
+  const ids=new Set();
+  Object.values(draftRewards||{}).forEach(round=>{
+    (round?.assignedRewards||[]).forEach(item=>{
+      if(item?.personId) ids.add(item.personId);
+    });
+  });
+  Object.values(raceRewardSets||{}).forEach(setInfo=>{
+    (setInfo?.winners||[]).forEach(item=>{
+      if(item?.personId) ids.add(item.personId);
+    });
+  });
+  if(finalDrawLog?.winner?.personId) ids.add(finalDrawLog.winner.personId);
+  return ids;
+}
+
+async function getFinalDrawEligiblePeople(){
+  const [draftSnap,raceSnap,finalSnap]=await Promise.all([
+    get(ref(db,'draft_rewards')),
+    get(ref(db,'race_reward_sets')),
+    get(ref(db,FINAL_DRAW_LOG_PATH))
+  ]);
+  const wonIds=getAnyPrizeWinnerIdsFromLogs(draftSnap.val()||{}, raceSnap.val()||{}, finalSnap.val()||null);
+  return normalizePeopleList(people).filter(person=>!isExecutiveName(person.name) && !wonIds.has(person.id));
+}
+
+async function loadPeopleToPool(){
+  if(!people.length){
+    const snap=await get(ref(db,'settings/people'));
+    people=normalizePeopleList(snap.val()||[]);
+  }
+  lotteryPool=(await getFinalDrawEligiblePeople()).map(person=>({
+    id:person.id,
+    name:person.name
+  }));
+  updatePoolDisplay();
+}
+
+function updatePoolDisplay(){
+  document.getElementById('pool-count').textContent=lotteryPool.length;
+  document.getElementById('pool-preview').textContent=lotteryPool.length
+    ?lotteryPool.map(p=>p.name).join(' · ')
+    :'미당첨자 풀이 비어 있습니다';
+  if(activePrizeIdx!==null) document.getElementById('lottery-start-btn').disabled=lotteryPool.length===0;
+}
+
+async function startLottery(){
+  if(lotteryPool.length===0||activePrizeIdx===null) return;
+  const finalDrawSnap=await get(ref(db,FINAL_DRAW_LOG_PATH));
+  if(finalDrawSnap.val()?.completed){
+    alert('최종 추첨은 이미 완료되었습니다.');
+    return;
+  }
+  const btn=document.getElementById('lottery-start-btn');
+  btn.disabled=true;
+  const donePrizeIdx=activePrizeIdx;
+  const selectedPrize=prizes[donePrizeIdx];
+
+  const spinWrap=document.getElementById('lottery-spin-wrap');
+  const spinInner=document.getElementById('lottery-spin-inner');
+  spinWrap.style.display='block';
+
+  const shuffled=[...lotteryPool].sort(()=>Math.random()-0.5);
+  spinInner.innerHTML=[...shuffled,...shuffled,...shuffled].map(entry=>`<div class="spin-item">${escapeHtml(entry.name)}</div>`).join('');
+
+  let speed=50,pos=0;
+  const winnerEntry=shuffled[Math.floor(Math.random()*shuffled.length)];
+  const winner=winnerEntry.name;
+  const isMatch=selectedPrize?.type==='match';
+  let matchedPrize=null;
+  if(isMatch) matchedPrize=await getGiftMatch(winnerEntry);
+
+  const spin=setInterval(async ()=>{
+    pos+=speed;
+    spinInner.style.transform=`translateX(-${pos}px)`;
+    speed=Math.max(speed*0.985,2);
+    if(speed<=2.1){
+      clearInterval(spin);
+      spinWrap.style.display='none';
+      const displayPrize=matchedPrize?matchedPrize.name:selectedPrize.name;
+      document.getElementById('lottery-display').innerHTML=`
+        <div style="font-size:13px;color:rgba(255,255,255,0.3);margin-bottom:8px;">${matchedPrize?'개인 희망 선물 매칭':'🎁 '+escapeHtml(selectedPrize.name)}</div>
+        <div class="lottery-winner">${escapeHtml(winner)}</div>
+        <div style="font-size:20px;font-weight:800;color:#FFD700;margin:8px 0;">${escapeHtml(displayPrize)}</div>
+        <div style="font-size:13px;color:var(--green);font-weight:600;">축하합니다!</div>`;
+      if(matchedPrize){
+        matchedPrize.done=true;
+        matchedPrize.winner=winner;
+      }
+
+      prizes[donePrizeIdx].done=true;
+      prizes[donePrizeIdx].winner=winner;
+      lotteryPool=lotteryPool.filter(p=>p.id!==winnerEntry.id);
+      activePrizeIdx=null;
+      await Promise.all([
+        set(ref(db,'settings/prizes'),prizes),
+        set(ref(db,FINAL_DRAW_LOG_PATH),{
+          completed:true,
+          ts:Date.now(),
+          prizeName:displayPrize,
+          winner:{personId:winnerEntry.id,name:winner}
+        })
+      ]);
+      updatePoolDisplay();
+      renderPrizeList();
+
+      const log=document.getElementById('winner-log');
+      if(log.querySelector('p')) log.innerHTML='';
+      log.innerHTML=`<div style="background:rgba(10,158,110,0.1);border:1px solid rgba(10,158,110,0.3);border-radius:7px;padding:8px 10px;font-size:11px;"><span style="font-weight:700;color:var(--green)">${escapeHtml(winner)}</span> · ${escapeHtml(displayPrize)}</div>`+log.innerHTML;
+
+      launchConfetti();
+      btn.disabled=false;
+    }
+  },16);
+}
+
+async function initLottery(){
+  const [snap,finalDrawSnap]=await Promise.all([
+    get(ref(db,'settings/prizes')),
+    get(ref(db,FINAL_DRAW_LOG_PATH))
+  ]);
+  if(snap.val()&&snap.val().length>0){
+    prizes=snap.val();
+  } else if(prizes.length===0){
+    prizes=DEFAULT_PRIZES.map(name=>({name,done:false,type:'normal'}));
+    await set(ref(db,'settings/prizes'),prizes);
+  }
+  renderPrizeList();
+  if(finalDrawSnap.val()?.completed){
+    const winnerName=finalDrawSnap.val()?.winner?.name||'당첨자';
+    const prizeName=finalDrawSnap.val()?.prizeName||'최종 추첨 완료';
+    lotteryPool=[];
+    updatePoolDisplay();
+    document.getElementById('lottery-start-btn').disabled=true;
+    document.getElementById('lottery-display').innerHTML=`
+      <div style="font-size:13px;color:rgba(255,255,255,0.3);margin-bottom:8px;">최종 추첨 완료</div>
+      <div class="lottery-winner">${escapeHtml(winnerName)}</div>
+      <div style="font-size:20px;font-weight:800;color:#FFD700;margin:8px 0;">${escapeHtml(prizeName)}</div>
+      <div style="font-size:13px;color:rgba(255,255,255,0.45);">최종 추첨은 1회만 진행됩니다.</div>`;
+    return;
+  }
+  await loadPeopleToPool();
+}
+
+function listenToHostState(){
+  replaceListener('hostState', onValue(ref(db,'state'),(snap)=>{
+    const participant=getAuthenticatedParticipant();
+    if(!participant){ showP('auth'); return; }
+    const s=snap.val()||{};
+    const mode=s.mode||'draft';
+    const active=s.active??false;
+    const closed=s.closed??false;
+    const qIdx=s.currentQ??-1;
+
+    if(s.ended){ showP('ended'); return; }
+    if(!active){ showP('waiting'); return; }
+
+    if(mode==='draft'){
+      if(closed){ showP('closed'); }
+      else if(myVotedQs[qIdx]){ showP('done'); }
+      else { showP('voting'); loadVoteQ(qIdx); }
+    } else if(mode==='race'){
+      const eligibleIds=Array.isArray(s.eligibleIds)?s.eligibleIds:[];
+      const eligible=eligibleIds.length ? eligibleIds.includes(participant.id) : true;
+      if(!eligible){
+        const doneEl=document.getElementById('p-race-done');
+        if(doneEl){
+          const p=doneEl.querySelector('p');
+          if(p) p.innerHTML='이번 라운드는 탈락 상태입니다.<br>다음 결과를 기다려주세요.';
+        }
+        showP('race-done');
+        return;
+      }
+      if(closed){ showP('race-done'); }
+      else if(myBetQ[s.raceSession]){ showP('race-done'); }
+      else {
+        showP('race');
+        loadRaceBet(s.racers||racers,s.raceSession||0);
+      }
+    }
+  }));
+
+  replaceListener('hostSettings', onValue(ref(db,'settings'),(snap)=>{
+    const s=snap.val()||{};
+    if(s.questions) questions=s.questions;
+    if(s.candidates) candidates=normalizePeopleList(s.candidates);
+    if(s.people){
+      people=normalizePeopleList(s.people);
+      if(!s.candidates) candidates=[...people];
+      const pVoting=document.getElementById('p-voting');
+      if(pVoting && !pVoting.classList.contains('hidden')) renderPeople('');
+      if(document.getElementById('auth-people-list')) renderAuthPeople(document.getElementById('auth-search')?.value||'');
+      if(document.getElementById('gp-people-list')) renderGPPeople(document.getElementById('gp-search')?.value||'');
+    }
+  }));
+}
+
+// ?쇰컲 script - ?꾩뿭 ?몄텧 遺덊븘??
+
 </script>
 </body>
 </html>
+
+
+
