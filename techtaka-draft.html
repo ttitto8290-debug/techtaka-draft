@@ -1,4 +1,4 @@
-\<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -380,7 +380,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
 <!-- ?먥븧 PARTICIPANT HUB ?먥븧 -->
 <div id="participant-hub" class="hidden">
   <div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;background:linear-gradient(135deg,#0C2340 0%,#0d1f3c 60%,#1a1035 100%);">
-    <div style="font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;letter-spacing:4px;color:var(--bl);text-transform:uppercase;margin-bottom:12px;">TECHTAKA 쨌 6TH</div>
+    <div style="font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;letter-spacing:4px;color:var(--bl);text-transform:uppercase;margin-bottom:12px;">TECHTAKA · 6TH</div>
     <div style="font-family:'DM Sans',sans-serif;font-size:36px;font-weight:900;text-align:center;margin-bottom:32px;">참여자 메뉴</div>
     <div class="hub-cards">
       <div class="hub-card" onclick="enterParticipant()">
@@ -595,6 +595,21 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
   </div>
 </div>
 <div id="confetti-wrap"></div>
+<!-- RACE RESULT OVERLAY -->
+<div id="race-result-ov" class="hidden">
+  <div class="rr-inner">
+    <div class="rr-title">RACE RESULT</div>
+    <div class="rr-vehicle" id="rr-vehicle"></div>
+    <div class="rr-winner" id="rr-winner"></div>
+    <div id="rr-event-desc" style="font-size:13px;color:#8888ff;line-height:1.8;margin:12px 0 20px;font-family:'Noto Sans KR',sans-serif;white-space:pre-wrap;"></div>
+    <div class="rr-betters-title">SURVIVORS / BETTING WINNERS</div>
+    <div class="rr-betters" id="rr-betters"></div>
+    <div class="rr-nav">
+      <button class="rv-btn rv-btn-p" onclick="closeRaceResult()">닫기</button>
+    </div>
+  </div>
+</div>
+
 
 <!-- ?먥븧 HOST RACE VIEW ?먥븧 -->
 <div id="h-race-view" class="hidden" style="background:#000080;height:100vh;display:flex;flex-direction:column;overflow:hidden;">
@@ -632,7 +647,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
     </div>
     <!-- 踰좏똿 ?ㅻ쾭?덉씠 -->
     <div id="race-bet-overlay" style="position:absolute;bottom:8px;left:8px;background:rgba(0,0,20,0.88);border:2px solid #cccc00;padding:8px 12px;font-family:'Press Start 2P',monospace;min-width:160px;z-index:15;pointer-events:none;">
-      <div style="font-size:7px;color:#888800;margin-bottom:4px;">BETTING 쨌 <span id="bet-total-count" style="color:#00ff88;">0</span>紐?/div>
+      <div style="font-size:7px;color:#888800;margin-bottom:4px;">BETTING · <span id="bet-total-count" style="color:#00ff88;">0</span>명</div>
       <div id="bet-bars"></div>
     </div>
   </div>
@@ -953,13 +968,8 @@ function escapeHtml(value){
 function safeFirebaseKey(value){
   return String(value ?? '').replace(/[.#$/\[\]]/g,'_');
 }
+/* duplicate function removed: getNameEntries; latest definition kept */
 
-function getNameEntries(list, source='entry'){
-  return (list||[]).map((name, idx)=>({
-    id:`${source}:${idx}`,
-    name:String(name ?? '')
-  }));
-}
 
 function appendSafeLineBreaks(el, lines){
   lines.forEach((line, idx)=>{
@@ -1092,7 +1102,7 @@ function showNewQBanner(qIdx){
   const b=document.createElement('div');
   b.id='new-q-banner';
   b.style.cssText='position:fixed;top:0;left:0;right:0;background:var(--blue);color:#fff;text-align:center;padding:14px;font-size:15px;font-weight:700;z-index:100;animation:slideDown 0.4s ease;';
-  b.innerHTML=`?넅 ${qIdx+1}踰덉㎏ 吏덈Ц???쒖옉?먯뼱??`;
+  b.textContent=`📣 ${qIdx+1}번째 질문이 시작됐어요`;
   document.body.appendChild(b);
   setTimeout(()=>b.remove(), 3000);
 }
@@ -1127,9 +1137,8 @@ async function syncRaceSessionFromDB(){
   raceSession=await getRaceSessionBaseline();
   return raceSession;
 }
-function enterParticipant(){
-  show('p-view'); listenToHostState();
-}
+/* duplicate function removed: enterParticipant; latest definition kept */
+
 
 // QR ?뚮씪誘명꽣 ?먮룞 吏꾩엯
 if(new URLSearchParams(window.location.search).get('p')==='1'){
@@ -1255,45 +1264,12 @@ function initDraftHost(){
   loadSettingsFromDB();
   listenToVotes();
 }
+/* duplicate function removed: loadSettingsFromDB; latest definition kept */
 
-async function loadSettingsFromDB(){
-  const snap = await get(ref(db,'settings'));
-  const s = snap.val()||{};
-  if(s.questions) questions = s.questions;
-  if(s.people) people = s.people;
-  if(s.candidates) candidates = s.candidates;
-  else candidates = [...people];
-  document.getElementById('questions-textarea').value = questions.join('\n');
-  document.getElementById('people-textarea').value = people.join('\n');
-  document.getElementById('candidates-textarea').value = candidates.join('\n');
-  initTabs();
-}
+/* duplicate function removed: savePeople; latest definition kept */
 
-async function savePeople(){
-  const prevPeople=[...people];
-  const raw = document.getElementById('people-textarea').value;
-  const nextPeople = raw.split('\n').map(p=>p.trim()).filter(p=>p);
-  try {
-    await set(ref(db,'settings/people'), nextPeople);
-    people = nextPeople;
-    alert(people.length+'명 저장됐어요!');
-  } catch(e) {
-    people = prevPeople;
-    alert('참석자 명단 저장에 실패했어요. 네트워크 또는 Firebase 상태를 확인한 뒤 다시 시도해주세요.\n\n오류: '+e.message);
-  }
-}
+/* duplicate function removed: saveCandidates; latest definition kept */
 
-async function saveCandidates(){
-  const raw = document.getElementById('candidates-textarea').value;
-  const nextCandidates = raw.split('\n').map(p=>p.trim()).filter(p=>p);
-  try{
-    await set(ref(db,'settings/candidates'), nextCandidates);
-    candidates = nextCandidates;
-    alert(candidates.length+'명의 후보가 저장됐어요!');
-  }catch(e){
-    alert('드래프트 후보 저장에 실패했어요.\n\n오류: '+e.message);
-  }
-}
 
 async function saveQuestions(){
   const raw = document.getElementById('questions-textarea').value;
@@ -1322,11 +1298,8 @@ function updateHostQ(){
   document.getElementById('hq-lbl').textContent=`QUESTION ${currentQIdx+1}`;
   document.getElementById('hq-txt').textContent=questions[currentQIdx]||'질문을 입력해주세요';
 }
+/* duplicate function removed: startQuestion; latest definition kept */
 
-async function startQuestion(){
-  await set(ref(db,'state'),{currentQ:currentQIdx,active:true,closed:false,standby:false,mode:'draft'});
-  firstReason=true;
-}
 
 async function closeVoting(){
   try{
@@ -1345,14 +1318,8 @@ async function resetCurrentQ(){
   document.getElementById('total-h').textContent='0';
   document.getElementById('unique-h').textContent='0';
 }
+/* duplicate function removed: listenToVotes; latest definition kept */
 
-function listenToVotes(){
-  replaceListener('votes', onValue(ref(db,'votes'),(snap)=>{
-    const all=snap.val()||{};
-    const qv=all[`q${currentQIdx}`]||{};
-    renderBars(qv); renderReasons(qv);
-  }));
-}
 
 function renderBars(qv){
   const counts={},reasons={},labels={};
@@ -1384,29 +1351,13 @@ function renderReasons(qv){
   if(firstReason){feed.innerHTML='';firstReason=false;}
   feed.innerHTML=items.slice(-6).reverse().map(v=>`<div class="reason-item"><div class="ri-name">${escapeHtml(v.person)}</div>${escapeHtml(v.reason)}</div>`).join('');
 }
+/* duplicate function removed: showReveal; latest definition kept */
 
-async function showReveal(){
-  const snap=await get(ref(db,`votes/q${currentQIdx}`));
-  const qv=snap.val()||{};
-  const counts={},reasons={},labels={};
-  Object.values(qv).forEach(v=>{
-    const key=v.personId||v.person;
-    counts[key]=(counts[key]||0)+1;
-    labels[key]=v.person||key;
-    if(!reasons[key]) reasons[key]=[];
-    if(v.reason) reasons[key].push(v.reason);
-  });
-  revealData=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([key,cnt])=>({name:labels[key]||key,cnt,reasons:reasons[key]||[]}));
-  if(!revealData.length){alert('투표 데이터가 없습니다.');return;}
-  revealQIdx=currentQIdx; revealStep=revealData.length-1;
-  document.getElementById('reveal-ov').classList.remove('hidden');
-  showRevealStep();
-}
 
 function showRevealStep(){
   const item=revealData[revealStep];
   const emojis=['🥇','🥈','🥉'],ranks=['1위','2위','3위'];
-  document.getElementById('rv-qlbl').textContent=`Q${revealQIdx+1} 쨌 ${ranks[revealStep]}`;
+  document.getElementById('rv-qlbl').textContent=`Q${revealQIdx+1} · ${ranks[revealStep]}`;
   document.getElementById('rv-emoji').textContent=emojis[revealStep];
   const ne=document.getElementById('rv-name');
   ne.textContent=item.name; ne.style.animation='none'; ne.offsetHeight; ne.style.animation='';
@@ -1429,134 +1380,14 @@ function launchConfetti(){
     wrap.appendChild(p);
   }
 }
+/* duplicate function removed: listenToHostState; latest definition kept */
 
-// ?? PARTICIPANT ??
-function listenToHostState(){
-  replaceListener('hostState', onValue(ref(db,'state'),(snap)=>{
-    const s=snap.val()||{};
-    const mode=s.mode||'draft';
-    const active=s.active??false;
-    const closed=s.closed??false;
-    const qIdx=s.currentQ??-1;
+/* duplicate function removed: showP; latest definition kept */
 
-    if(s.ended){showP('ended');return;}
-    if(!active){showP('waiting');return;}
+/* duplicate function removed: loadVoteQ; latest definition kept */
 
-    if(mode==='draft'){
-      if(closed){showP('closed');}
-      else if(myVotedQs[qIdx]){
-        // ?대? ?ы몴??吏덈Ц - ?꾨즺 ?붾㈃???닿? 戮묒? ?щ엺 ?쒖떆
-        const votedName=localStorage.getItem('tt_voted_name_'+qIdx)||'';
-        const doneEl=document.getElementById('p-done');
-        if(doneEl){
-          const p=doneEl.querySelector('p');
-          p.textContent='';
-          if(votedName){
-            const strong=document.createElement('strong');
-            strong.style.color='var(--blue)';
-            strong.textContent=`${votedName}`;
-            p.appendChild(strong);
-            p.appendChild(document.createTextNode(' 님을 선택했어요.'));
-            p.appendChild(document.createElement('br'));
-            p.appendChild(document.createElement('br'));
-          }
-          appendSafeLineBreaks(p,['진행자 화면에서','결과를 곧 확인해주세요']);
-        }
-        showP('done');
-      }
-      else{
-        // ??吏덈Ц ?꾪솚 ?덈궡
-        if(window._lastQIdx!==undefined && window._lastQIdx!==qIdx){
-          showNewQBanner(qIdx);
-        }
-        window._lastQIdx=qIdx;
-        showP('voting');loadVoteQ(qIdx);
-      }
-    } else if(mode==='race'){
-      if(closed){showP('race-done');}
-      else if(myBetQ[s.raceSession]){
-        // ?대? 踰좏똿???뚯감 - ?닿? 踰좏똿???덉씠???쒖떆
-        const savedBet=localStorage.getItem('tt_bet_racer_'+s.raceSession)||'';
-        const raceDoneEl=document.getElementById('p-race-done');
-        if(raceDoneEl && savedBet){
-          const parts=savedBet.split('|');
-          if(parts[1]){
-            const p=raceDoneEl.querySelector('p');
-            p.textContent='';
-            const strong=document.createElement('strong');
-            strong.style.color='var(--blue)';
-            strong.textContent=parts[1];
-            p.appendChild(strong);
-            p.appendChild(document.createTextNode('에게 베팅했어요.'));
-            p.appendChild(document.createElement('br'));
-            p.appendChild(document.createElement('br'));
-            appendSafeLineBreaks(p,['화면을 보면서','레이스를 응원해주세요!']);
-          }
-        }
-        showP('race-done');
-      }
-      else{
-        // ???뚯감 ?덈궡
-        if(s.raceSession>1 && window._lastRaceSession!==undefined && window._lastRaceSession!==s.raceSession){
-          const b=document.getElementById('new-q-banner')||document.createElement('div');
-          b.id='new-q-banner';
-          b.style.cssText='position:fixed;top:0;left:0;right:0;background:#1E4DB7;color:#fff;text-align:center;padding:14px;font-size:15px;font-weight:700;z-index:100;';
-          b.innerHTML=`🏁 ${s.raceSession}회차 레이스가 시작됐어요`;
-          document.body.appendChild(b);
-          setTimeout(()=>b.remove(),3000);
-        }
-        window._lastRaceSession=s.raceSession;
-        showP('race');loadRaceBet(s.racers||racers,s.raceSession||0);
-      }
-    }
-  }));
+/* duplicate function removed: renderPeople; latest definition kept */
 
-  // 설정 동기화
-  replaceListener('hostSettings', onValue(ref(db,'settings'),(snap)=>{
-    const s=snap.val()||{};
-    if(s.questions) questions=s.questions;
-    if(s.candidates) candidates=s.candidates;
-    if(s.people){
-      people=s.people;
-      if(!s.candidates) candidates=s.people; // ?꾨낫 ?놁쑝硫??꾩껜 紐낅떒
-      // ?ы몴 ?붾㈃???대젮?덉쑝硫?利됱떆 紐낅떒 諛섏쁺
-      const pVoting=document.getElementById('p-voting');
-      if(pVoting && !pVoting.classList.contains('hidden')){
-        renderPeople('');
-      }
-    }
-  }));
-}
-
-function showP(screen){
-  ['waiting','voting','done','closed','race','race-done','ended'].forEach(s=>{
-    const el=document.getElementById(`p-${s}`);
-    if(el) el.classList.add('hidden');
-  });
-  document.getElementById(`p-${screen}`)?.classList.remove('hidden');
-}
-
-function loadVoteQ(qIdx){
-  document.getElementById('p-q-num').textContent=`QUESTION ${qIdx+1} / ${questions.length}`;
-  document.getElementById('p-q-text').textContent=questions[qIdx]||'';
-  selectedPerson=null;
-  document.getElementById('sel-prev').classList.add('hidden');
-  document.getElementById('reason-input').value='';
-  document.getElementById('submit-btn').disabled=true;
-  document.getElementById('search-input').value='';
-  renderPeople('');
-  window._voteQ=qIdx;
-}
-
-function renderPeople(filter){
-  // ?쒕옒?꾪듃 ?ы몴??candidates, 洹??몃뒗 people ?ъ슜
-  const pool = candidates.length ? getNameEntries(candidates,'candidate') : getNameEntries(people,'person');
-  const filtered=pool.filter(entry=>entry.name.includes(filter));
-  window._peopleViewEntries=filtered;
-  document.getElementById('people-list').innerHTML=filtered.length?filtered.map((entry,i)=>
-    `<div class="p-item${selectedPerson?.id===entry.id?' sel':''}" onclick="selectPersonByIndex(${i})"><div class="p-av">${escapeHtml(entry.name[0]||'?')}</div>${escapeHtml(entry.name)}</div>`
-  ).join(''):'<div style="padding:16px;text-align:center;font-size:12px;color:var(--sub)">검색 결과가 없습니다</div>';
-}
 
 function filterPeople(val){renderPeople(val);}
 window.selectPersonByIndex=function(idx){
@@ -1571,35 +1402,8 @@ function selectPerson(entry){
   document.getElementById('submit-btn').disabled=false;
   renderPeople(document.getElementById('search-input').value);
 }
+/* duplicate function removed: submitVote; latest definition kept */
 
-async function submitVote(){
-  if(!selectedPerson)return;
-  const reason=document.getElementById('reason-input').value.trim();
-  const qIdx=window._voteQ;
-  const btn=document.getElementById('submit-btn');
-  btn.disabled=true;btn.textContent='제출 중..';
-  try{
-  await push(ref(db,`votes/q${qIdx}`),{person:selectedPerson.name,personId:selectedPerson.id,reason,ts:Date.now()});
-  } catch(e){ btn.disabled=false; btn.textContent='투표하기'; alert('오류: '+e.message); return; }
-  myVotedQs[qIdx]=true;
-  localStorage.setItem('tt_voted', JSON.stringify(myVotedQs));
-  localStorage.setItem('tt_voted_name_'+qIdx, selectedPerson.name);
-  // ?꾨즺 ?붾㈃???닿? 戮묒? ?щ엺 ?쒖떆
-  const doneEl=document.getElementById('p-done');
-  if(doneEl){
-    const p=doneEl.querySelector('p');
-    p.textContent='';
-    const strong=document.createElement('strong');
-    strong.style.color='var(--blue)';
-    strong.textContent=`${selectedPerson.name}`;
-    p.appendChild(strong);
-    p.appendChild(document.createTextNode(' 님을 선택했어요.'));
-    p.appendChild(document.createElement('br'));
-    p.appendChild(document.createElement('br'));
-    appendSafeLineBreaks(p,['진행자 화면에서','결과를 곧 확인해주세요']);
-  }
-  showP('done');
-}
 
 // ?? RACE HOST (Canvas Engine) ??
 
@@ -1968,72 +1772,16 @@ function initRaceCanvas(){
   }
   drawCanvas();
 }
+/* duplicate function removed: initRaceHost; latest definition kept */
 
-async function initRaceHost(){
-  renderRacerSetupRows();
-  renderBetBars();
-  setTimeout(()=>{
-    initRaceCanvas();
-    // ?ㅼ퐫?대낫??濡쒓퀬 ?ㅼ젙
-    const sbLogos=document.getElementById('sb-logos');
-    if(sbLogos) sbLogos.innerHTML=
-      '<img src="'+LOGO_TECHTAKA+'" style="height:14px;margin-right:6px;vertical-align:middle;">'
-      +'<img src="'+LOGO_ARGO+'" style="height:14px;vertical-align:middle;">';
-  }, 100);
-  try{
-    await syncRaceSessionFromDB();
-    await loadRacersFromDB();
-    listenToBets();
-  }catch(e){
-    // file:// ?먮뒗 Firebase ?쇱떆 ?ㅻ쪟?щ룄 湲곕낯 ?덉씠???붾㈃? 諛붾줈 蹂댁씠寃??좎?
-    if(raceCanvas) drawCanvas();
-  }
-}
+/* duplicate function removed: loadRacersFromDB; latest definition kept */
 
-async function loadRacersFromDB(){
-  try{
-    const snap=await get(ref(db,'settings/racers'));
-    if(snap.val()) racers=snap.val();
-  }catch(e){
-    // 湲곕낯 ?덉씠?쒕줈 吏꾪뻾 媛??  }
-  renderRacerSetupRows();
-  renderBetBars();
-  setTimeout(()=>{if(raceCanvas) drawCanvas();}, 100);
-}
+/* duplicate function removed: renderRacerSetupRows; latest definition kept */
 
-function renderRacerSetupRows(){
-  document.getElementById('racer-setup-rows').innerHTML=racers.map((r,i)=>`
-    <div class="racer-row">
-      <div class="rv-emoji-sel" style="background:${RACER_COLORS[i]};width:14px;height:14px;border-radius:50%;margin-right:4px;"></div>
-      <input type="text" value="${r.name}" placeholder="?대쫫" id="racer-name-${i}">
-      <input type="text" value="${r.title||''}" placeholder="吏곸콉" id="racer-title-${i}" style="max-width:100px;">
-    </div>`).join('');
-}
+/* duplicate function removed: saveRacers; latest definition kept */
 
-async function saveRacers(){
-  const nextRacers=racers.map((r,i)=>({
-    ...r,
-    name:document.getElementById('racer-name-'+i)?.value||r.name,
-    title:document.getElementById('racer-title-'+i)?.value||r.title
-  }));
-  try{
-    await set(ref(db,'settings/racers'), nextRacers);
-    racers=nextRacers;
-    if(raceCanvas) drawCanvas();
-    renderBetBars();
-    document.getElementById('racer-settings-panel').classList.add('hidden');
-    alert('레이서가 저장됐어요!');
-  }catch(e){
-    alert('레이서 저장에 실패했어요.\n\n오류: '+e.message);
-  }
-}
+/* duplicate function removed: openRacerSettings; latest definition kept */
 
-function openRacerSettings(){
-  const panel=document.getElementById('racer-settings-panel');
-  panel.classList.toggle('hidden');
-  renderRacerSetupRows();
-  setTimeout(initRaceCanvas, 60);
-}
 
 function selectRound(){} // ?붾? (?쇱슫???쒓굅??
 
@@ -2051,52 +1799,14 @@ function renderBetBars(){
       <span id="bet-cnt-${i}" style="color:#ffff00;width:14px;text-align:right;">0</span>
     </div>`).join('');
 }
+/* duplicate function removed: listenToBets; latest definition kept */
 
-function listenToBets(){
-  replaceListener('bets', onValue(ref(db,'bets'),(snap)=>{
-    const all=snap.val()||{};
-    const sessionBets=all['s'+raceSession]||{};
-    const counts=racers.map((_,i)=>Object.values(sessionBets).filter(b=>b.racerIdx===i).length);
-    const total=counts.reduce((a,b)=>a+b,0);
-    const el=document.getElementById('bet-total-count');
-    if(el) el.textContent=total;
-    const max=Math.max(...counts,1);
-    counts.forEach((cnt,i)=>{
-      const fill=document.getElementById('bet-fill-'+i);
-      const cnt_el=document.getElementById('bet-cnt-'+i);
-      if(fill) fill.style.width=(cnt/max*100).toFixed(1)+'%';
-      if(cnt_el) cnt_el.textContent=cnt;
-    });
-  }));
-}
+/* duplicate function removed: openRaceBetting; latest definition kept */
 
-async function openRaceBetting(){
-  const stateSnap=await get(ref(db,'state'));
-  const currentState=stateSnap.val()||{};
-  if(currentState.mode==='race' && currentState.active && !currentState.closed){
-    alert('이미 진행 중인 레이스 베팅이 있어요. 먼저 베팅을 마감하거나 현재 레이스를 마무리해주세요.');
-    return;
-  }
-  raceSession=(await getRaceSessionBaseline())+1;
-  await set(ref(db,'state'),{active:true,closed:false,standby:false,mode:'race',raceSession,racers:racers.map(r=>({name:r.name,title:r.title||''}))});
-  renderBetBars();
-  listenToBets();
-  alert('🏁 '+raceSession+'회차 베팅이 시작되었습니다!');
-}
+/* duplicate function removed: closeRaceBetting; latest definition kept */
 
-async function closeRaceBetting(){
-  await update(ref(db,'state'),{closed:true});
-  alert('베팅이 마감되었습니다.');
-}
+/* duplicate function removed: resetRaceSession; latest definition kept */
 
-async function resetRaceSession(){
-  if(!confirm('레이스 기록과 베팅을 모두 초기화할까요?')) return;
-  await remove(ref(db,'bets'));
-  await set(ref(db,'state'),{active:false,standby:true,mode:'idle'});
-  raceSession=0;
-  renderBetBars();
-  alert('초기화되었습니다.');
-}
 
 async function startRace(){
   if(raceRunning) return;
@@ -2140,39 +1850,8 @@ async function startRace(){
   startBGM();
   raceRaf=requestAnimationFrame(raceLoop);
 }
+/* duplicate function removed: showRaceResult; latest definition kept */
 
-async function showRaceResult(finishOrder){
-  if(!finishOrder.length) return;
-  const winnerIdx=finishOrder[0];
-  const winner=racers[winnerIdx];
-
-  // 踰좏똿 留욏엺 ?щ엺
-  const snap=await get(ref(db,'bets/s'+raceSession));
-  const bets=snap.val()||{};
-  const betters=Object.values(bets).filter(b=>b.racerIdx===winnerIdx).map(b=>b.name);
-
-  // 기록 Firebase 저장
-  const record={
-    session:raceSession,
-    ts:Date.now(),
-    winner:winner.name,
-    winnerIdx,
-    finishOrder:finishOrder.map(i=>racers[i].name),
-    eventLog:raceEventLog||'',
-    betters,
-    betCount:Object.keys(bets).length,
-  };
-  await push(ref(db,'race_history'), record);
-
-  document.getElementById('rr-vehicle').innerHTML='<img src="'+LOGO_TECHTAKA+'" style="height:20px;vertical-align:middle;margin-right:8px;"><img src="'+LOGO_ARGO+'" style="height:20px;vertical-align:middle;">';
-  document.getElementById('rr-winner').textContent=winner.name;
-  document.getElementById('rr-event-desc').textContent=raceEventLog||'';
-  document.getElementById('rr-betters').innerHTML=betters.length
-    ?betters.map(n=>'<div class="rr-better-tag">'+escapeHtml(n)+'</div>').join('')
-    :'<div style="font-size:12px;color:rgba(255,255,255,0.3)">踰좏똿???щ엺???놁뒿?덈떎</div>';
-  document.getElementById('race-result-ov').classList.remove('hidden');
-  launchConfetti();
-}
 
 function closeRaceResult(){
   document.getElementById('race-result-ov').classList.add('hidden');
@@ -2231,64 +1910,16 @@ async function loadRaceHistory(){
       </div>`:`<div style="font-size:11px;color:rgba(255,255,255,0.2);padding-top:8px;border-top:1px solid rgba(255,255,255,0.07);">베팅 성공자가 없습니다</div>`}
     </div>`).join('');
 }
+/* duplicate function removed: loadRaceBet; latest definition kept */
 
-// ?? PARTICIPANT RACE ??
-function loadRaceBet(raceRacers, sessionIdx){
-  selectedRacer=null;
-  document.getElementById('race-bet-btn').disabled=true;
-  document.getElementById('racer-options').innerHTML=raceRacers.map((r,i)=>`
-    <div class="racer-opt" onclick="selectRacer(${i})">
-      <div style="width:14px;height:14px;border-radius:50%;background:${RACER_COLORS[i]};flex-shrink:0;"></div>
-      <div class="ro-info">
-        <div class="ro-name">${escapeHtml(r.name)}</div>
-        <div class="ro-title">${escapeHtml(r.title||'')}</div>
-      </div>
-    </div>`).join('');
-  window._betSession=sessionIdx;
-  window._betRacers=raceRacers;
-  // ??λ맂 ?대쫫 ?먮룞 ?낅젰
-  const savedName=localStorage.getItem('tt_myname');
-  const nameInp=document.getElementById('race-name-input');
-  if(savedName && nameInp) nameInp.value=savedName;
-}
 
 window.selectRacer=function(idx){
   selectedRacer=idx;
   document.querySelectorAll('.racer-opt').forEach((el,i)=>el.classList.toggle('sel',i===idx));
   document.getElementById('race-bet-btn').disabled=false;
 };
+/* duplicate function removed: submitRaceBet; latest definition kept */
 
-async function submitRaceBet(){
-  if(selectedRacer===null) return;
-  const btn=document.getElementById('race-bet-btn');
-  btn.disabled=true; btn.textContent='제출 중..';
-  // ?대쫫 ?좏깮: 濡쒖뺄?ㅽ넗由ъ?????λ맂 ?대쫫 ?ъ슜, ?놁쑝硫??앹뾽
-  const nameInput=document.getElementById('race-name-input');
-  let betterName=(nameInput?.value.trim())||localStorage.getItem('tt_myname')||'익명';
-  if(betterName!=='익명') localStorage.setItem('tt_myname', betterName);
-  if(nameInput) nameInput.value=betterName;
-  await push(ref(db,'bets/s'+window._betSession),{racerIdx:selectedRacer,name:betterName,ts:Date.now()});
-  myBetQ[window._betSession]=true;
-  myBetQLocal[window._betSession]=true;
-  localStorage.setItem('tt_bets', JSON.stringify(myBetQLocal));
-  localStorage.setItem('tt_bet_racer_'+window._betSession, betterName+'|'+(window._betRacers[selectedRacer]?.name||''));
-  // ?꾨즺 ?붾㈃???닿? 踰좏똿???덉씠???쒖떆
-  const racerName=window._betRacers[selectedRacer]?.name||'';
-  const raceDoneEl=document.getElementById('p-race-done');
-  if(raceDoneEl){
-    const p=raceDoneEl.querySelector('p');
-    p.textContent='';
-    const strong=document.createElement('strong');
-    strong.style.color='var(--blue)';
-    strong.textContent=racerName;
-    p.appendChild(strong);
-    p.appendChild(document.createTextNode('에게 베팅했어요.'));
-    p.appendChild(document.createElement('br'));
-    p.appendChild(document.createElement('br'));
-    appendSafeLineBreaks(p,['화면을 보면서','레이스를 응원해주세요!']);
-  }
-  showP('race-done');
-}
 
 // ?? LOTTERY ??
 const DEFAULT_PRIZES = [
@@ -2311,53 +1942,12 @@ const DEFAULT_PRIZES = [
   '저주파 마사지기 ⚡',
   '홍삼정 에브리데이',
 ];
+/* duplicate function removed: initLottery; latest definition kept */
 
-async function initLottery(){
-  // Firebase?먯꽌 寃쏀뭹 濡쒕뱶
-  const [snap,finalDrawSnap]=await Promise.all([
-    get(ref(db,'settings/prizes')),
-    get(ref(db,FINAL_DRAW_LOG_PATH))
-  ]);
-  if(snap.val()&&snap.val().length>0){
-    prizes=snap.val();
-  } else if(prizes.length===0){
-    prizes=DEFAULT_PRIZES.map(name=>({name,done:false,type:'normal'}));
-    await set(ref(db,'settings/prizes'),prizes);
-  }
-  renderPrizeList();
-  if(finalDrawSnap.val()?.completed){
-    lotteryPool=[];
-    updatePoolDisplay();
-    document.getElementById('lottery-start-btn').disabled=true;
-    return;
-  }
-  await loadPeopleToPool();
-}
+/* duplicate function removed: loadPeopleToPool; latest definition kept */
 
-async function loadPeopleToPool(){
-  try{
-    if(!people.length){
-      const snap=await get(ref(db,'settings/people'));
-      people=normalizePeopleList(snap.val()||[]);
-    }
-    lotteryPool=(await getFinalDrawEligiblePeople()).map(person=>({
-      id:person.id,
-      name:person.name
-    }));
-  }catch(e){
-    const fallbackPeople=normalizePeopleList(people.length ? people : getCachedPeopleList());
-    lotteryPool=fallbackPeople
-      .filter(person=>!isExecutiveName(person.name))
-      .map(person=>({id:person.id,name:person.name}));
-  }
-  updatePoolDisplay();
-}
+/* duplicate function removed: updatePoolDisplay; latest definition kept */
 
-function updatePoolDisplay(){
-  document.getElementById('pool-count').textContent=lotteryPool.length;
-  document.getElementById('pool-preview').textContent=lotteryPool.map(p=>p.name).join(' · ');
-  if(activePrizeIdx!==null) document.getElementById('lottery-start-btn').disabled=false;
-}
 
 async function addPrize(){
   const input=document.getElementById('prize-input');
@@ -2412,65 +2002,8 @@ function selectPrize(idx){
     <div style="font-size:24px;font-weight:700;margin-bottom:16px;">${prizes[idx].name}</div>
     <div style="font-size:13px;color:rgba(255,255,255,0.3)">추첨 시작 버튼을 눌러주세요.</div>`;
 }
+/* duplicate function removed: startLottery; latest definition kept */
 
-async function startLottery(){
-  if(lotteryPool.length===0||activePrizeIdx===null) return;
-  const btn=document.getElementById('lottery-start-btn');
-  btn.disabled=true;
-  const donePrizeIdx=activePrizeIdx;
-  const selectedPrize=prizes[donePrizeIdx];
-
-  const spinWrap=document.getElementById('lottery-spin-wrap');
-  const spinInner=document.getElementById('lottery-spin-inner');
-  spinWrap.style.display='block';
-
-  // ?뷀뵆???대쫫?ㅻ줈 ?ㅽ?
-  const shuffled=[...lotteryPool].sort(()=>Math.random()-0.5);
-  spinInner.innerHTML=[...shuffled,...shuffled,...shuffled].map(entry=>`<div class="spin-item">${escapeHtml(entry.name)}</div>`).join('');
-
-  let speed=50,pos=0;
-  const winnerEntry=shuffled[Math.floor(Math.random()*shuffled.length)];
-  const winner=winnerEntry.name;
-  // 留ㅼ묶 寃쏀뭹?대㈃ ?ъ쟾 ?좏깮 ?뺤씤
-  const isMatch=selectedPrize?.type==='match';
-  let matchedPrize=null;
-  if(isMatch) matchedPrize=await getGiftMatch(winnerEntry);
-
-  const spin=setInterval(async ()=>{
-    pos+=speed;
-    spinInner.style.transform=`translateX(-${pos}px)`;
-    speed=Math.max(speed*0.985,2);
-    if(speed<=2.1){
-      clearInterval(spin);
-      spinWrap.style.display='none';
-      // 寃곌낵 ?쒖떆 (留ㅼ묶?대㈃ ?щ쭩 ?좊Ъ濡??쒖떆)
-      const displayPrize=matchedPrize?matchedPrize.name:selectedPrize.name;
-      document.getElementById('lottery-display').innerHTML=`
-        <div style="font-size:13px;color:rgba(255,255,255,0.3);margin-bottom:8px;">${matchedPrize?'개인 희망 선물 매칭':'🎁 '+escapeHtml(selectedPrize.name)}</div>
-        <div class="lottery-winner">${escapeHtml(winner)}</div>
-        <div style="font-size:20px;font-weight:800;color:#FFD700;margin:8px 0;">${escapeHtml(displayPrize)}</div>
-        <div style="font-size:13px;color:var(--green);font-weight:600;">축하합니다!</div>`;
-      if(matchedPrize){ matchedPrize.done=true; matchedPrize.winner=winner; }
-
-      // ?뱀꺼 湲곕줉
-      prizes[donePrizeIdx].done=true;
-      prizes[donePrizeIdx].winner=winner;
-      lotteryPool=lotteryPool.filter(p=>p.id!==winnerEntry.id);
-      activePrizeIdx=null;
-      await set(ref(db,'settings/prizes'),prizes);
-      updatePoolDisplay();
-      renderPrizeList();
-
-      // 濡쒓렇 異붽?
-      const log=document.getElementById('winner-log');
-      if(log.querySelector('p')) log.innerHTML='';
-      log.innerHTML=`<div style="background:rgba(10,158,110,0.1);border:1px solid rgba(10,158,110,0.3);border-radius:7px;padding:8px 10px;font-size:11px;"><span style="font-weight:700;color:var(--green)">${escapeHtml(winner)}</span> · ${escapeHtml(displayPrize)}</div>`+log.innerHTML;
-
-      launchConfetti();
-      btn.disabled=false;
-    }
-  },16);
-}
 
 
 // ?? WEB AUDIO ENGINE ??
@@ -2498,19 +2031,22 @@ function beep(freq,dur,type='square',vol=0.15,delay=0){
   o.stop(ac.currentTime+delay+dur+0.05);
 }
 
-// ?④낵??function sfx(type){
+// 효과음
+function sfx(type){
   switch(type){
     case 'start':
       // ?≫뙆?? ?꾨??붾룄
       [262,330,392,523].forEach((f,i)=>beep(f,0.12,'square',0.2,i*0.1));
       break;
     case 'event':
-      // 寃쎈낫??      beep(880,0.08,'square',0.15,0);
+      // 경보음
+      beep(880,0.08,'square',0.15,0);
       beep(440,0.08,'square',0.15,0.09);
       beep(880,0.08,'square',0.15,0.18);
       break;
     case 'winner':
-      // ?곗듅 ?≫뙆??      [523,659,784,1047].forEach((f,i)=>beep(f,0.18,'square',0.2,i*0.12));
+      // 우승 효과음
+      [523,659,784,1047].forEach((f,i)=>beep(f,0.18,'square',0.2,i*0.12));
       setTimeout(()=>[784,1047].forEach((f,i)=>beep(f,0.3,'square',0.25,i*0.15)),600);
       break;
     case 'fall':
@@ -2571,39 +2107,13 @@ function stopBGM(){
 
 // ?? GIFT PICK ??
 let gpSelectedPerson=null;
-let gpSelectedGifts=[]; // [{id, name}] ?곗꽑?쒖쐞 ?쒖꽌
+let gpSelectedGifts=[];
+/* duplicate function removed: enterGiftPick; latest definition kept */
 
-function enterGiftPick(){
-  show('gift-pick-view');
-  // 湲곗〈 ?좏깮 ?뺤씤
-  const saved=localStorage.getItem('tt_gift_pick');
-  if(saved){
-    const data=JSON.parse(saved);
-    gpSelectedPerson=data.name?{id:data.personId||'',name:data.name}:null;
-    gpSelectedGifts=data.gifts||[];
-    // ?꾨즺 ?붾㈃?쇰줈 諛붾줈
-    gpShowDone();
-  } else {
-    gpGoStep1();
-  }
-  loadGPPeople();
-}
+/* duplicate function removed: loadGPPeople; latest definition kept */
 
-async function loadGPPeople(){
-  const snap=await get(ref(db,'settings/people'));
-  const ppl=snap.val()||people;
-  window._gpPeople=ppl;
-  renderGPPeople('');
-}
+/* duplicate function removed: renderGPPeople; latest definition kept */
 
-function renderGPPeople(filter){
-  const ppl=getNameEntries(window._gpPeople||[],'person').filter(entry=>entry.name.includes(filter));
-  window._gpPeopleEntries=ppl;
-  document.getElementById('gp-people-list').innerHTML=ppl.length
-    ?ppl.map((entry,i)=>`<div class="p-item${gpSelectedPerson?.id===entry.id?' sel':''}" onclick="gpSelectNameByIndex(${i})">
-        <div class="p-av">${escapeHtml(entry.name[0]||'?')}</div>${escapeHtml(entry.name)}</div>`).join('')
-    :'<div style="padding:16px;text-align:center;font-size:12px;color:var(--sub)">寃??寃곌낵媛 ?놁뒿?덈떎</div>';
-}
 
 function filterGPPeople(v){ renderGPPeople(v); }
 
@@ -2617,149 +2127,30 @@ function gpSelectName(entry){
   document.getElementById('gp-next-btn').disabled=false;
   renderGPPeople(document.getElementById('gp-search').value);
 }
+/* duplicate function removed: gpGoStep1; latest definition kept */
 
-function gpGoStep1(){
-  document.getElementById('gp-step-name').classList.remove('hidden');
-  document.getElementById('gp-step-gifts').classList.add('hidden');
-  document.getElementById('gp-step-done').classList.add('hidden');
-}
+/* duplicate function removed: gpGoStep2; latest definition kept */
 
-async function gpGoStep2(){
-  if(!gpSelectedPerson) return;
-  document.getElementById('gp-step-name').classList.add('hidden');
-  document.getElementById('gp-step-gifts').classList.remove('hidden');
-  document.getElementById('gp-step-done').classList.add('hidden');
-  document.getElementById('gp-title').textContent=gpSelectedPerson.name+'?섏쓽 ?щ쭩 ?좊Ъ';
-  // Firebase?먯꽌 留ㅼ묶 寃쏀뭹留?濡쒕뱶
-  const snap=await get(ref(db,'settings/prizes'));
-  const allPrizes=snap.val()||DEFAULT_PRIZES.map(n=>({name:n,type:'normal',done:false}));
-  window._gpPrizes=allPrizes.filter(p=>p.type==='match'&&!p.done);
-  renderGPGiftList();
-  renderGPSelected();
-}
+/* duplicate function removed: renderGPGiftList; latest definition kept */
 
-function renderGPGiftList(){
-  const prizes=window._gpPrizes||[];
-  const selectedIds=gpSelectedGifts.map(g=>g.id);
-  document.getElementById('gp-gift-list').innerHTML=prizes.length
-    ?prizes.map((p,i)=>{
-      const sel=selectedIds.includes(i);
-      return `<div class="p-item${sel?' sel':''}" onclick="gpToggleGift(${i})">
-        <div class="p-av" style="${sel?'background:var(--blue);color:#fff;':''}">${sel?gpSelectedGifts.findIndex(g=>g.id===i)+1:'+'}</div>
-        ${escapeHtml(p.name)}
-      </div>`;
-    }).join('')
-    :'<div style="padding:16px;text-align:center;font-size:12px;color:var(--sub)">매칭 가능한 선물이 없습니다<br>진행자에게 문의해주세요</div>';
-}
+/* duplicate function removed: gpToggleGift; latest definition kept */
 
-function gpToggleGift(id){
-  const idx=gpSelectedGifts.findIndex(g=>g.id===id);
-  if(idx>=0){
-    gpSelectedGifts.splice(idx,1);
-  } else {
-    if(gpSelectedGifts.length>=5) return;
-    const prize=window._gpPrizes?.[id];
-    if(!prize) return;
-    gpSelectedGifts.push({id,name:prize.name});
-  }
-  document.getElementById('gp-submit-btn').disabled=gpSelectedGifts.length===0;
-  renderGPGiftList();
-  renderGPSelected();
-}
+/* duplicate function removed: renderGPSelected; latest definition kept */
 
-function renderGPSelected(){
-  const el=document.getElementById('gp-selected-list');
-  el.innerHTML=gpSelectedGifts.length
-    ?gpSelectedGifts.map((g,i)=>`
-      <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(61,111,232,0.1);border:1px solid rgba(61,111,232,0.3);border-radius:8px;">
-        <div style="width:22px;height:22px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">${i+1}</div>
-        <span style="flex:1;font-size:13px;">${escapeHtml(g.name)}</span>
-        <span onclick="gpToggleGift(${g.id})" style="color:rgba(255,255,255,0.3);cursor:pointer;font-size:16px;">×</span>
-      </div>`).join('')
-    :'<div style="font-size:12px;color:rgba(255,255,255,0.2);padding:8px 0;">아래 목록에서 선물을 선택해주세요</div>';
-}
+/* duplicate function removed: submitGiftPick; latest definition kept */
 
-async function submitGiftPick(){
-  if(!gpSelectedPerson||gpSelectedGifts.length===0) return;
-  const btn=document.getElementById('gp-submit-btn');
-  btn.disabled=true; btn.textContent='저장 중..';
-  const data={personId:gpSelectedPerson.id,name:gpSelectedPerson.name,gifts:gpSelectedGifts,ts:Date.now()};
-  await set(ref(db,'gift_preferences/'+safeFirebaseKey(gpSelectedPerson.id||gpSelectedPerson.name)), data);
-  localStorage.setItem('tt_gift_pick', JSON.stringify(data));
-  btn.textContent='선물 선택 완료';
-  gpShowDone();
-}
+/* duplicate function removed: gpShowDone; latest definition kept */
 
-function gpShowDone(){
-  document.getElementById('gp-step-name').classList.add('hidden');
-  document.getElementById('gp-step-gifts').classList.add('hidden');
-  document.getElementById('gp-step-done').classList.remove('hidden');
-  const saved=JSON.parse(localStorage.getItem('tt_gift_pick')||'{}');
-  document.getElementById('gp-done-list').innerHTML=`
-    <div style="font-size:13px;color:var(--sub);margin-bottom:8px;">${escapeHtml(saved.name||gpSelectedPerson?.name||'')}님의 희망 선물</div>
-    ${(saved.gifts||gpSelectedGifts).map((g,i)=>`
-      <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(255,255,255,0.04);border-radius:8px;margin-bottom:4px;">
-        <div style="width:22px;height:22px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;">${i+1}</div>
-        <span style="font-size:13px;">${escapeHtml(g.name)}</span>
-      </div>`).join('')}`;
-}
+/* duplicate function removed: gpEdit; latest definition kept */
 
-function gpEdit(){
-  localStorage.removeItem('tt_gift_pick');
-  gpSelectedPerson=null;
-  gpSelectedGifts=[];
-  gpGoStep1();
-  renderGPPeople('');
-}
+/* duplicate function removed: gpResetMessageState; latest definition kept */
 
-function gpResetMessageState(){
-  gpSelectedTags=[];
-  gpDisplayMode='named';
-  gpMessageText='';
-  gpExtraAnswer='';
-  gpExistingMessageMeta=null;
-}
+/* duplicate function removed: getCachedPeopleList; latest definition kept */
 
-function getCachedPeopleList(){
-  try{
-    const cached=JSON.parse(localStorage.getItem('tt_people_cache')||'[]');
-    return Array.isArray(cached) ? cached.filter(Boolean) : [];
-  }catch(e){
-    return [];
-  }
-}
+/* duplicate function removed: savePeople; latest definition kept */
 
-async function savePeople(){
-  const prevPeople=[...people];
-  const raw = document.getElementById('people-textarea').value;
-  const nextPeople = raw.split('\n').map(p=>p.trim()).filter(p=>p);
-  try {
-    await set(ref(db,'settings/people'), nextPeople);
-    people = nextPeople;
-    localStorage.setItem('tt_people_cache', JSON.stringify(nextPeople));
-    alert(people.length+'명이 저장됐어요!');
-  } catch(e) {
-    people = prevPeople;
-    alert('참석자 명단 저장에 실패했어요. 네트워크 또는 Firebase 상태를 확인한 뒤 다시 시도해주세요.\n\n오류: '+e.message);
-  }
-}
+/* duplicate function removed: loadGPPeople; latest definition kept */
 
-async function loadGPPeople(){
-  let ppl=[];
-  try{
-    const snap=await get(ref(db,'settings/people'));
-    ppl=snap.val()||[];
-  }catch(e){}
-  if(Array.isArray(ppl) && ppl.length){
-    people=[...ppl];
-    localStorage.setItem('tt_people_cache', JSON.stringify(ppl));
-  }
-  if(!Array.isArray(ppl) || !ppl.length) ppl=people;
-  if((!Array.isArray(ppl) || !ppl.length) && window._gpPeople?.length) ppl=window._gpPeople;
-  if((!Array.isArray(ppl) || !ppl.length)) ppl=getCachedPeopleList();
-  window._gpPeople=Array.isArray(ppl) ? ppl : [];
-  renderGPPeople(document.getElementById('gp-search')?.value || '');
-}
 
 function gpLoadSavedMessageState(data){
   gpSelectedTags=Array.isArray(data?.tags) ? data.tags.filter(Boolean).slice(0,2) : [];
@@ -2768,32 +2159,8 @@ function gpLoadSavedMessageState(data){
   gpExtraAnswer=String(data?.extraAnswer||'');
   gpExistingMessageMeta=data ? {...data} : null;
 }
+/* duplicate function removed: enterGiftPick; latest definition kept */
 
-function enterGiftPick(){
-  show('gift-pick-view');
-  const saved=localStorage.getItem('tt_gift_pick');
-  if(saved){
-    try{
-      const data=JSON.parse(saved);
-      gpSelectedPerson=data.name?{id:data.personId||'',name:data.name}:null;
-      gpSelectedGifts=data.gifts||[];
-      gpLoadSavedMessageState(data.messageData||data);
-      gpShowDone();
-    }catch(e){
-      localStorage.removeItem('tt_gift_pick');
-      gpSelectedPerson=null;
-      gpSelectedGifts=[];
-      gpResetMessageState();
-      gpGoStep1();
-    }
-  } else {
-    gpSelectedPerson=null;
-    gpSelectedGifts=[];
-    gpResetMessageState();
-    gpGoStep1();
-  }
-  loadGPPeople();
-}
 
 function gpHandleMessageInput(){
   gpMessageText=document.getElementById('gp-message-input').value;
@@ -2834,53 +2201,12 @@ function renderGpTags(){
     wrap.appendChild(btn);
   });
 }
+/* duplicate function removed: renderGpMessageForm; latest definition kept */
 
-function renderGpMessageForm(){
-  const msgInput=document.getElementById('gp-message-input');
-  const extraInput=document.getElementById('gp-extra-input');
-  if(msgInput) msgInput.value=gpMessageText;
-  if(extraInput) extraInput.value=gpExtraAnswer;
-  document.getElementById('gp-message-count').textContent=gpMessageText.trim().length;
-  document.getElementById('gp-extra-count').textContent=gpExtraAnswer.trim().length;
-  renderGpTags();
-  document.querySelectorAll('input[name="gp-display-mode"]').forEach(input=>{
-    input.checked=input.value===gpDisplayMode;
-  });
-}
+/* duplicate function removed: gpUpdateSubmitState; latest definition kept */
 
-function gpUpdateSubmitState(){
-  const btn=document.getElementById('gp-submit-btn');
-  if(!btn) return;
-  btn.disabled=gpSelectedGifts.length===0 || gpMessageText.trim().length<2;
-}
+/* duplicate function removed: gpGoStep2; latest definition kept */
 
-async function gpGoStep2(){
-  if(!gpSelectedPerson) return;
-  document.getElementById('gp-step-name').classList.add('hidden');
-  document.getElementById('gp-step-gifts').classList.remove('hidden');
-  document.getElementById('gp-step-done').classList.add('hidden');
-  document.getElementById('gp-title').textContent=gpSelectedPerson.name+'님의 선물을 골라주세요';
-  const personKey=getPersonKey(gpSelectedPerson);
-  const [prizeSnap,giftSnap,msgSnap]=await Promise.all([
-    get(ref(db,'settings/prizes')),
-    get(ref(db,'gift_preferences/'+personKey)).catch(()=>({val:()=>null})),
-    get(ref(db,'anniversary_messages/'+personKey)).catch(()=>({val:()=>null}))
-  ]);
-  const allPrizes=prizeSnap.val()||DEFAULT_PRIZES.map(n=>({name:n,type:'normal',done:false}));
-  window._gpPrizes=allPrizes.filter(p=>p.type==='match'&&!p.done);
-  const savedGift=giftSnap.val();
-  const savedMsg=msgSnap.val();
-  if(savedGift?.gifts) gpSelectedGifts=savedGift.gifts;
-  if(savedMsg){
-    gpLoadSavedMessageState(savedMsg);
-  } else if(!gpExistingMessageMeta && !gpMessageText && !gpExtraAnswer && !gpSelectedTags.length){
-    gpResetMessageState();
-  }
-  renderGPGiftList();
-  renderGPSelected();
-  renderGpMessageForm();
-  gpUpdateSubmitState();
-}
 
 function gpToggleGift(id){
   const idx=gpSelectedGifts.findIndex(g=>g.id===id);
@@ -2896,68 +2222,12 @@ function gpToggleGift(id){
   renderGPSelected();
   gpUpdateSubmitState();
 }
+/* duplicate function removed: submitGiftPick; latest definition kept */
 
-async function submitGiftPick(){
-  if(!gpSelectedPerson||gpSelectedGifts.length===0||gpMessageText.trim().length<2) return;
-  const btn=document.getElementById('gp-submit-btn');
-  btn.disabled=true;
-  btn.textContent='저장 중..';
-  const personKey=getPersonKey(gpSelectedPerson);
-  const now=Date.now();
-  const giftData={personId:gpSelectedPerson.id,name:gpSelectedPerson.name,gifts:gpSelectedGifts,ts:now};
-  const messageData={
-    personId:gpSelectedPerson.id,
-    name:gpSelectedPerson.name,
-    shortMessage:gpMessageText.trim(),
-    tags:gpSelectedTags,
-    extraAnswer:gpExtraAnswer.trim(),
-    displayMode:gpDisplayMode,
-    adminHidden:Boolean(gpExistingMessageMeta?.adminHidden),
-    featured:Boolean(gpExistingMessageMeta?.featured),
-    ts:gpExistingMessageMeta?.ts || now,
-    updatedAt:now
-  };
-  await Promise.all([
-    set(ref(db,'gift_preferences/'+personKey), giftData),
-    set(ref(db,'anniversary_messages/'+personKey), messageData)
-  ]);
-  gpExistingMessageMeta=messageData;
-  localStorage.setItem('tt_gift_pick', JSON.stringify({...giftData, messageData}));
-  btn.textContent='선물 + 메시지 저장';
-  gpShowDone();
-}
+/* duplicate function removed: gpShowDone; latest definition kept */
 
-function gpShowDone(){
-  document.getElementById('gp-step-name').classList.add('hidden');
-  document.getElementById('gp-step-gifts').classList.add('hidden');
-  document.getElementById('gp-step-done').classList.remove('hidden');
-  const saved=JSON.parse(localStorage.getItem('tt_gift_pick')||'{}');
-  const savedMessage=saved.messageData||saved;
-  const visibilityLabel=savedMessage.displayMode==='anonymous' ? '익명 공개' : '실명 공개';
-  document.getElementById('gp-done-list').innerHTML=`
-    <div style="font-size:13px;color:var(--sub);margin-bottom:8px;">${escapeHtml(saved.name||gpSelectedPerson?.name||'')}님의 희망 선물과 메시지</div>
-    ${(saved.gifts||gpSelectedGifts).map((g,i)=>`
-      <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(255,255,255,0.04);border-radius:8px;margin-bottom:4px;">
-        <div style="width:22px;height:22px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;">${i+1}</div>
-        <span style="font-size:13px;">${escapeHtml(g.name)}</span>
-      </div>`).join('')}
-    <div style="margin-top:14px;padding:14px;border-radius:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);">
-      <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-bottom:8px;">6주년 메시지 · ${escapeHtml(visibilityLabel)}</div>
-      <div style="font-size:14px;line-height:1.6;">"${escapeHtml(savedMessage.shortMessage||gpMessageText)}"</div>
-      ${(savedMessage.tags||gpSelectedTags).length ? `<div style="margin-top:10px;font-size:12px;color:#8fb1ff;">${(savedMessage.tags||gpSelectedTags).map(tag=>`#${escapeHtml(tag)}`).join(' ')}</div>` : ''}
-      ${(savedMessage.extraAnswer||gpExtraAnswer) ? `<div style="margin-top:10px;font-size:12px;color:rgba(255,255,255,0.55);">7주년 응답: ${escapeHtml(savedMessage.extraAnswer||gpExtraAnswer)}</div>` : ''}
-    </div>
-  `;
-}
+/* duplicate function removed: gpEdit; latest definition kept */
 
-function gpEdit(){
-  localStorage.removeItem('tt_gift_pick');
-  gpSelectedPerson=null;
-  gpSelectedGifts=[];
-  gpResetMessageState();
-  gpGoStep1();
-  renderGPPeople('');
-}
 
 // ?? 異붿꺼 留ㅼ묶 濡쒖쭅 ??
 async function getGiftMatch(winnerEntry){
@@ -3888,7 +3158,7 @@ function renderGPGiftList(){
     const items=getAllowedPrizesForSlot(catalog, rule.slot);
     return `
       <div style="margin-bottom:16px;">
-        <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.42);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">${rule.label} 쨌 Tier ${rule.tiers.join('/')}</div>
+        <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.42);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">${rule.label} · Tier ${rule.tiers.join('/')}</div>
         <div style="display:flex;flex-direction:column;gap:6px;">
           ${items.map(item=>{
             const active=gpChoiceBySlot[rule.slot-1]?.id===item.id;
