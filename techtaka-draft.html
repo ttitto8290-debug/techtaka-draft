@@ -69,13 +69,13 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
 .nb-amber{background:var(--amber);color:#fff;}
 
 /* ?먥븧 PARTICIPANT ?먥븧 */
-#p-view{background:var(--bg);color:var(--text);}
+#p-view{background:var(--bg);color:var(--text);overflow-y:auto;overflow-x:hidden;}
 #p-view .top-bar{background:var(--navy);border-bottom:none;}
-.p-body{max-width:1100px;margin:0 auto;padding:20px;width:100%;}
+.p-body{max-width:1100px;margin:0 auto;padding:20px 20px 120px;width:100%;}
 #gift-pick-view.view-wrap{height:auto;min-height:100vh;overflow-y:auto;overflow-x:hidden;}
 #gift-pick-view{overflow-y:auto;overflow-x:hidden;}
 #gift-pick-view .p-body{max-width:1100px;padding-bottom:120px;}
-.p-layout{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:18px;align-items:start;}
+.p-layout{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:18px;align-items:start;min-height:fit-content;}
 .p-main-col{min-width:0;}
 .session-reward-panel{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:18px;}
 .session-reward-title{font-size:10px;font-weight:700;color:rgba(255,255,255,0.35);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;}
@@ -378,6 +378,8 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
 .message-cloud-word{display:inline-flex;align-items:center;justify-content:center;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);font-weight:800;line-height:1;}
 @media (max-width: 980px){
   .p-layout{grid-template-columns:1fr;}
+  #p-view{overflow-y:auto;}
+  .p-body{padding-bottom:140px;}
   .message-admin-grid{grid-template-columns:1fr;}
   .message-stage-quote{font-size:28px;}
   .message-stage-card{padding:30px 26px;}
@@ -3129,6 +3131,15 @@ function filterFinalDrawLogBySession(finalDrawLog, sessionStartedAt){
   );
 }
 
+function formatDraftRoundLabel(key){
+  const raw=String(key||'').trim();
+  const match=raw.match(/^q(\d+)$/i);
+  if(match){
+    return `Q${Number(match[1])+1}`;
+  }
+  return raw.toUpperCase();
+}
+
 async function getDraftRewardContext(){
   const [catalog,rewardsSnap,sessionStartedAt]=await Promise.all([
     ensureSelectionPrizeCatalog(),
@@ -3275,7 +3286,7 @@ async function refreshDraftSafetyIndicators(currentVotes){
   const round3Allowed=remainingStock>=15 && previousTop<=15;
   const summaryText=Object.entries(allRewards).sort((a,b)=>a[0].localeCompare(b[0])).map(([key,round])=>{
     const granted=(round?.assignedRewards||[]).length;
-    return `<div>${escapeHtml(key.toUpperCase())}: 1위 ${escapeHtml(round?.winnerName||'-')} · 득표 ${Number(round?.topVoteCount)||0}표 · 지급 ${granted}건</div>`;
+    return `<div>${escapeHtml(formatDraftRoundLabel(key))}: 1위 ${escapeHtml(round?.winnerName||'-')} · 득표 ${Number(round?.topVoteCount)||0}표 · 지급 ${granted}건</div>`;
   }).join('') || '아직 드래프트 보상 로그가 없습니다.';
   updateDraftSafetyUI(remainingStock, projectedCount, round3Allowed, summaryText);
   return {remainingStock,projectedCount,round3Allowed,previousTop};
@@ -4316,13 +4327,13 @@ function getSessionRewardEntriesFromLogs(draftRewards, raceRewardSets, finalDraw
     if(ts<minTs) return;
     (round?.assignedRewards||[]).forEach(item=>{
       if(!(item?.personId||item?.name)) return;
-      entries.push({
-        source:'draft',
-        label:`드래프트 ${key.toUpperCase()}`,
-        personId:item.personId||'',
-        name:item.name||'-',
-        prizeName:item.prizeName||'-',
-        ts
+        entries.push({
+          source:'draft',
+          label:`드래프트 ${formatDraftRoundLabel(key)}`,
+          personId:item.personId||'',
+          name:item.name||'-',
+          prizeName:item.prizeName||'-',
+          ts
       });
     });
   });
