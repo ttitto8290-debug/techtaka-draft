@@ -920,6 +920,7 @@ let raceInterval = null;
 let positions = [0,0,0,0,0];
 let lotteryPool = [];
 let prizes = [];
+let lotteryPrizes = [];
 let activePrizeIdx = null;
 let winnerLog = [];
 const MESSAGE_TAG_OPTIONS = ['축하','고마움','응원','웃음','추억','자랑'];
@@ -1955,9 +1956,9 @@ async function addPrize(){
   const val=input.value.trim();
   const type=document.getElementById('prize-type-select')?.value||'normal';
   if(!val) return;
-  prizes.push({name:val,done:false,type});
+  lotteryPrizes.push({name:val,done:false,type});
   input.value='';
-  await set(ref(db,'settings/prizes'),prizes);
+  await set(ref(db,'settings/prizes'),lotteryPrizes);
   renderPrizeList();
 }
 
@@ -1967,15 +1968,15 @@ async function addPrizeBulk(){
   if(!ta) return;
   const lines=ta.value.split('\n').map(l=>l.trim()).filter(l=>l);
   if(!lines.length) return;
-  lines.forEach(name=>prizes.push({name,done:false,type}));
+  lines.forEach(name=>lotteryPrizes.push({name,done:false,type}));
   ta.value='';
-  await set(ref(db,'settings/prizes'),prizes);
+  await set(ref(db,'settings/prizes'),lotteryPrizes);
   renderPrizeList();
   alert(lines.length+'개 경품이 추가됐어요.');
 }
 
 function renderPrizeList(){
-  document.getElementById('prize-list').innerHTML=prizes.map((p,i)=>`
+  document.getElementById('prize-list').innerHTML=lotteryPrizes.map((p,i)=>`
     <div class="prize-item${p.done?' done':''}${activePrizeIdx===i?' active':''}">
       <div class="pi-name">${p.done?'✓':''} ${p.name}${p.winner?' · '+p.winner:''}</div>
       <div style="display:flex;gap:4px;align-items:center;">
@@ -1986,10 +1987,10 @@ function renderPrizeList(){
 }
 
 async function deletePrize(idx){
-  prizes.splice(idx,1);
+  lotteryPrizes.splice(idx,1);
   if(activePrizeIdx===idx) activePrizeIdx=null;
   else if(activePrizeIdx>idx) activePrizeIdx--;
-  await set(ref(db,'settings/prizes'),prizes);
+  await set(ref(db,'settings/prizes'),lotteryPrizes);
   renderPrizeList();
 }
 
@@ -1999,7 +2000,7 @@ function selectPrize(idx){
   document.getElementById('lottery-start-btn').disabled=lotteryPool.length===0;
   document.getElementById('lottery-display').innerHTML=`
     <div style="font-size:14px;color:rgba(255,255,255,0.4);margin-bottom:8px;">현재 경품</div>
-    <div style="font-size:24px;font-weight:700;margin-bottom:16px;">${prizes[idx].name}</div>
+    <div style="font-size:24px;font-weight:700;margin-bottom:16px;">${lotteryPrizes[idx].name}</div>
     <div style="font-size:13px;color:rgba(255,255,255,0.3)">추첨 시작 버튼을 눌러주세요.</div>`;
 }
 /* duplicate function removed: startLottery; latest definition kept */
@@ -2236,14 +2237,15 @@ async function getGiftMatch(winnerEntry){
   for(const key of keys){
     const snap=await get(ref(db,'gift_preferences/'+key));
     if(snap.val()){
-      prefs=snap.val().gifts||[];
+      const value=snap.val()||{};
+      prefs=Array.isArray(value.choices) ? value.choices : (value.gifts||[]);
       break;
     }
   }
   if(!prefs.length) return null;
-  // ?⑥? 留ㅼ묶 寃쏀뭹 ?뺤씤
   for(const pref of prefs){
-    const prize=prizes.find(p=>p.name===pref.name&&p.type==='match'&&!p.done);
+    const prefName=typeof pref==='string' ? pref : String(pref.name||'').trim();
+    const prize=lotteryPrizes.find(p=>p.name===prefName&&p.type==='match'&&!p.done);
     if(prize) return prize;
   }
   return null;
@@ -2485,6 +2487,15 @@ let gpChoiceBySlot=[null,null,null];
 
 function isExecutiveName(name){
   return EXECUTIVE_NAMES.includes(String(name||'').trim());
+}
+
+function syncCandidatesFromPeople(){
+  candidates=normalizePeopleList(people).filter(person=>!isExecutiveName(person.name));
+  const textarea=document.getElementById('candidates-textarea');
+  if(textarea){
+    textarea.value=candidates.map(item=>item.name).join('\n');
+  }
+  return candidates;
 }
 
 function normalizePeopleList(raw){
@@ -2827,8 +2838,7 @@ async function processDraftRewardsForQuestion(qIdx, qv, winnerPersonId, winnerNa
 }
 
 function getDraftCandidatePool(){
-  const source=candidates.length ? candidates : people;
-  return getNameEntries(source, candidates.length?'candidate':'person')
+  return getNameEntries(people, 'person')
     .filter(entry=>!isExecutiveName(entry.name))
     .filter(entry=>entry.id!==getAuthenticatedParticipant()?.id);
 }
@@ -2981,11 +2991,9 @@ async function loadSettingsFromDB(){
   const s=settingsSnap.val()||{};
   if(s.questions) questions=s.questions;
   if(s.people) people=normalizePeopleList(s.people);
-  if(s.candidates) candidates=normalizePeopleList(s.candidates);
-  else candidates=[...people];
   document.getElementById('questions-textarea').value=questions.join('\n');
   document.getElementById('people-textarea').value=peopleToTextareaValue(people);
-  document.getElementById('candidates-textarea').value=normalizePeopleList(candidates).map(item=>item.name).join('\n');
+  syncCandidatesFromPeople();
   prizes=catalog;
   initTabs();
   await refreshDraftSafetyIndicators();
@@ -2998,6 +3006,7 @@ async function savePeople(){
   try{
     await set(ref(db,'settings/people'), serializePeopleList(nextPeople));
     people=nextPeople;
+    syncCandidatesFromPeople();
     localStorage.setItem('tt_people_cache', JSON.stringify(serializePeopleList(nextPeople)));
     alert(people.length+'명이 저장됐어요!');
   }catch(e){
@@ -3007,15 +3016,8 @@ async function savePeople(){
 }
 
 async function saveCandidates(){
-  const raw=document.getElementById('candidates-textarea').value;
-  const nextCandidates=raw.split('\n').map(name=>String(name||'').trim()).filter(Boolean).map((name,idx)=>({id:`candidate:${safeFirebaseKey(name)}:${idx}`,name}));
-  try{
-    await set(ref(db,'settings/candidates'), nextCandidates);
-    candidates=nextCandidates;
-    alert(candidates.length+'명의 후보가 저장됐어요!');
-  }catch(e){
-    alert('후보 저장에 실패했어요.\n\n오류: '+e.message);
-  }
+  syncCandidatesFromPeople();
+  alert('드래프트 후보는 참석자 명단 기준으로 자동 구성됩니다.\n경영진(Soo, Chris, John)은 자동 제외됩니다.');
 }
 
 function getNameEntries(list, source='entry'){
@@ -3638,6 +3640,7 @@ async function loadPeopleToPool(){
   if(!people.length){
     const snap=await get(ref(db,'settings/people'));
     people=normalizePeopleList(snap.val()||[]);
+    syncCandidatesFromPeople();
   }
   lotteryPool=(await getFinalDrawEligiblePeople()).map(person=>({
     id:person.id,
@@ -3667,7 +3670,7 @@ async function startLottery(){
   const btn=document.getElementById('lottery-start-btn');
   btn.disabled=true;
   const donePrizeIdx=activePrizeIdx;
-  const selectedPrize=prizes[donePrizeIdx];
+  const selectedPrize=lotteryPrizes[donePrizeIdx];
 
   const spinWrap=document.getElementById('lottery-spin-wrap');
   const spinInner=document.getElementById('lottery-spin-inner');
@@ -3701,13 +3704,13 @@ async function startLottery(){
         matchedPrize.winner=winner;
       }
 
-      prizes[donePrizeIdx].done=true;
-      prizes[donePrizeIdx].winner=winner;
+      lotteryPrizes[donePrizeIdx].done=true;
+      lotteryPrizes[donePrizeIdx].winner=winner;
       lotteryPool=lotteryPool.filter(p=>p.id!==winnerEntry.id);
       activePrizeIdx=null;
       try{
         await Promise.all([
-          set(ref(db,'settings/prizes'),prizes),
+          set(ref(db,'settings/prizes'),lotteryPrizes),
           set(ref(db,FINAL_DRAW_LOG_PATH),{
             completed:true,
             ts:Date.now(),
@@ -3741,10 +3744,10 @@ async function initLottery(){
     finalDrawVal=finalDrawSnap.val();
   }catch(e){}
   if(snapVal&&snapVal.length>0){
-    prizes=snapVal;
-  } else if(prizes.length===0){
-    prizes=DEFAULT_PRIZES.map(name=>({name,done:false,type:'normal'}));
-    try{ await set(ref(db,'settings/prizes'),prizes); }catch(e){}
+    lotteryPrizes=snapVal;
+  } else if(lotteryPrizes.length===0){
+    lotteryPrizes=DEFAULT_PRIZES.map(name=>({name,done:false,type:'normal'}));
+    try{ await set(ref(db,'settings/prizes'),lotteryPrizes); }catch(e){}
   }
   renderPrizeList();
   if(finalDrawVal?.completed){
@@ -3804,10 +3807,9 @@ function listenToHostState(){
   replaceListener('hostSettings', onValue(ref(db,'settings'),(snap)=>{
     const s=snap.val()||{};
     if(s.questions) questions=s.questions;
-    if(s.candidates) candidates=normalizePeopleList(s.candidates);
     if(s.people){
       people=normalizePeopleList(s.people);
-      if(!s.candidates) candidates=[...people];
+      syncCandidatesFromPeople();
       const pVoting=document.getElementById('p-voting');
       if(pVoting && !pVoting.classList.contains('hidden')) renderPeople('');
       if(document.getElementById('auth-people-list')) renderAuthPeople(document.getElementById('auth-search')?.value||'');
