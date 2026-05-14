@@ -453,6 +453,11 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
         <p>희망 선물<br>미리 골라주세요</p>
         <div class="hc-badge" style="background:var(--green);">사전 선택</div>
       </div>
+      <div class="hub-card" onclick="openParticipantMessageStage('participant-hub')">
+        <div class="hc-icon">💬</div>
+        <h2>한마디 보기</h2>
+        <p>구성원 메시지<br>랜덤 카드로 보기</p>
+      </div>
     </div>
     <button class="back-btn" onclick="goHome()" style="margin-top:24px;padding:10px 24px;">← 홈으로</button>
   </div>
@@ -527,7 +532,10 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
 <div id="p-view" class="hidden view-wrap">
   <div class="top-bar">
     <div class="logo">TECHTAKA <span>6TH</span></div>
-    <button class="back-btn" onclick="goParticipantHome()">← 홈</button>
+    <div class="nav-btns">
+      <button class="nb nb-ghost" onclick="openParticipantMessageStage('p-view')">💬 한마디 보기</button>
+      <button class="back-btn" onclick="goParticipantHome()">← 홈</button>
+    </div>
   </div>
   <div class="p-body">
     <!-- ?湲?-->
@@ -875,7 +883,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
         <button class="nb nb-primary" onclick="showRandomMessageStage()">랜덤 카드</button>
         <button class="nb nb-ghost" onclick="showNextRandomStageMessage()">다음 메시지</button>
         <button class="nb nb-ghost" onclick="showKeywordCloudStage()">키워드 보기</button>
-        <button class="back-btn" onclick="backToMessagesView()">← 목록</button>
+        <button class="back-btn" onclick="backFromMessageStage()">← 목록</button>
       </div>
     </div>
     <div class="message-stage-content" id="message-stage-content"></div>
@@ -1086,6 +1094,7 @@ let selectedMessageKey = null;
 let messageAdminFilter = 'displayable';
 let messageStageMode = 'random';
 let messageStageSelectedKey = null;
+let messageStageReturnView = 'messages-view';
 let sessionRewardEntries = [];
 const firebaseUnsubs = {
   adminStatus:null,
@@ -1278,6 +1287,34 @@ function pickRandomDisplayableMessage(excludeKey){
   const list=adminMessages.filter(msg=>isDisplayableMessage(msg) && msg.key!==excludeKey);
   if(!list.length) return null;
   return list[Math.floor(Math.random()*list.length)];
+}
+
+function handleAdminMessagesSnapshot(raw){
+  adminMessages=Object.entries(raw||{})
+    .map(([key,value])=>normalizeMessageRecord(key, value))
+    .filter(msg=>msg.shortMessage)
+    .sort((a,b)=>b.updatedAt-a.updatedAt || b.ts-a.ts);
+  if(!adminMessages.some(msg=>msg.key===selectedMessageKey)){
+    selectedMessageKey=getFilteredAdminMessages()[0]?.key || adminMessages[0]?.key || null;
+  }
+  renderMessageFilters();
+  renderMessagesAdminStats();
+  renderMessageList();
+  renderSelectedMessagePreview();
+  if(messageStageMode==='cloud' && !document.getElementById('message-stage-view').classList.contains('hidden')){
+    renderMessageStageCloud();
+  } else if(!document.getElementById('message-stage-view').classList.contains('hidden') && messageStageSelectedKey){
+    const stageMsg=adminMessages.find(msg=>msg.key===messageStageSelectedKey);
+    if(messageStageMode==='selected'){
+      renderMessageStageCard(stageMsg||null);
+    }
+  }
+}
+
+function ensureAdminMessagesListener(){
+  replaceListener('adminMessages', onValue(ref(db,'anniversary_messages'), snap=>{
+    handleAdminMessagesSnapshot(snap.val()||{});
+  }));
 }
 
 
@@ -1498,13 +1535,39 @@ function toggleDraftSettings(forceOpen){
 }
 
 function enterMessagesView(){
+  messageStageReturnView='messages-view';
   show('messages-view');
   initMessagesAdmin();
 }
 
 function backToMessagesView(){
+  messageStageReturnView='messages-view';
   show('messages-view');
   initMessagesAdmin();
+}
+
+function openParticipantMessageStage(returnView){
+  messageStageReturnView=returnView||'participant-hub';
+  ensureAdminMessagesListener();
+  const msg=pickRandomDisplayableMessage();
+  messageStageMode='random';
+  messageStageSelectedKey=msg?.key||null;
+  show('message-stage-view');
+  renderMessageStageCard(msg);
+}
+
+function backFromMessageStage(){
+  if(messageStageReturnView==='participant-hub'){
+    goParticipantHome();
+    refreshSessionRewardPanels().catch(()=>{});
+    return;
+  }
+  if(messageStageReturnView==='p-view'){
+    show('p-view');
+    refreshSessionRewardPanels().catch(()=>{});
+    return;
+  }
+  backToMessagesView();
 }
 
 // ?? DRAFT HOST ??
@@ -2809,28 +2872,7 @@ function showKeywordCloudStage(){
 
 function initMessagesAdmin(){
   renderMessageFilters();
-  replaceListener('adminMessages', onValue(ref(db,'anniversary_messages'), snap=>{
-    const raw=snap.val()||{};
-    adminMessages=Object.entries(raw)
-      .map(([key,value])=>normalizeMessageRecord(key, value))
-      .filter(msg=>msg.shortMessage)
-      .sort((a,b)=>b.updatedAt-a.updatedAt || b.ts-a.ts);
-    if(!adminMessages.some(msg=>msg.key===selectedMessageKey)){
-      selectedMessageKey=getFilteredAdminMessages()[0]?.key || adminMessages[0]?.key || null;
-    }
-    renderMessageFilters();
-    renderMessagesAdminStats();
-    renderMessageList();
-    renderSelectedMessagePreview();
-    if(messageStageMode==='cloud' && !document.getElementById('message-stage-view').classList.contains('hidden')){
-      renderMessageStageCloud();
-    } else if(!document.getElementById('message-stage-view').classList.contains('hidden') && messageStageSelectedKey){
-      const stageMsg=adminMessages.find(msg=>msg.key===messageStageSelectedKey);
-      if(messageStageMode==='selected'){
-        renderMessageStageCard(stageMsg||null);
-      }
-    }
-  }));
+  ensureAdminMessagesListener();
 }
 
 const EXECUTIVE_NAMES=['Soo','Chris','John'];
