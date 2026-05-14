@@ -167,6 +167,12 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
 .setting-row textarea,.setting-row input{flex:1;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#fff;font-family:'Noto Sans KR',sans-serif;font-size:12px;padding:8px 10px;outline:none;resize:none;}
 .setting-row textarea:focus,.setting-row input:focus{border-color:var(--bl);}
 .save-btn{padding:8px 14px;background:var(--green);color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:700;font-family:'Noto Sans KR',sans-serif;cursor:pointer;white-space:nowrap;}
+.settings-panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;}
+.settings-panel-head h3{margin:0;}
+.settings-toggle-btn{padding:7px 12px;border:none;border-radius:999px;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.78);font-size:11px;font-weight:700;font-family:'Noto Sans KR',sans-serif;cursor:pointer;transition:all 0.18s;}
+.settings-toggle-btn:hover{background:rgba(255,255,255,0.14);color:#fff;}
+.settings-panel-body{overflow:hidden;transition:max-height 0.22s ease,opacity 0.18s ease,margin-top 0.18s ease;}
+.settings-panel.collapsed .settings-panel-body{max-height:0 !important;opacity:0;margin-top:0;pointer-events:none;}
 
 /* REVEAL */
 #reveal-ov{position:fixed;inset:0;background:#0A0F1A;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;}
@@ -570,9 +576,12 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
   </div>
   <div class="h-body">
     <!-- ?ㅼ젙 ?⑤꼸 -->
-    <div class="settings-panel">
-      <h3>운영 설정</h3>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+    <div class="settings-panel collapsed" id="draft-settings-panel">
+      <div class="settings-panel-head">
+        <h3>운영 설정</h3>
+        <button type="button" class="settings-toggle-btn" id="draft-settings-toggle" onclick="toggleDraftSettings()">설정 열기</button>
+      </div>
+      <div class="settings-panel-body" id="draft-settings-body" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;max-height:420px;">
         <div>
           <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-bottom:6px;">전체 참석자 명단 (줄바꿈)</div>
           <div style="font-size:9px;color:rgba(255,255,255,0.25);margin-bottom:4px;">이름 선택 · 추첨 · 선물 선택에 사용</div>
@@ -984,6 +993,7 @@ let prizes = [];
 let lotteryPrizes = [];
 let activePrizeIdx = null;
 let winnerLog = [];
+let participantDraftViewQ = null;
 const MESSAGE_TAG_OPTIONS = ['축하','고마움','응원','웃음','추억','자랑'];
 const MESSAGE_FILTERS = [
   {key:'all', label:'전체'},
@@ -1378,6 +1388,7 @@ async function adminStartSession(){
     remove(ref(db,SESSION_PARTICIPANTS_PATH))
   ]);
   activeSessionParticipants={};
+  await resetLotterySessionState();
   renderSessionRewardPanels([]);
   alert('세션이 대기 상태로 시작되었습니다. 이제 드래프트나 레이스에서 세션을 진행해주세요.');
 }
@@ -1386,12 +1397,24 @@ async function adminStartSession(){
 async function adminEndSession(){
   if(!confirm('세션을 종료할까요? 참여자 화면은 종료 화면으로 전환됩니다.')) return;
   await set(ref(db,'state'),{active:false,ended:true});
+  await resetLotterySessionState();
   alert('세션이 종료되었습니다.');
 }
 
 function show(id){
   hideAllViews();
   document.getElementById(id).classList.remove('hidden');
+}
+
+function toggleDraftSettings(forceOpen){
+  const panel=document.getElementById('draft-settings-panel');
+  const body=document.getElementById('draft-settings-body');
+  const btn=document.getElementById('draft-settings-toggle');
+  if(!panel || !body || !btn) return;
+  const shouldOpen=typeof forceOpen==='boolean' ? forceOpen : panel.classList.contains('collapsed');
+  panel.classList.toggle('collapsed', !shouldOpen);
+  body.style.maxHeight=shouldOpen ? '420px' : '0px';
+  btn.textContent=shouldOpen ? '설정 닫기' : '설정 열기';
 }
 
 function enterMessagesView(){
@@ -1437,7 +1460,13 @@ function initTabs(){
   updateHostQ();
 }
 
-window.selectQ=function(i){ currentQIdx=i; firstReason=true; updateHostQ(); document.querySelectorAll('.q-tab').forEach((t,idx)=>t.className='q-tab'+(idx===currentQIdx?' active':'')); };
+window.selectQ=function(i){
+  currentQIdx=i;
+  firstReason=true;
+  updateHostQ();
+  document.querySelectorAll('.q-tab').forEach((t,idx)=>t.className='q-tab'+(idx===currentQIdx?' active':''));
+  refreshCurrentDraftView();
+};
 
 function updateHostQ(){
   document.getElementById('hq-lbl').textContent=`QUESTION ${currentQIdx+1}`;
@@ -1454,6 +1483,28 @@ async function closeVoting(){
   }
 }
 
+async function refreshCurrentDraftView(allVotes){
+  const qKey=`q${currentQIdx}`;
+  let qv={};
+  try{
+    const source=allVotes || (await get(ref(db,'votes'))).val() || {};
+    qv=filterDraftVotesByEligiblePeople(source[qKey]||{});
+  }catch(e){
+    qv={};
+  }
+  const hasVotes=Object.keys(qv).length>0;
+  if(hasVotes){
+    renderBars(qv);
+    renderReasons(qv);
+  }else{
+    document.getElementById('reason-feed').innerHTML='<p style="font-size:11px;color:rgba(255,255,255,0.2)">투표가 들어오면 여기에 표시됩니다.</p>';
+    document.getElementById('bar-area').innerHTML='<div class="waiting-msg"><div class="wi">📊</div><p>투표가 시작되면 실시간으로 집계됩니다</p></div>';
+    document.getElementById('total-h').textContent='0';
+    document.getElementById('unique-h').textContent='0';
+  }
+  await refreshDraftSafetyIndicators(qv);
+}
+
 async function resetCurrentQ(){
   if(!confirm(`Q${currentQIdx+1} 데이터를 삭제할까요?`)) return;
   await Promise.all([
@@ -1467,11 +1518,7 @@ async function resetCurrentQ(){
     safeStorageRemove('tt_voted_name_'+currentQIdx);
   }catch(e){}
   firstReason=true;
-  document.getElementById('reason-feed').innerHTML='<p style="font-size:11px;color:rgba(255,255,255,0.2)">투표가 들어오면 여기에 표시됩니다.</p>';
-  document.getElementById('bar-area').innerHTML='<div class="waiting-msg"><div class="wi">🗳️</div><p>투표가 시작되면 실시간으로 집계됩니다.</p></div>';
-  document.getElementById('total-h').textContent='0';
-  document.getElementById('unique-h').textContent='0';
-  await refreshDraftSafetyIndicators({});
+  await refreshCurrentDraftView({});
 }
 /* duplicate function removed: listenToVotes; latest definition kept */
 
@@ -2158,6 +2205,56 @@ const DEFAULT_PRIZES = [
 
 function buildDefaultLotteryPrizes(){
   return DEFAULT_PRIZES.map(name=>({name,done:false,type:'normal'}));
+}
+
+function normalizeLotteryPrizeItem(item){
+  const name=typeof item==='string' ? item.trim() : String(item?.name||'').trim();
+  if(!name) return null;
+  return {
+    name,
+    type:item?.type==='match' ? 'match' : 'normal',
+    done:false
+  };
+}
+
+async function resetLotterySessionState(){
+  let basePrizes=Array.isArray(lotteryPrizes) && lotteryPrizes.length ? lotteryPrizes : null;
+  if(!basePrizes){
+    try{
+      const snap=await get(ref(db,'settings/prizes'));
+      basePrizes=snap.val();
+    }catch(e){}
+  }
+  if(!Array.isArray(basePrizes) || !basePrizes.length || isLegacyLotteryPrizeList(basePrizes)){
+    basePrizes=buildDefaultLotteryPrizes();
+  }
+  const resetPrizes=basePrizes.map(normalizeLotteryPrizeItem).filter(Boolean);
+  lotteryPrizes=resetPrizes;
+  lotteryPool=[];
+  activePrizeIdx=null;
+  winnerLog=[];
+
+  try{
+    await Promise.all([
+      set(ref(db,'settings/prizes'), resetPrizes),
+      remove(ref(db,FINAL_DRAW_LOG_PATH))
+    ]);
+  }catch(e){}
+
+  const display=document.getElementById('lottery-display');
+  if(display){
+    display.innerHTML=`
+      <div class="lottery-icon">🎰</div>
+      <div>경품을 선택하고 추첨을 시작하세요</div>`;
+  }
+  const log=document.getElementById('winner-log');
+  if(log){
+    log.innerHTML='<p>추첨 후 기록이 쌓입니다</p>';
+  }
+  const startBtn=document.getElementById('lottery-start-btn');
+  if(startBtn) startBtn.disabled=true;
+  if(document.getElementById('prize-list')) renderPrizeList();
+  if(document.getElementById('pool-count')) updatePoolDisplay();
 }
 
 function isLegacyLotteryPrizeList(list){
@@ -3517,18 +3614,7 @@ async function startQuestion(){
 async function listenToVotes(){
   replaceListener('votes', onValue(ref(db,'votes'), async (snap)=>{
     const all=snap.val()||{};
-    const qv=filterDraftVotesByEligiblePeople(all[`q${currentQIdx}`]||{});
-    const counts={},labels={};
-    Object.values(qv).forEach(v=>{
-      const key=v.personId||v.person;
-      counts[key]=(counts[key]||0)+1;
-      labels[key]=v.person||key;
-    });
-    renderBars(qv);
-    renderReasons(qv);
-    document.getElementById('total-h').textContent=Object.keys(qv).length;
-    document.getElementById('unique-h').textContent=Object.keys(counts).length;
-    await refreshDraftSafetyIndicators(qv);
+    await refreshCurrentDraftView(all);
   }));
 }
 
@@ -4453,6 +4539,11 @@ function listenToHostState(){
     if(!active){ showP('waiting'); return; }
 
     if(mode==='draft'){
+      if(participantDraftViewQ!==qIdx){
+        participantDraftViewQ=qIdx;
+        showP('voting');
+        loadVoteQ(qIdx);
+      }
       if(closed){ showP('closed'); }
       else if(myVotedQs[qIdx]){
         let stillHasVote=true;
