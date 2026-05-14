@@ -284,8 +284,23 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
 .racer-opt.sel{background:#000066;border-color:#ffff00;}
 .racer-opt .ro-vehicle{font-size:28px;}
 .racer-opt .ro-info{flex:1;}
-.racer-opt .ro-name{font-size:14px;font-weight:700;}
-.racer-opt .ro-title{font-size:11px;color:#8888ff;}
+.racer-opt .ro-name{font-size:14px;font-weight:700;color:#ffffff;}
+.racer-opt .ro-title{font-size:11px;color:#b9c7ff;}
+.gift-status-body{padding:24px;max-width:1100px;margin:0 auto;}
+.gift-status-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:18px;}
+.gift-status-stat{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:16px;}
+.gift-status-stat-label{font-size:11px;color:rgba(255,255,255,0.45);margin-bottom:8px;}
+.gift-status-stat-value{font-size:28px;font-weight:800;color:var(--blue);}
+.gift-status-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(320px,0.8fr);gap:18px;align-items:start;}
+.gift-status-subgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;}
+.gift-status-panel h3{font-size:14px;font-weight:800;margin-bottom:12px;}
+.gift-status-list{display:flex;flex-direction:column;gap:8px;max-height:520px;overflow-y:auto;}
+.gift-status-item{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:12px 14px;}
+.gift-status-name{font-size:13px;font-weight:700;color:#fff;}
+.gift-status-meta{font-size:11px;color:rgba(255,255,255,0.55);margin-top:4px;line-height:1.5;}
+.gift-status-counts{display:flex;flex-direction:column;align-items:flex-end;gap:4px;white-space:nowrap;font-size:11px;color:rgba(255,255,255,0.72);}
+.gift-status-counts strong{font-size:12px;color:#fff;}
+.gift-status-empty{font-size:12px;color:rgba(255,255,255,0.35);padding:12px 2px;}
 
 /* 吏꾪뻾???덉씠???ㅼ젙 */
 .racer-setup{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
@@ -307,6 +322,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
 .spin-item{padding:0 20px;font-size:18px;font-weight:700;line-height:60px;flex-shrink:0;}
 .lottery-grid{display:grid;grid-template-columns:1fr 280px;gap:18px;}
 .prize-list{display:flex;flex-direction:column;gap:6px;max-height:300px;overflow-y:auto;}
+.prize-done-list{display:flex;flex-direction:column;gap:6px;max-height:180px;overflow-y:auto;}
 .prize-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:8px;transition:all 0.2s;}
 .prize-item.done{opacity:0.3;}
 .prize-item .pi-emoji{font-size:20px;}
@@ -391,7 +407,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
 .add-prize input:focus{border-color:var(--bl);}
 
 @media(max-width:800px){
-  .hd-grid,.lottery-grid{grid-template-columns:1fr;}
+  .hd-grid,.lottery-grid,.gift-status-grid,.gift-status-subgrid,.gift-status-summary{grid-template-columns:1fr;}
   .hub-title{font-size:36px;}
   .hub-cards{gap:12px;}
   .hub-card{width:160px;padding:24px 20px;}
@@ -472,6 +488,11 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
         <div class="hc-icon">🎰</div>
         <h2>추첨</h2>
         <p>경품 추첨<br>진행자 화면</p>
+      </div>
+      <div class="hub-card" onclick="show('gift-status-view');initGiftStatusView();">
+        <div class="hc-icon">🎁</div>
+        <h2>선물 현황</h2>
+        <p>남은 경품 / 지급 완료<br>읽기 전용 대시보드</p>
       </div>
       <div class="hub-card" onclick="enterRaceHistory()">
         <div class="hc-icon">📋</div>
@@ -899,6 +920,10 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
             </div>
           </div>
           <div class="prize-list" id="prize-list"></div>
+          <div id="prize-done-section" style="display:none;margin-top:12px;">
+            <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.4);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">지급 완료 <span id="prize-done-count" style="color:rgba(255,255,255,0.7);">0</span></div>
+            <div class="prize-done-list" id="prize-done-list"></div>
+          </div>
         </div>
       </div>
       <div class="lottery-side">
@@ -917,6 +942,53 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
           <div id="winner-log" style="display:flex;flex-direction:column;gap:6px;max-height:200px;overflow-y:auto;">
             <p style="font-size:11px;color:rgba(255,255,255,0.2)">추첨 후 기록이 쌓입니다</p>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="gift-status-view" class="hidden view-wrap" style="background:#0A0F1A;">
+  <div class="top-bar" style="background:rgba(0,0,0,0.45);">
+    <div class="logo">TECHTAKA <span>선물 현황</span></div>
+    <div class="nav-btns">
+      <button class="back-btn" onclick="goHub()">← 홈</button>
+    </div>
+  </div>
+  <div class="gift-status-body">
+    <div class="gift-status-summary">
+      <div class="gift-status-stat">
+        <div class="gift-status-stat-label">선택형 남은 재고</div>
+        <div class="gift-status-stat-value" id="gift-status-selection-remaining">0</div>
+      </div>
+      <div class="gift-status-stat">
+        <div class="gift-status-stat-label">추첨 미지급 경품</div>
+        <div class="gift-status-stat-value" id="gift-status-lottery-pending">0</div>
+      </div>
+      <div class="gift-status-stat">
+        <div class="gift-status-stat-label">이번 세션 지급 건수</div>
+        <div class="gift-status-stat-value" id="gift-status-issued-count">0</div>
+      </div>
+    </div>
+    <div class="gift-status-grid">
+      <div class="gift-status-subgrid">
+        <div class="panel gift-status-panel">
+          <h3>선택형 선물 현황</h3>
+          <div class="gift-status-list" id="gift-status-selection-list">
+            <div class="gift-status-empty">불러오는 중...</div>
+          </div>
+        </div>
+        <div class="panel gift-status-panel">
+          <h3>추첨 경품 현황</h3>
+          <div class="gift-status-list" id="gift-status-lottery-list">
+            <div class="gift-status-empty">불러오는 중...</div>
+          </div>
+        </div>
+      </div>
+      <div class="panel gift-status-panel">
+        <h3>이번 세션 지급 내역</h3>
+        <div class="gift-status-list" id="gift-status-issued-list">
+          <div class="gift-status-empty">아직 지급 내역이 없습니다</div>
         </div>
       </div>
     </div>
@@ -1120,7 +1192,7 @@ function setSafeInnerHTML(el, html){
 }
 
 function getViewIds(){
-  return ['hub','participant-hub','admin-hub','p-view','h-draft-view','h-race-view','lottery-view','race-history-view','gift-pick-view','messages-view','message-stage-view'];
+  return ['hub','participant-hub','admin-hub','p-view','h-draft-view','h-race-view','lottery-view','gift-status-view','race-history-view','gift-pick-view','messages-view','message-stage-view'];
 }
 
 function hideAllViews(){
@@ -2300,14 +2372,32 @@ async function addPrizeBulk(){
 }
 
 function renderPrizeList(){
-  document.getElementById('prize-list').innerHTML=lotteryPrizes.map((p,i)=>`
-    <div class="prize-item${p.done?' done':''}${activePrizeIdx===i?' active':''}">
-      <div class="pi-name">${p.done?'✓':''} ${p.name}${p.winner?' · '+p.winner:''}</div>
-      <div style="display:flex;gap:4px;align-items:center;">
-        ${!p.done?`<button class="pi-select" onclick="selectPrize(${i})">선택</button>`:'<span style="font-size:10px;color:var(--green)">완료</span>'}
-        <button onclick="deletePrize(${i})" style="padding:4px 7px;background:rgba(217,48,37,0.2);border:none;border-radius:5px;color:var(--red);font-size:10px;cursor:pointer;">삭제</button>
-      </div>
-    </div>`).join('');
+  const pendingItems=[];
+  const doneItems=[];
+  lotteryPrizes.forEach((p,i)=>{
+    const html=`
+      <div class="prize-item${p.done?' done':''}${activePrizeIdx===i?' active':''}">
+        <div class="pi-name">${p.done?'✓ ':''}${escapeHtml(p.name)}${p.winner?' · '+escapeHtml(p.winner):''}</div>
+        <div style="display:flex;gap:4px;align-items:center;">
+          ${!p.done?`<button class="pi-select" onclick="selectPrize(${i})">선택</button>`:'<span style="font-size:10px;color:var(--green)">완료</span>'}
+          <button onclick="deletePrize(${i})" style="padding:4px 7px;background:rgba(217,48,37,0.2);border:none;border-radius:5px;color:var(--red);font-size:10px;cursor:pointer;">삭제</button>
+        </div>
+      </div>`;
+    if(p.done) doneItems.push(html);
+    else pendingItems.push(html);
+  });
+  const prizeListEl=document.getElementById('prize-list');
+  if(prizeListEl){
+    prizeListEl.innerHTML=pendingItems.length ? pendingItems.join('') : '<div class="session-reward-empty">미지급 경품이 없습니다</div>';
+  }
+  const doneSection=document.getElementById('prize-done-section');
+  const doneListEl=document.getElementById('prize-done-list');
+  const doneCountEl=document.getElementById('prize-done-count');
+  if(doneSection && doneListEl && doneCountEl){
+    doneCountEl.textContent=String(doneItems.length);
+    doneSection.style.display=doneItems.length ? 'block' : 'none';
+    doneListEl.innerHTML=doneItems.join('');
+  }
 }
 
 async function deletePrize(idx){
@@ -4407,6 +4497,134 @@ async function refreshSessionRewardPanels(){
   }catch(e){
     renderSessionRewardPanels(sessionRewardEntries||[]);
   }
+}
+
+function buildGiftStatusSelectionRows(catalog){
+  const groupMap={S:'A',A:'B',B:'C'};
+  return getSelectionPrizeCatalog(catalog).map(item=>{
+    const prepared=getSelectionDisplayStock(item);
+    const remaining=Math.max(0, Number(item.stock)||0);
+    return {
+      name:item.name,
+      tier:item.tier,
+      groupLabel:groupMap[item.tier]||item.tier,
+      prepared,
+      remaining,
+      issued:Math.max(0, prepared-remaining)
+    };
+  }).sort((a,b)=>{
+    const tierOrder={S:0,A:1,B:2};
+    return (tierOrder[a.tier]??9)-(tierOrder[b.tier]??9) || a.name.localeCompare(b.name,'ko');
+  });
+}
+
+function buildGiftStatusLotteryRows(prizeList){
+  return (prizeList||[]).map(item=>({
+    name:item.name||'-',
+    done:Boolean(item.done),
+    winner:item.winner||''
+  })).sort((a,b)=>{
+    if(a.done!==b.done) return a.done-b.done;
+    return a.name.localeCompare(b.name,'ko');
+  });
+}
+
+function renderGiftStatusView(data){
+  const selectionRows=data.selectionRows||[];
+  const lotteryRows=data.lotteryRows||[];
+  const issuedEntries=data.issuedEntries||[];
+  const selectionRemaining=selectionRows.reduce((sum,item)=>sum+item.remaining,0);
+  const lotteryPending=lotteryRows.filter(item=>!item.done).length;
+
+  const selectionListEl=document.getElementById('gift-status-selection-list');
+  const lotteryListEl=document.getElementById('gift-status-lottery-list');
+  const issuedListEl=document.getElementById('gift-status-issued-list');
+  const selectionRemainingEl=document.getElementById('gift-status-selection-remaining');
+  const lotteryPendingEl=document.getElementById('gift-status-lottery-pending');
+  const issuedCountEl=document.getElementById('gift-status-issued-count');
+
+  if(selectionRemainingEl) selectionRemainingEl.textContent=String(selectionRemaining);
+  if(lotteryPendingEl) lotteryPendingEl.textContent=String(lotteryPending);
+  if(issuedCountEl) issuedCountEl.textContent=String(issuedEntries.length);
+
+  if(selectionListEl){
+    selectionListEl.innerHTML=selectionRows.length ? selectionRows.map(item=>`
+      <div class="gift-status-item">
+        <div>
+          <div class="gift-status-name">${escapeHtml(item.name)}</div>
+          <div class="gift-status-meta">그룹 ${escapeHtml(item.groupLabel)} · 준비 ${item.prepared} · 지급 ${item.issued}</div>
+        </div>
+        <div class="gift-status-counts"><strong>남음 ${item.remaining}</strong></div>
+      </div>
+    `).join('') : '<div class="gift-status-empty">표시할 선택형 선물이 없습니다</div>';
+  }
+
+  if(lotteryListEl){
+    lotteryListEl.innerHTML=lotteryRows.length ? lotteryRows.map(item=>`
+      <div class="gift-status-item">
+        <div>
+          <div class="gift-status-name">${escapeHtml(item.name)}</div>
+          <div class="gift-status-meta">${item.done ? `지급 완료${item.winner ? ` · ${escapeHtml(item.winner)}` : ''}` : '미지급'}</div>
+        </div>
+        <div class="gift-status-counts"><strong>${item.done ? '완료' : '대기'}</strong></div>
+      </div>
+    `).join('') : '<div class="gift-status-empty">표시할 추첨 경품이 없습니다</div>';
+  }
+
+  if(issuedListEl){
+    issuedListEl.innerHTML=issuedEntries.length ? issuedEntries.map(item=>`
+      <div class="gift-status-item">
+        <div>
+          <div class="gift-status-name">${escapeHtml(item.name)}</div>
+          <div class="gift-status-meta">${escapeHtml(item.label)} · ${escapeHtml(item.prizeName)}</div>
+        </div>
+      </div>
+    `).join('') : '<div class="gift-status-empty">이번 세션 지급 내역이 없습니다</div>';
+  }
+}
+
+async function refreshGiftStatusView(){
+  try{
+    const [catalog,prizeSnap,stateSnap,draftSnap,raceSnap,finalSnap]=await Promise.all([
+      ensureSelectionPrizeCatalog(),
+      get(ref(db,'settings/prizes')),
+      get(ref(db,'state')),
+      get(ref(db,'draft_rewards')),
+      get(ref(db,'race_reward_sets')),
+      get(ref(db,FINAL_DRAW_LOG_PATH))
+    ]);
+    const prizeListRaw=prizeSnap.val();
+    const prizeList=Array.isArray(prizeListRaw) ? prizeListRaw.map(normalizeLotteryPrizeItem).filter(Boolean) : buildDefaultLotteryPrizes();
+    const sessionStartedAt=Number(stateSnap.val()?.sessionStartedAt)||0;
+    const issuedEntries=getSessionRewardEntriesFromLogs(
+      draftSnap.val()||{},
+      raceSnap.val()||{},
+      finalSnap.val()||{},
+      sessionStartedAt
+    );
+    renderGiftStatusView({
+      selectionRows:buildGiftStatusSelectionRows(catalog),
+      lotteryRows:buildGiftStatusLotteryRows(prizeList),
+      issuedEntries
+    });
+  }catch(e){
+    renderGiftStatusView({selectionRows:[],lotteryRows:[],issuedEntries:[]});
+  }
+}
+
+function listenToGiftStatusView(){
+  const rerender=()=>{ refreshGiftStatusView(); };
+  replaceListener('giftStatusSelection', onValue(ref(db,'settings/selection_prizes'), rerender));
+  replaceListener('giftStatusLottery', onValue(ref(db,'settings/prizes'), rerender));
+  replaceListener('giftStatusDraft', onValue(ref(db,'draft_rewards'), rerender));
+  replaceListener('giftStatusRace', onValue(ref(db,'race_reward_sets'), rerender));
+  replaceListener('giftStatusFinal', onValue(ref(db,FINAL_DRAW_LOG_PATH), rerender));
+  replaceListener('giftStatusState', onValue(ref(db,'state'), rerender));
+}
+
+function initGiftStatusView(){
+  refreshGiftStatusView();
+  listenToGiftStatusView();
 }
 
 function listenToSessionRewardPanels(){
