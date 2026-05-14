@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+\<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -1262,7 +1262,8 @@ async function loadSettingsFromDB(){
   if(s.questions) questions = s.questions;
   if(s.people) people = s.people;
   if(s.candidates) candidates = s.candidates;
-  else candidates = [...people]; // ?꾨낫 ?놁쑝硫??꾩껜 紐낅떒?쇰줈 珥덇린??  document.getElementById('questions-textarea').value = questions.join('\n');
+  else candidates = [...people];
+  document.getElementById('questions-textarea').value = questions.join('\n');
   document.getElementById('people-textarea').value = people.join('\n');
   document.getElementById('candidates-textarea').value = candidates.join('\n');
   initTabs();
@@ -1672,7 +1673,7 @@ function drawPix(x,y,frame,color,sc=6,flip=false){
   }
 }
 
-// ?ㅽ겕濡?諛곕꼫 ?ㅽ봽??let bannerOffset=0;
+let bannerOffset=0;
 
 function drawCanvas(){
   if(!raceCanvas||!raceCtx) return;
@@ -1687,7 +1688,7 @@ function drawCanvas(){
   const LW=Math.round(W*0.1);          // ?덉씠釉??덈퉬: ?붾㈃ 10%
   const FINISH=W-LW-Math.round(W*0.02); // 寃곗듅???꾩튂
 
-  // sc: 罹먮┃?곌? ?덉씤??85% ?믪씠媛 ?섎룄濡?  const sc=Math.max(3,Math.round(LANE_H*0.85/12));
+  const sc=Math.max(3,Math.round(LANE_H*0.85/12));
   const charH=12*sc, charW=8*sc;
 
   // ?? 諛곌꼍 ??
@@ -1743,7 +1744,7 @@ function drawCanvas(){
       raceCtx.fillRect(LW+sx,y,stripeW,LANE_H);
     }
 
-    // ?덉씤 援щ텇??    raceCtx.fillStyle='rgba(255,255,255,0.18)';
+    raceCtx.fillStyle='rgba(255,255,255,0.18)';
     raceCtx.fillRect(LW,y,W-LW,1);
 
     // ?덉씠釉?諛곌꼍
@@ -1787,7 +1788,7 @@ function drawCanvas(){
       }
     }
 
-    // ?덉씠??罹먮┃??    const px=LW+Math.max(0,Math.min(s.pos,FINISH-charW));
+    const px=LW+Math.max(0,Math.min(s.pos,FINISH-charW));
     const py=y+Math.floor((LANE_H-charH)/2);
     const fi=Math.floor(raceFrame/6)%2;
 
@@ -2099,8 +2100,13 @@ async function resetRaceSession(){
 
 async function startRace(){
   if(raceRunning) return;
-  const stateSnap=await get(ref(db,'state'));
-  const currentState=stateSnap.val()||{};
+  let currentState={};
+  try{
+    const stateSnap=await get(ref(db,'state'));
+    currentState=stateSnap.val()||{};
+  }catch(e){
+    currentState=window._localRaceState||{};
+  }
   if(currentState.mode!=='race' || !currentState.active || currentState.raceSession!==raceSession){
     alert('먼저 레이스 베팅을 시작해주세요.');
     return;
@@ -2329,14 +2335,21 @@ async function initLottery(){
 }
 
 async function loadPeopleToPool(){
-  if(!people.length){
-    const snap=await get(ref(db,'settings/people'));
-    people=normalizePeopleList(snap.val()||[]);
+  try{
+    if(!people.length){
+      const snap=await get(ref(db,'settings/people'));
+      people=normalizePeopleList(snap.val()||[]);
+    }
+    lotteryPool=(await getFinalDrawEligiblePeople()).map(person=>({
+      id:person.id,
+      name:person.name
+    }));
+  }catch(e){
+    const fallbackPeople=normalizePeopleList(people.length ? people : getCachedPeopleList());
+    lotteryPool=fallbackPeople
+      .filter(person=>!isExecutiveName(person.name))
+      .map(person=>({id:person.id,name:person.name}));
   }
-  lotteryPool=(await getFinalDrawEligiblePeople()).map(person=>({
-    id:person.id,
-    name:person.name
-  }));
   updatePoolDisplay();
 }
 
@@ -2407,7 +2420,7 @@ async function startLottery(){
   const donePrizeIdx=activePrizeIdx;
   const selectedPrize=prizes[donePrizeIdx];
 
-  // ?ㅽ? ?좊땲硫붿씠??  const spinWrap=document.getElementById('lottery-spin-wrap');
+  const spinWrap=document.getElementById('lottery-spin-wrap');
   const spinInner=document.getElementById('lottery-spin-inner');
   spinWrap.style.display='block';
 
@@ -3965,7 +3978,7 @@ async function submitGiftPick(){
   if(!gpSelectedPerson||!gpChoiceBySlot.every(Boolean)||gpMessageText.trim().length<2) return;
   const btn=document.getElementById('gp-submit-btn');
   btn.disabled=true;
-  btn.textContent='???以?.';
+  btn.textContent='저장 중..';
   const personKey=getPersonKey(gpSelectedPerson);
   const now=Date.now();
   const choices=getChoiceArrayFromSlots();
@@ -3982,10 +3995,12 @@ async function submitGiftPick(){
     ts:gpExistingMessageMeta?.ts || now,
     updatedAt:now
   };
-  await Promise.all([
-    set(ref(db,'gift_preferences/'+personKey), giftData),
-    set(ref(db,'anniversary_messages/'+personKey), messageData)
-  ]);
+  try{
+    await Promise.all([
+      set(ref(db,'gift_preferences/'+personKey), giftData),
+      set(ref(db,'anniversary_messages/'+personKey), messageData)
+    ]);
+  }catch(e){}
   gpExistingMessageMeta=messageData;
   localStorage.setItem('tt_gift_pick', JSON.stringify({...giftData, messageData}));
   btn.textContent='선물 + 메시지 저장';
@@ -4153,13 +4168,23 @@ function openRacerSettings(){
 }
 
 async function openRaceBetting(){
-  const stateSnap=await get(ref(db,'state'));
-  const currentState=stateSnap.val()||{};
+  let currentState={};
+  try{
+    const stateSnap=await get(ref(db,'state'));
+    currentState=stateSnap.val()||{};
+  }catch(e){
+    currentState=window._localRaceState||{};
+  }
   if(currentState.mode==='race' && currentState.active && !currentState.closed){
     alert('이미 진행 중인 레이스 베팅이 있습니다. 먼저 베팅을 마감해주세요.');
     return;
   }
-  const meta=await getRaceSetState();
+  let meta={};
+  try{
+    meta=await getRaceSetState();
+  }catch(e){
+    meta=window._localRaceSetState||{};
+  }
   let nextMeta={...meta};
   const baseEligible=getRaceEligibleBaseIds();
   if(!nextMeta.setNumber){
@@ -4179,39 +4204,49 @@ async function openRaceBetting(){
   }
   raceSession=(await getRaceSessionBaseline())+1;
   racers=[...FIXED_RACE_RACERS];
-  await Promise.all([
-    saveRaceSetState(nextMeta),
-    set(ref(db,'state'),{
-      active:true,
-      closed:false,
-      standby:false,
-      mode:'race',
-      raceSession,
-      raceSet:nextMeta.setNumber,
-      raceRoundInSet:nextMeta.roundInSet,
-      prizeLabel:nextMeta.prizeLabel,
-      eligibleIds:nextMeta.eligibleIds,
-      racers:racers.map(r=>({name:r.name,title:r.title||''}))
-    })
-  ]);
+  const nextState={
+    active:true,
+    closed:false,
+    standby:false,
+    mode:'race',
+    raceSession,
+    raceSet:nextMeta.setNumber,
+    raceRoundInSet:nextMeta.roundInSet,
+    prizeLabel:nextMeta.prizeLabel,
+    eligibleIds:nextMeta.eligibleIds,
+    racers:racers.map(r=>({name:r.name,title:r.title||''}))
+  };
+  window._localRaceSetState=nextMeta;
+  window._localRaceState=nextState;
+  try{
+    await Promise.all([
+      saveRaceSetState(nextMeta),
+      set(ref(db,'state'), nextState)
+    ]);
+  }catch(e){}
   renderBetBars();
   listenToBets();
   alert(`레이스 ${nextMeta.setNumber}세트 ${nextMeta.roundInSet}라운드 베팅이 시작되었습니다.\n상품: ${nextMeta.prizeLabel}`);
 }
 
 async function closeRaceBetting(){
-  await update(ref(db,'state'),{closed:true});
+  window._localRaceState={...(window._localRaceState||{}),closed:true};
+  try{ await update(ref(db,'state'),{closed:true}); }catch(e){}
   alert('베팅이 마감되었습니다.');
 }
 
 async function resetRaceSession(){
   if(!confirm('레이스 기록, 베팅, 세트 상태를 모두 초기화할까요?')) return;
-  await Promise.all([
-    remove(ref(db,'bets')),
-    remove(ref(db,'race_set_state')),
-    remove(ref(db,'race_reward_sets')),
-    set(ref(db,'state'),{active:false,standby:true,mode:'idle'})
-  ]);
+  window._localRaceState={active:false,standby:true,mode:'idle'};
+  window._localRaceSetState={};
+  try{
+    await Promise.all([
+      remove(ref(db,'bets')),
+      remove(ref(db,'race_set_state')),
+      remove(ref(db,'race_reward_sets')),
+      set(ref(db,'state'),{active:false,standby:true,mode:'idle'})
+    ]);
+  }catch(e){}
   raceSession=0;
   renderBetBars();
   alert('레이스 상태가 초기화되었습니다.');
@@ -4351,8 +4386,11 @@ function updatePoolDisplay(){
 
 async function startLottery(){
   if(lotteryPool.length===0||activePrizeIdx===null) return;
-  const finalDrawSnap=await get(ref(db,FINAL_DRAW_LOG_PATH));
-  if(finalDrawSnap.val()?.completed){
+  let finalDrawData=null;
+  try{
+    finalDrawData=(await get(ref(db,FINAL_DRAW_LOG_PATH))).val();
+  }catch(e){}
+  if(finalDrawData?.completed){
     alert('최종 추첨은 이미 완료되었습니다.');
     return;
   }
@@ -4397,15 +4435,17 @@ async function startLottery(){
       prizes[donePrizeIdx].winner=winner;
       lotteryPool=lotteryPool.filter(p=>p.id!==winnerEntry.id);
       activePrizeIdx=null;
-      await Promise.all([
-        set(ref(db,'settings/prizes'),prizes),
-        set(ref(db,FINAL_DRAW_LOG_PATH),{
-          completed:true,
-          ts:Date.now(),
-          prizeName:displayPrize,
-          winner:{personId:winnerEntry.id,name:winner}
-        })
-      ]);
+      try{
+        await Promise.all([
+          set(ref(db,'settings/prizes'),prizes),
+          set(ref(db,FINAL_DRAW_LOG_PATH),{
+            completed:true,
+            ts:Date.now(),
+            prizeName:displayPrize,
+            winner:{personId:winnerEntry.id,name:winner}
+          })
+        ]);
+      }catch(e){}
       updatePoolDisplay();
       renderPrizeList();
 
@@ -4420,20 +4460,26 @@ async function startLottery(){
 }
 
 async function initLottery(){
-  const [snap,finalDrawSnap]=await Promise.all([
-    get(ref(db,'settings/prizes')),
-    get(ref(db,FINAL_DRAW_LOG_PATH))
-  ]);
-  if(snap.val()&&snap.val().length>0){
-    prizes=snap.val();
+  let snapVal=null;
+  let finalDrawVal=null;
+  try{
+    const [snap,finalDrawSnap]=await Promise.all([
+      get(ref(db,'settings/prizes')),
+      get(ref(db,FINAL_DRAW_LOG_PATH))
+    ]);
+    snapVal=snap.val();
+    finalDrawVal=finalDrawSnap.val();
+  }catch(e){}
+  if(snapVal&&snapVal.length>0){
+    prizes=snapVal;
   } else if(prizes.length===0){
     prizes=DEFAULT_PRIZES.map(name=>({name,done:false,type:'normal'}));
-    await set(ref(db,'settings/prizes'),prizes);
+    try{ await set(ref(db,'settings/prizes'),prizes); }catch(e){}
   }
   renderPrizeList();
-  if(finalDrawSnap.val()?.completed){
-    const winnerName=finalDrawSnap.val()?.winner?.name||'당첨자';
-    const prizeName=finalDrawSnap.val()?.prizeName||'최종 추첨 완료';
+  if(finalDrawVal?.completed){
+    const winnerName=finalDrawVal?.winner?.name||'당첨자';
+    const prizeName=finalDrawVal?.prizeName||'최종 추첨 완료';
     lotteryPool=[];
     updatePoolDisplay();
     document.getElementById('lottery-start-btn').disabled=true;
