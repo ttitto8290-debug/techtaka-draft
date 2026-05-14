@@ -2201,84 +2201,19 @@ window.selectRacer=function(idx){
 
 
 // ?? LOTTERY ??
-const DEFAULT_PRIZES = [
-  '올리브영 3만원 기프트카드',
-  '올리브영 3만원 기프트카드',
-  '올리브영 3만원 기프트카드',
-  '올리브영 3만원 기프트카드',
-  '올리브영 3만원 기프트카드',
-  '스타벅스 3만원 기프트카드',
-  '스타벅스 3만원 기프트카드',
-  '스타벅스 3만원 기프트카드',
-  '스타벅스 3만원 기프트카드',
-  '스타벅스 3만원 기프트카드',
-  '바이오던스 마스크팩 2BOX 세트 (10ea)',
-  '바이오던스 마스크팩 2BOX 세트 (10ea)',
-  '바이오던스 마스크팩 2BOX 세트 (10ea)',
-  '바이오던스 마스크팩 2BOX 세트 (10ea)',
-  '바이오던스 마스크팩 2BOX 세트 (10ea)',
-  '바이오던스 마스크팩 2BOX 세트 (10ea)',
-  '바이오던스 마스크팩 2BOX 세트 (10ea)',
-  '바이오던스 마스크팩 2BOX 세트 (10ea)',
-  '바이오던스 마스크팩 2BOX 세트 (10ea)',
-  '바이오던스 마스크팩 2BOX 세트 (10ea)',
-  '바이오던스 마스크팩 2BOX 세트 (10ea)',
-  '바이오던스 마스크팩 2BOX 세트 (10ea)',
-  '루메나 MIST TOWER PLUS',
-  '루메나 MIST POT',
-  '스테나 STN100A',
-  'KORIN HubPack X',
-  'KORIN HubSling X',
-  'KORIN ClickSling S',
-  '이야 충전식 저주파 마사지기 LF-0324',
-  '이야 충전식 저주파 마사지기 LF-0324',
-  '이야 충전식 저주파 마사지기 LF-0324',
-  '이야 충전식 저주파 마사지기 LF-0324',
-  '이야 충전식 저주파 마사지기 LF-0324',
-  '이야 충전식 저주파 마사지기 LF-0324',
-  '이야 충전식 저주파 마사지기 LF-0324',
-  '이야 충전식 저주파 마사지기 LF-0324',
-  '이야 충전식 저주파 마사지기 LF-0324',
-  '이야 충전식 저주파 마사지기 LF-0324',
-  '이야 충전식 저주파 마사지기 LF-0324',
-  '이야 충전식 저주파 마사지기 LF-0324',
-  '이야 충전식 저주파 마사지기 LF-0324',
-  '이야 충전식 저주파 마사지기 LF-0324',
-  '이야 충전식 저주파 마사지기 LF-0324',
-  '이야 충전식 저주파 마사지기 LF-0324',
-  '이야 충전식 저주파 마사지기 LF-0324',
-  '이야 충전식 저주파 마사지기 LF-0324',
-  '이야 충전식 저주파 마사지기 LF-0324',
-  '이야 충전식 저주파 마사지기 LF-0324',
-  '홍삼정 에브리데이 100포 1BOX',
-  '볼빅 소닉 V10 소프트 트랙 골프공 12개입',
-  '볼빅 소닉 V10 소프트 트랙 골프공 12개입',
-  '볼빅 소닉 V10 소프트 트랙 골프공 12개입',
-  '볼빅 소닉 V10 소프트 트랙 골프공 12개입',
-  '볼빅 소닉 V10 소프트 트랙 골프공 12개입',
-  '볼빅 소닉 V10 소프트 트랙 골프공 12개입',
-  '볼빅 소닉 V10 소프트 트랙 골프공 12개입',
-  '볼빅 소닉 V10 소프트 트랙 골프공 12개입',
-  '볼빅 소닉 V10 소프트 트랙 골프공 12개입',
-  '카카오프렌즈 닥터라이언 피규어',
-  '카카오프렌즈 닥터라이언 피규어',
-  '카카오프렌즈 닥터라이언 피규어',
-  '루메나 WARMER PAD 발난로',
-  'INTHome 맥북 프로 노트북 거치대 IH-LS001',
-  '카카오프렌즈 춘식이 유리볼 2ea 세트',
-  '카카오프렌즈 춘식이 유리볼 2ea 세트',
-  '카카오프렌즈 춘식이 유리볼 2ea 세트',
-  '카카오프렌즈 춘식이 유리볼 2ea 세트',
-  '카카오프렌즈 춘식이 유리볼 2ea 세트',
-  '카카오프렌즈 춘식이 유리볼 2ea 세트',
-  '카카오프렌즈 춘식이 유리볼 2ea 세트',
-  '카카오프렌즈 춘식이 유리볼 2ea 세트',
-  '카카오프렌즈 춘식이 유리볼 2ea 세트',
-  '카카오프렌즈 춘식이 유리볼 2ea 세트',
-];
+const DEFAULT_PRIZES = [];
 
 function buildDefaultLotteryPrizes(){
   return DEFAULT_PRIZES.map(name=>({name,done:false,type:'normal'}));
+}
+
+function getSelectionPrizeNameSet(catalog){
+  return new Set(getSelectionPrizeCatalog(catalog||prizes||[]).map(item=>String(item.name||'').trim()).filter(Boolean));
+}
+
+function stripSelectionPrizeOverlap(prizeList, catalog){
+  const selectionNames=getSelectionPrizeNameSet(catalog);
+  return (prizeList||[]).filter(item=>!selectionNames.has(String(item?.name||'').trim()));
 }
 
 function normalizeLotteryPrizeItem(item){
@@ -2299,10 +2234,11 @@ async function resetLotterySessionState(){
       basePrizes=snap.val();
     }catch(e){}
   }
+  const selectionCatalog=await ensureSelectionPrizeCatalog();
   if(!Array.isArray(basePrizes) || !basePrizes.length || isLegacyLotteryPrizeList(basePrizes)){
     basePrizes=buildDefaultLotteryPrizes();
   }
-  const resetPrizes=basePrizes.map(normalizeLotteryPrizeItem).filter(Boolean);
+  const resetPrizes=stripSelectionPrizeOverlap(basePrizes.map(normalizeLotteryPrizeItem).filter(Boolean), selectionCatalog);
   lotteryPrizes=resetPrizes;
   lotteryPool=[];
   activePrizeIdx=null;
@@ -2315,12 +2251,12 @@ async function resetLotterySessionState(){
     ]);
   }catch(e){}
 
-  const display=document.getElementById('lottery-display');
-  if(display){
-    display.innerHTML=`
-      <div class="lottery-icon">🎰</div>
-      <div>경품을 선택하고 추첨을 시작하세요</div>`;
-  }
+    const display=document.getElementById('lottery-display');
+    if(display){
+      display.innerHTML=`
+        <div class="lottery-icon">🎰</div>
+        <div>당첨자를 추첨하면 선택 선물에서 자동 배정됩니다</div>`;
+    }
   const log=document.getElementById('winner-log');
   if(log){
     log.innerHTML='<p>추첨 후 기록이 쌓입니다</p>';
@@ -2352,6 +2288,11 @@ async function addPrize(){
   const val=input.value.trim();
   const type=document.getElementById('prize-type-select')?.value||'normal';
   if(!val) return;
+  const selectionCatalog=await ensureSelectionPrizeCatalog();
+  if(getSelectionPrizeNameSet(selectionCatalog).has(val)){
+    alert('선택형 선물에 포함된 경품은 추첨 리스트에 중복 추가할 수 없습니다.');
+    return;
+  }
   lotteryPrizes.push({name:val,done:false,type});
   input.value='';
   await set(ref(db,'settings/prizes'),lotteryPrizes);
@@ -2364,14 +2305,27 @@ async function addPrizeBulk(){
   if(!ta) return;
   const lines=ta.value.split('\n').map(l=>l.trim()).filter(l=>l);
   if(!lines.length) return;
-  lines.forEach(name=>lotteryPrizes.push({name,done:false,type}));
+  const selectionCatalog=await ensureSelectionPrizeCatalog();
+  const selectionNames=getSelectionPrizeNameSet(selectionCatalog);
+  const allowed=lines.filter(name=>!selectionNames.has(name));
+  const skipped=lines.length-allowed.length;
+  allowed.forEach(name=>lotteryPrizes.push({name,done:false,type}));
   ta.value='';
   await set(ref(db,'settings/prizes'),lotteryPrizes);
   renderPrizeList();
-  alert(lines.length+'개 경품이 추가됐어요.');
+  alert(`${allowed.length}개 경품이 추가됐어요.${skipped>0?` 선택형 선물과 겹치는 ${skipped}개는 제외됐습니다.`:''}`);
 }
 
 function renderPrizeList(){
+  if(!lotteryPrizes.length){
+    const prizeListEl=document.getElementById('prize-list');
+    const doneSection=document.getElementById('prize-done-section');
+    if(prizeListEl){
+      prizeListEl.innerHTML='<div class="session-reward-empty">별도 추첨 경품을 사용하지 않습니다</div>';
+    }
+    if(doneSection) doneSection.style.display='none';
+    return;
+  }
   const pendingItems=[];
   const doneItems=[];
   lotteryPrizes.forEach((p,i)=>{
@@ -2903,11 +2857,25 @@ const DEFAULT_SELECTION_PRIZES=[
   {id:'reselbio_cica_5ea',name:'리셀바이오 PDRN 시카 크림 5ea 세트',tier:'B',stock:1,bundleSize:5,fallbackLabel:'리셀바이오 시카크림 5ea'}
 ];
 const GIFT_SLOT_RULES=[
-  {slot:1,group:'A',label:'그룹 A',description:'프리미엄/메인 선물',tiers:['S']},
-  {slot:2,group:'B',label:'그룹 B',description:'취향형 선물',tiers:['A']},
-  {slot:3,group:'B',label:'그룹 B',description:'취향형 선물',tiers:['A']},
-  {slot:4,group:'C',label:'그룹 C',description:'실속형 선물',tiers:['B']},
-  {slot:5,group:'C',label:'그룹 C',description:'실속형 선물',tiers:['B']}
+  {slot:1,group:'A',label:'그룹 A',description:'프리미엄',tiers:['S']},
+  {slot:2,group:'B',label:'그룹 B',description:'취향형',tiers:['A']},
+  {slot:3,group:'B',label:'그룹 B',description:'취향형',tiers:['A']},
+  {slot:4,group:'C',label:'그룹 C',description:'실속형',tiers:['B']},
+  {slot:5,group:'C',label:'그룹 C',description:'실속형',tiers:['B']}
+];
+const GROUP_RANDOM_WEIGHTS={A:30,B:50,C:20};
+const RANDOM_PRIZE_EXCLUDED_NAMES=new Set(['올리브영 3만원 기프트카드','스타벅스 3만원 기프트카드']);
+const RACE_SET2_GIFTCARD_POOL=[
+  '올리브영 3만원 기프트카드',
+  '올리브영 3만원 기프트카드',
+  '올리브영 3만원 기프트카드',
+  '올리브영 3만원 기프트카드',
+  '올리브영 3만원 기프트카드',
+  '스타벅스 3만원 기프트카드',
+  '스타벅스 3만원 기프트카드',
+  '스타벅스 3만원 기프트카드',
+  '스타벅스 3만원 기프트카드',
+  '스타벅스 3만원 기프트카드'
 ];
 const FALLBACK_PRIZE_IDS=['lf_0324','choonsik_glass_set','volvik_v10_box','reselbio_cica_5ea'];
 let currentParticipant=null;
@@ -3262,6 +3230,37 @@ function getFallbackPrize(catalog){
   return null;
 }
 
+function getWeightedRandomChoice(items, weightFn){
+  const list=(items||[]).filter(Boolean);
+  if(!list.length) return null;
+  const weighted=list.map(item=>({item,weight:Math.max(0, Number(weightFn(item))||0)})).filter(entry=>entry.weight>0);
+  if(!weighted.length) return list[Math.floor(Math.random()*list.length)]||null;
+  const total=weighted.reduce((sum,entry)=>sum+entry.weight,0);
+  let cursor=Math.random()*total;
+  for(const entry of weighted){
+    cursor-=entry.weight;
+    if(cursor<=0) return entry.item;
+  }
+  return weighted[weighted.length-1]?.item||null;
+}
+
+function getPersonGiftChoiceEntries(personId, prefMap){
+  const pref=prefMap.get(personId)||{};
+  return Array.isArray(pref.choices)
+    ? pref.choices.map(choice=>{
+        if(!choice) return null;
+        if(typeof choice==='string'){
+          return {prizeId:choice,group:'',slot:0};
+        }
+        return {
+          prizeId:choice.prizeId||choice.id||'',
+          group:String(choice.group||'').trim(),
+          slot:Number(choice.slot)||0
+        };
+      }).filter(item=>item?.prizeId)
+    : [];
+}
+
 function getPersonGiftChoices(personId, prefMap){
   const pref=prefMap.get(personId)||{};
   const choices=Array.isArray(pref.choices) ? pref.choices.filter(Boolean).map(choice=>{
@@ -3272,18 +3271,31 @@ function getPersonGiftChoices(personId, prefMap){
 }
 
 function allocatePrizeToPerson(person, prefMap, catalog){
-  const choices=getPersonGiftChoices(person.personId||person.id, prefMap);
-  for(const prizeId of choices){
-    const found=catalog.find(item=>item.id===prizeId && item.stock>0);
-    if(found){
-      found.stock-=1;
-      return {prizeId:found.id, prizeName:found.name, source:'choice'};
+  const choiceEntries=getPersonGiftChoiceEntries(person.personId||person.id, prefMap);
+  const groupedChoices={A:[],B:[],C:[]};
+  choiceEntries.forEach(choice=>{
+    const found=catalog.find(item=>item.id===choice.prizeId && item.stock>0 && !RANDOM_PRIZE_EXCLUDED_NAMES.has(String(item.name||'').trim()));
+    if(!found) return;
+    const group=String(choice.group||'').trim();
+    if(!['A','B','C'].includes(group)) return;
+    if(groupedChoices[group].some(item=>item.id===found.id)) return;
+    groupedChoices[group].push(found);
+  });
+  const availableGroups=Object.entries(groupedChoices)
+    .filter(([,items])=>items.length>0)
+    .map(([group])=>group);
+  if(availableGroups.length){
+    const chosenGroup=getWeightedRandomChoice(availableGroups, group=>GROUP_RANDOM_WEIGHTS[group]||0);
+    const chosenPrize=getWeightedRandomChoice(groupedChoices[chosenGroup], ()=>1);
+    if(chosenPrize){
+      chosenPrize.stock-=1;
+      return {prizeId:chosenPrize.id, prizeName:chosenPrize.name, prizeGroup:chosenGroup, source:'weighted_choice'};
     }
   }
   const fallback=getFallbackPrize(catalog);
   if(fallback){
     fallback.stock-=1;
-    return {prizeId:fallback.id, prizeName:fallback.fallbackLabel||fallback.name, source:'fallback'};
+    return {prizeId:fallback.id, prizeName:fallback.fallbackLabel||fallback.name, prizeGroup:'C', source:'fallback'};
   }
   return null;
 }
@@ -4084,7 +4096,7 @@ const FIXED_RACE_RACERS=[
   {name:'Chris',title:'Executive'},
   {name:'John',title:'Executive'}
 ];
-const RACE_SET_PRIZES={1:'스타벅스 3만원 기프트카드',2:'올리브영 3만원 기프트카드'};
+const RACE_SET_PRIZES={1:'선택 선물 랜덤 지급',2:'3만원 기프트카드 랜덤 지급'};
 
 const FINAL_DRAW_LOG_PATH='final_draw_log';
 const SESSION_PARTICIPANTS_PATH='session_participants';
@@ -4324,6 +4336,39 @@ async function showRaceResult(finishOrder){
     },[]);
   const survivorTarget=normalizeRaceSurvivorTarget(meta?.survivorTarget ?? raceSurvivorTarget);
   const nextStatus=survivorPeople.length<=survivorTarget ? 'set_complete' : 'awaiting_next_round';
+  let assignedRewards=[];
+  let selectionCatalogToSave=null;
+  if(nextStatus==='set_complete'){
+    if((meta.setNumber||1)===1){
+      const [prefMap,catalog] = await Promise.all([
+        getGiftPreferenceMap(),
+        ensureSelectionPrizeCatalog()
+      ]);
+      const mutableCatalog=catalog.map(item=>({...item}));
+      survivorPeople.forEach(person=>{
+        const allocation=allocatePrizeToPerson(person, prefMap, mutableCatalog);
+        if(!allocation) return;
+        assignedRewards.push({
+          personId:person.personId,
+          name:person.name,
+          ...allocation
+        });
+      });
+      selectionCatalogToSave=mutableCatalog;
+    } else if((meta.setNumber||1)===2){
+      const pool=[...RACE_SET2_GIFTCARD_POOL].sort(()=>Math.random()-0.5);
+      survivorPeople.forEach((person,idx)=>{
+        const card=pool[idx] || pool[Math.floor(Math.random()*pool.length)] || '3만원 기프트카드';
+        assignedRewards.push({
+          personId:person.personId,
+          name:person.name,
+          prizeId:'',
+          prizeName:card,
+          source:'race_giftcard'
+        });
+      });
+    }
+  }
   const nextMeta={
     ...meta,
     status:nextStatus,
@@ -4354,8 +4399,12 @@ async function showRaceResult(finishOrder){
       setNumber:meta.setNumber,
       prizeLabel:meta.prizeLabel,
       winners:survivorPeople,
+      assignedRewards,
       completedAt:Date.now()
     }));
+    if(selectionCatalogToSave){
+      ops.push(saveSelectionPrizeCatalog(selectionCatalogToSave));
+    }
   }
   ops.push(set(ref(db,'state'),{active:false,standby:true,mode:'idle'}));
   await Promise.all(ops);
@@ -4431,6 +4480,21 @@ function getSessionRewardEntriesFromLogs(draftRewards, raceRewardSets, finalDraw
   Object.values(raceRewardSets||{}).forEach(setInfo=>{
     const ts=Number(setInfo?.completedAt)||0;
     if(ts<minTs) return;
+    if(Array.isArray(setInfo?.assignedRewards) && setInfo.assignedRewards.length){
+      setInfo.assignedRewards.forEach(item=>{
+        if(!(item?.personId||item?.name)) return;
+        entries.push({
+          source:'race',
+          label:`레이스 ${Number(setInfo?.setNumber)||1}세트`,
+          personId:item.personId||'',
+          name:item.name||'-',
+          prizeId:item.prizeId||'',
+          prizeName:item.prizeName||setInfo?.prizeLabel||'-',
+          ts
+        });
+      });
+      return;
+    }
     (setInfo?.winners||[]).forEach(item=>{
       if(!(item?.personId||item?.name)) return;
       entries.push({
@@ -4453,6 +4517,7 @@ function getSessionRewardEntriesFromLogs(draftRewards, raceRewardSets, finalDraw
       label:'최종 추첨',
       personId:entry.winner.personId||'',
       name:entry.winner.name||'-',
+      prizeId:entry.prizeId||'',
       prizeName:entry.prizeName||'-',
       ts
     });
@@ -4499,8 +4564,14 @@ async function refreshSessionRewardPanels(){
   }
 }
 
-function buildGiftStatusSelectionRows(catalog){
+function buildGiftStatusSelectionRows(catalog, issuedEntries){
   const groupMap={S:'A',A:'B',B:'C'};
+  const issuedMap=new Map();
+  (issuedEntries||[]).forEach(item=>{
+    const key=String(item?.prizeId||'').trim();
+    if(!key) return;
+    issuedMap.set(key, (issuedMap.get(key)||0)+1);
+  });
   return getSelectionPrizeCatalog(catalog).map(item=>{
     const prepared=getSelectionDisplayStock(item);
     const remaining=Math.max(0, Number(item.stock)||0);
@@ -4510,7 +4581,7 @@ function buildGiftStatusSelectionRows(catalog){
       groupLabel:groupMap[item.tier]||item.tier,
       prepared,
       remaining,
-      issued:Math.max(0, prepared-remaining)
+      issued:issuedMap.get(item.id)||0
     };
   }).sort((a,b)=>{
     const tierOrder={S:0,A:1,B:2};
@@ -4594,16 +4665,19 @@ async function refreshGiftStatusView(){
       get(ref(db,FINAL_DRAW_LOG_PATH))
     ]);
     const prizeListRaw=prizeSnap.val();
-    const prizeList=Array.isArray(prizeListRaw) ? prizeListRaw.map(normalizeLotteryPrizeItem).filter(Boolean) : buildDefaultLotteryPrizes();
+    const prizeList=Array.isArray(prizeListRaw)
+      ? stripSelectionPrizeOverlap(prizeListRaw.map(normalizeLotteryPrizeItem).filter(Boolean), catalog)
+      : buildDefaultLotteryPrizes();
     const sessionStartedAt=Number(stateSnap.val()?.sessionStartedAt)||0;
+    const sessionDraftRewards=filterDraftRewardsBySession(draftSnap.val()||{}, sessionStartedAt);
     const issuedEntries=getSessionRewardEntriesFromLogs(
-      draftSnap.val()||{},
+      sessionDraftRewards,
       raceSnap.val()||{},
       finalSnap.val()||{},
       sessionStartedAt
     );
     renderGiftStatusView({
-      selectionRows:buildGiftStatusSelectionRows(catalog),
+      selectionRows:buildGiftStatusSelectionRows(catalog, issuedEntries),
       lotteryRows:buildGiftStatusLotteryRows(prizeList),
       issuedEntries
     });
@@ -4668,15 +4742,19 @@ function updatePoolDisplay(){
   document.getElementById('pool-preview').textContent=lotteryPool.length
     ?lotteryPool.map(p=>p.name).join(' · ')
     :'미당첨자 풀이 비어 있습니다';
-  if(activePrizeIdx!==null) document.getElementById('lottery-start-btn').disabled=lotteryPool.length===0;
+  const startBtn=document.getElementById('lottery-start-btn');
+  if(startBtn) startBtn.disabled=lotteryPool.length===0;
 }
 
 async function startLottery(){
-  if(lotteryPool.length===0||activePrizeIdx===null) return;
+  if(lotteryPool.length===0) return;
   const btn=document.getElementById('lottery-start-btn');
   btn.disabled=true;
-  const donePrizeIdx=activePrizeIdx;
-  const selectedPrize=lotteryPrizes[donePrizeIdx];
+  const [prefMap,catalog] = await Promise.all([
+    getGiftPreferenceMap(),
+    ensureSelectionPrizeCatalog()
+  ]);
+  const mutableCatalog=catalog.map(item=>({...item}));
 
   const spinWrap=document.getElementById('lottery-spin-wrap');
   const spinInner=document.getElementById('lottery-spin-inner');
@@ -4688,9 +4766,13 @@ async function startLottery(){
   let speed=50,pos=0;
   const winnerEntry=shuffled[Math.floor(Math.random()*shuffled.length)];
   const winner=winnerEntry.name;
-  const isMatch=selectedPrize?.type==='match';
-  let matchedPrize=null;
-  if(isMatch) matchedPrize=await getGiftMatch(winnerEntry);
+  const allocation=allocatePrizeToPerson(winnerEntry, prefMap, mutableCatalog);
+  if(!allocation){
+    spinWrap.style.display='none';
+    btn.disabled=false;
+    alert('당첨자에게 배정 가능한 선물이 없습니다.');
+    return;
+  }
 
   const spin=setInterval(async ()=>{
     pos+=speed;
@@ -4699,26 +4781,19 @@ async function startLottery(){
     if(speed<=2.1){
       clearInterval(spin);
       spinWrap.style.display='none';
-      const displayPrize=matchedPrize?matchedPrize.name:selectedPrize.name;
+      const displayPrize=allocation.prizeName;
       document.getElementById('lottery-display').innerHTML=`
-        <div style="font-size:13px;color:rgba(255,255,255,0.3);margin-bottom:8px;">${matchedPrize?'개인 희망 선물 매칭':'🎁 '+escapeHtml(selectedPrize.name)}</div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.3);margin-bottom:8px;">참여자 선택 선물 랜덤 배정</div>
         <div class="lottery-winner">${escapeHtml(winner)}</div>
         <div style="font-size:20px;font-weight:800;color:#FFD700;margin:8px 0;">${escapeHtml(displayPrize)}</div>
         <div style="font-size:13px;color:var(--green);font-weight:600;">축하합니다!</div>`;
-      if(matchedPrize){
-        matchedPrize.done=true;
-        matchedPrize.winner=winner;
-      }
-
-      lotteryPrizes[donePrizeIdx].done=true;
-      lotteryPrizes[donePrizeIdx].winner=winner;
       lotteryPool=lotteryPool.filter(p=>p.id!==winnerEntry.id);
-      activePrizeIdx=null;
       try{
         await Promise.all([
-          set(ref(db,'settings/prizes'),lotteryPrizes),
+          saveSelectionPrizeCatalog(mutableCatalog),
           push(ref(db,FINAL_DRAW_LOG_PATH),{
             ts:Date.now(),
+            prizeId:allocation.prizeId||'',
             prizeName:displayPrize,
             winner:{personId:winnerEntry.id,name:winner}
           })
@@ -4743,13 +4818,27 @@ async function initLottery(){
     const snap=await get(ref(db,'settings/prizes'));
     snapVal=snap.val();
   }catch(e){}
+  const selectionCatalog=await ensureSelectionPrizeCatalog();
   if(snapVal&&snapVal.length>0 && !isLegacyLotteryPrizeList(snapVal)){
-    lotteryPrizes=snapVal;
+    const normalized=snapVal.map(normalizeLotteryPrizeItem).filter(Boolean);
+    const sanitized=stripSelectionPrizeOverlap(normalized, selectionCatalog);
+    lotteryPrizes=sanitized;
+    const rawSignature=JSON.stringify(normalized.map(item=>({name:item.name,type:item.type})));
+    const sanitizedSignature=JSON.stringify(sanitized.map(item=>({name:item.name,type:item.type})));
+    if(Array.isArray(snapVal) && rawSignature!==sanitizedSignature){
+      try{ await set(ref(db,'settings/prizes'), lotteryPrizes); }catch(e){}
+    }
   } else if(lotteryPrizes.length===0 || isLegacyLotteryPrizeList(lotteryPrizes) || isLegacyLotteryPrizeList(snapVal)){
     lotteryPrizes=buildDefaultLotteryPrizes();
     try{ await set(ref(db,'settings/prizes'),lotteryPrizes); }catch(e){}
   }
   renderPrizeList();
+  const display=document.getElementById('lottery-display');
+  if(display){
+    display.innerHTML=`
+      <div class="lottery-icon">🎰</div>
+      <div>당첨자를 추첨하면 선택 선물에서 자동 배정됩니다</div>`;
+  }
   await loadPeopleToPool();
 }
 
