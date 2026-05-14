@@ -303,16 +303,14 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
 .msg-option{display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(255,255,255,0.78);}
 .msg-option input{accent-color:var(--bl);}
 .gp-selected-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:14px;min-height:40px;}
-.gp-step2-layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(320px,0.95fr);gap:16px;align-items:start;}
+.gp-step2-layout{display:flex;flex-direction:column;gap:16px;align-items:stretch;}
 .gp-gift-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;}
-.gp-message-col{display:flex;flex-direction:column;gap:16px;position:sticky;top:16px;}
+.gp-message-col{display:flex;flex-direction:column;gap:16px;position:static;}
 .gp-group-panel{padding:14px;border:1px solid rgba(255,255,255,0.08);border-radius:14px;background:rgba(255,255,255,0.03);display:flex;flex-direction:column;min-height:0;}
-.gp-group-items{display:flex;flex-direction:column;gap:8px;max-height:42vh;overflow-y:auto;padding-right:4px;}
-@media (max-width:1100px){
+.gp-group-items{display:flex;flex-direction:column;gap:8px;max-height:36vh;overflow-y:auto;padding-right:4px;}
+@media (max-width:1200px){
   .gp-selected-grid{grid-template-columns:1fr;}
-  .gp-step2-layout{grid-template-columns:1fr;}
   .gp-gift-grid{grid-template-columns:1fr;}
-  .gp-message-col{position:static;}
 }
 .message-admin-body{max-width:1180px;width:100%;margin:0 auto;padding:20px 24px 24px;}
 .message-admin-grid{display:grid;grid-template-columns:minmax(0,1.15fr) 360px;gap:18px;}
@@ -643,6 +641,11 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
   <div id="racer-settings-panel" class="settings-panel hidden" style="flex-shrink:0;">
     <h3>레이서 설정</h3>
     <div class="racer-setup" id="racer-setup-rows"></div>
+    <div style="margin:12px 0 10px;">
+      <div style="font-size:11px;color:rgba(255,255,255,0.55);margin-bottom:6px;">최종 생존 인원</div>
+      <input id="race-survivor-target-input" type="number" min="1" max="20" value="5" style="width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.04);color:#fff;font-size:13px;font-weight:700;">
+      <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:6px;">생존자가 이 숫자 이하가 되면 해당 세트가 종료됩니다.</div>
+    </div>
     <button class="save-btn" style="width:100%" onclick="saveRacers()">레이서 저장</button>
   </div>
 
@@ -965,6 +968,7 @@ const firebaseUnsubs = {
   adminStatus:null,
   hostState:null,
   hostSettings:null,
+  sessionParticipants:null,
   votes:null,
   bets:null,
   adminMessages:null,
@@ -1055,6 +1059,22 @@ function hideAllViews(){
 
 function getPersonKey(person){
   return safeFirebaseKey(person?.id || person?.name || '');
+}
+
+function normalizeSessionParticipants(raw){
+  const entries=(raw && typeof raw==='object') ? Object.values(raw) : [];
+  return entries.map(entry=>({
+    id:String(entry?.personId||entry?.id||'').trim(),
+    name:String(entry?.name||'').trim()
+  })).filter(entry=>entry.id && entry.name);
+}
+
+function getParticipatingPeople(){
+  const participants=normalizeSessionParticipants(activeSessionParticipants);
+  if(!participants.length) return normalizePeopleList(people);
+  const activeIds=new Set(participants.map(item=>item.id));
+  const activeNames=new Set(participants.map(item=>item.name));
+  return normalizePeopleList(people).filter(person=>activeIds.has(person.id) || activeNames.has(person.name));
 }
 
 function normalizeMessageRecord(key, raw){
@@ -1279,7 +1299,12 @@ function watchAdminStatus(){
 // ?몄뀡 ?쒖옉 (珥덇린?????湲??곹깭)
 async function adminStartSession(){
   if(!confirm('세션을 시작할까요? 기존 투표와 베팅 데이터는 유지됩니다.')) return;
-  await set(ref(db,'state'),{active:false,standby:true,mode:'idle'});
+  await Promise.all([
+    set(ref(db,'state'),{active:false,standby:true,mode:'idle'}),
+    remove(ref(db,FINAL_DRAW_LOG_PATH)),
+    remove(ref(db,SESSION_PARTICIPANTS_PATH))
+  ]);
+  activeSessionParticipants={};
   alert('세션이 대기 상태로 시작되었습니다. 이제 드래프트나 레이스에서 세션을 진행해주세요.');
 }
 
@@ -1411,17 +1436,19 @@ function renderReasons(qv){
 
 
 function showRevealStep(){
-  const item=revealData[revealStep];
-  const emojis=['🥇','🥈','🥉'],ranks=['1위','2위','3위'];
-  document.getElementById('rv-qlbl').textContent=`Q${revealQIdx+1} · ${ranks[revealStep]}`;
-  document.getElementById('rv-emoji').textContent=emojis[revealStep];
+  const isTie=revealData.length>1;
+  const item=revealData[revealStep] || revealData[0];
+  document.getElementById('rv-qlbl').textContent=`Q${revealQIdx+1} · ${isTie?'공동 1위':'1위'}`;
+  document.getElementById('rv-emoji').textContent='🥇';
   const ne=document.getElementById('rv-name');
-  ne.textContent=item.name; ne.style.animation='none'; ne.offsetHeight; ne.style.animation='';
-  document.getElementById('rv-votes').textContent=`${item.cnt}표`;
-  document.getElementById('rv-reasons').innerHTML=item.reasons.map(r=>`<div class="rv-reason-item">"${escapeHtml(r)}"</div>`).join('');
+  ne.textContent=isTie ? revealData.map(entry=>entry.name).join(' · ') : item.name;
+  ne.style.animation='none'; ne.offsetHeight; ne.style.animation='';
+  document.getElementById('rv-votes').textContent=isTie ? `${item.cnt}표 공동 1위` : `${item.cnt}표`;
+  document.getElementById('rv-reasons').innerHTML=(isTie ? [] : item.reasons).map(r=>`<div class="rv-reason-item">"${escapeHtml(r)}"</div>`).join('');
   const btn=document.getElementById('rv-next-btn');
-  if(revealStep===0){btn.textContent='닫기';btn.onclick=closeReveal;launchConfetti();}
-  else{btn.textContent=`다음 ${['1위','2위','3위'][revealStep-1]} 공개`;btn.onclick=revealNext;}
+  btn.textContent='닫기';
+  btn.onclick=closeReveal;
+  launchConfetti();
 }
 
 function revealNext(){revealStep--;showRevealStep();}
@@ -2622,6 +2649,8 @@ const FALLBACK_PRIZE_IDS=['lf_0324','choonsik_glass_set','volvik_v10_box','resel
 let currentParticipant=null;
 let authSelectedPerson=null;
 let gpChoiceBySlot=[null,null,null,null,null];
+let raceSurvivorTarget=5;
+let activeSessionParticipants={};
 
 function isExecutiveName(name){
   return EXECUTIVE_NAMES.includes(String(name||'').trim());
@@ -2648,13 +2677,13 @@ function normalizePeopleList(raw){
       const name=String(parts[0]||'').trim();
       const verifyCode=String(parts[1]||'').trim().replace(/\D/g,'').slice(-4);
       if(!name) return null;
-      return {id:`person:${safeFirebaseKey(name)}:${idx}`,name,verifyCode};
+      return {id:`person:${safeFirebaseKey(name)}`,name,verifyCode};
     }
     if(!entry || typeof entry!=='object') return null;
     const name=String(entry.name||'').trim();
     if(!name) return null;
     return {
-      id:String(entry.id||`person:${safeFirebaseKey(name)}:${idx}`),
+      id:String(entry.id||`person:${safeFirebaseKey(name)}`),
       name,
       verifyCode:String(entry.verifyCode||'').trim().replace(/\D/g,'').slice(-4)
     };
@@ -2759,6 +2788,21 @@ function showP(screen){
 
 function getSelectionPrizeCatalog(catalog){
   return (catalog||prizes||[]).filter(item=>item && item.selectionActive!==false);
+}
+
+function normalizeRaceSurvivorTarget(value){
+  const num=Number(value);
+  if(!Number.isFinite(num)) return 5;
+  return Math.max(1, Math.min(20, Math.floor(num)));
+}
+
+function getCurrentRaceSurvivorTarget(){
+  return normalizeRaceSurvivorTarget(raceSurvivorTarget);
+}
+
+function renderRaceSurvivorTargetInput(){
+  const input=document.getElementById('race-survivor-target-input');
+  if(input) input.value=String(getCurrentRaceSurvivorTarget());
 }
 
 function normalizePrizeCatalog(raw){
@@ -2895,7 +2939,7 @@ function updateDraftSafetyUI(remainingStock, projectedCount, round3Allowed, summ
 }
 
 function getEligibleDraftPeopleSets(){
-  const eligible=normalizePeopleList(people).filter(person=>!isExecutiveName(person.name));
+  const eligible=getParticipatingPeople().filter(person=>!isExecutiveName(person.name));
   return {
     ids:new Set(eligible.map(person=>person.id)),
     names:new Set(eligible.map(person=>person.name))
@@ -2934,7 +2978,24 @@ async function refreshDraftSafetyIndicators(currentVotes){
     counts[key]=(counts[key]||0)+1;
   });
   const topVoteCount=Math.max(0,...Object.values(counts));
-  const projectedCount=topVoteCount ? topVoteCount+1 : 0;
+  let projectedCount=0;
+  if(topVoteCount){
+    const winnerKeys=Object.entries(counts).filter(([,cnt])=>cnt===topVoteCount).map(([key])=>key);
+    const winnerKeySet=new Set(winnerKeys);
+    const projectedRewardIds=new Set();
+    const peopleById=getPeopleMap(people);
+    winnerKeys.forEach(key=>{
+      const winnerPerson=peopleById.get(key) || normalizePeopleList(people).find(person=>person.name===key);
+      if(winnerPerson?.id) projectedRewardIds.add(winnerPerson.id);
+    });
+    Object.values(currentVotes||{}).forEach(v=>{
+      const votedKey=v.personId||v.person;
+      if(!winnerKeySet.has(votedKey)) return;
+      const voterId=String(v.voterId||'').trim();
+      if(voterId) projectedRewardIds.add(voterId);
+    });
+    projectedCount=projectedRewardIds.size;
+  }
   const previousTop=Object.values(allRewards).reduce((max,round)=>Math.max(max, Number(round?.topVoteCount)||0),0);
   const round3Allowed=remainingStock>=15 && previousTop<=15;
   const summaryText=Object.entries(allRewards).sort((a,b)=>a[0].localeCompare(b[0])).map(([key,round])=>{
@@ -2945,7 +3006,7 @@ async function refreshDraftSafetyIndicators(currentVotes){
   return {remainingStock,projectedCount,round3Allowed,previousTop};
 }
 
-async function processDraftRewardsForQuestion(qIdx, qv, winnerPersonId, winnerName){
+async function processDraftRewardsForQuestion(qIdx, qv, winners){
   const rewardPath=`draft_rewards/q${qIdx}`;
   const existingSnap=await get(ref(db,rewardPath));
   if(existingSnap.val()?.processed) return existingSnap.val();
@@ -2956,11 +3017,17 @@ async function processDraftRewardsForQuestion(qIdx, qv, winnerPersonId, winnerNa
   ]);
   const peopleMap=getPeopleMap(people);
   const catalog=context.catalog.map(item=>({...item}));
-  const winnerPerson=(winnerPersonId && peopleMap.get(winnerPersonId)) || [...peopleMap.values()].find(person=>person.name===winnerName) || null;
-  const winnerKey=winnerPerson?.id || winnerPersonId || winnerName || '';
+  const winnerList=(Array.isArray(winners)?winners:[]).map(item=>{
+    const winnerPerson=(item?.personId && peopleMap.get(item.personId)) || [...peopleMap.values()].find(person=>person.name===item?.name) || null;
+    return {
+      personId:winnerPerson?.id || item?.personId || '',
+      name:winnerPerson?.name || item?.name || '',
+      cnt:Number(item?.cnt)||0
+    };
+  }).filter(item=>item.personId || item.name);
+  const winnerKeySet=new Set(winnerList.flatMap(item=>[item.personId,item.name].filter(Boolean)));
   const correctVoters=Object.values(qv||{})
-    .filter(v=>(v.personId||v.person)===winnerKey)
-    .filter(v=>(v.voterId||'')!==winnerKey)
+    .filter(v=>winnerKeySet.has(v.personId||v.person))
     .sort((a,b)=>{
       const aTs=Number(a.ts)||Number(a.clientTs)||0;
       const bTs=Number(b.ts)||Number(b.clientTs)||0;
@@ -2970,19 +3037,20 @@ async function processDraftRewardsForQuestion(qIdx, qv, winnerPersonId, winnerNa
   const assignedRewards=[];
   const roundRewarded=new Set();
 
-  if(winnerPerson && !context.rewardedSet.has(winnerPerson.id)){
-    const allocation=allocatePrizeToPerson({personId:winnerPerson.id,name:winnerPerson.name}, prefMap, catalog);
-    if(allocation){
-      assignedRewards.push({personId:winnerPerson.id,name:winnerPerson.name,role:'winner',...allocation});
-      roundRewarded.add(winnerPerson.id);
-    }
-  }
+  winnerList.forEach(winnerPerson=>{
+    if(!winnerPerson?.personId) return;
+    if(context.rewardedSet.has(winnerPerson.personId) || roundRewarded.has(winnerPerson.personId)) return;
+    const allocation=allocatePrizeToPerson({personId:winnerPerson.personId,name:winnerPerson.name}, prefMap, catalog);
+    if(!allocation) return;
+    assignedRewards.push({personId:winnerPerson.personId,name:winnerPerson.name,role:'winner',...allocation});
+    roundRewarded.add(winnerPerson.personId);
+  });
 
   correctVoters.forEach(voter=>{
-    const personId=voter.personId||'';
+    const personId=(voter.voterId||'').trim();
     if(!personId) return;
     if(context.rewardedSet.has(personId) || roundRewarded.has(personId)) return;
-    const person=peopleMap.get(personId) || {id:personId,name:voter.voterName||voter.name||personId};
+    const person=peopleMap.get(personId) || {id:personId,name:voter.voterName||personId};
     const allocation=allocatePrizeToPerson({personId:person.id,name:person.name}, prefMap, catalog);
     if(!allocation) return;
     assignedRewards.push({personId:person.id,name:person.name,role:'correct_voter',voteTs:Number(voter.ts)||0,...allocation});
@@ -2992,11 +3060,13 @@ async function processDraftRewardsForQuestion(qIdx, qv, winnerPersonId, winnerNa
   const rewardLog={
     processed:true,
     qIdx,
-    winnerName:winnerName||'',
-    winnerPersonId:winnerPerson?.id||'',
-    topVoteCount:correctVoters.length,
+    winnerNames:winnerList.map(item=>item.name),
+    winnerPersonIds:winnerList.map(item=>item.personId),
+    winnerName:winnerList.map(item=>item.name).join(', '),
+    winnerPersonId:winnerList[0]?.personId||'',
+    topVoteCount:winnerList[0]?.cnt||0,
     assignedRewards,
-    projectedCount:correctVoters.length+1,
+    projectedCount:roundRewarded.size,
     processedAt:Date.now()
   };
   await Promise.all([
@@ -3007,13 +3077,13 @@ async function processDraftRewardsForQuestion(qIdx, qv, winnerPersonId, winnerNa
 }
 
 function getDraftCandidatePool(){
-  return getNameEntries(people, 'person')
+  return getNameEntries(getParticipatingPeople(), 'person')
     .filter(entry=>!isExecutiveName(entry.name))
     .filter(entry=>entry.id!==getAuthenticatedParticipant()?.id);
 }
 
 function filterDraftVotesByEligiblePeople(qv){
-  const validEntries=getNameEntries(people, 'person').filter(entry=>!isExecutiveName(entry.name));
+  const validEntries=getNameEntries(getParticipatingPeople(), 'person').filter(entry=>!isExecutiveName(entry.name));
   const validIds=new Set(validEntries.map(entry=>entry.id));
   const validNames=new Set(validEntries.map(entry=>entry.name));
   return Object.fromEntries(
@@ -3030,7 +3100,7 @@ function renderPeople(filter){
   window._peopleViewEntries=filtered;
   document.getElementById('people-list').innerHTML=filtered.length?filtered.map((entry,i)=>
     `<div class="p-item${selectedPerson?.id===entry.id?' sel':''}" onclick="selectPersonByIndex(${i})"><div class="p-av">${escapeHtml(entry.name[0]||'?')}</div>${escapeHtml(entry.name)}</div>`
-  ).join(''):'<div style="padding:16px;text-align:center;font-size:12px;color:var(--sub)">寃??寃곌낵媛 ?놁뒿?덈떎</div>';
+  ).join(''):'<div style="padding:16px;text-align:center;font-size:12px;color:var(--sub)">검색 결과가 없습니다</div>';
 }
 
 function loadVoteQ(qIdx){
@@ -3099,12 +3169,19 @@ async function submitRaceBet(){
   const btn=document.getElementById('race-bet-btn');
   btn.disabled=true;
   btn.textContent='제출 중...';
-  await push(ref(db,'bets/s'+window._betSession),{
-    racerIdx:selectedRacer,
-    name:participant.name,
-    personId:participant.id,
-    ts:firebase.database.ServerValue.TIMESTAMP
-  });
+  try{
+    await push(ref(db,'bets/s'+window._betSession),{
+      racerIdx:selectedRacer,
+      name:participant.name,
+      personId:participant.id,
+      ts:firebase.database.ServerValue.TIMESTAMP
+    });
+  }catch(e){
+    btn.disabled=false;
+    btn.textContent='베팅하기';
+    alert('오류: '+e.message);
+    return;
+  }
   myBetQ[window._betSession]=true;
   myBetQLocal[window._betSession]=true;
   safeStorageSet('tt_bets', JSON.stringify(myBetQLocal));
@@ -3156,6 +3233,11 @@ function verifyParticipantAuth(){
     alert('확인값 4자리가 일치하지 않습니다.');
     return;
   }
+  update(ref(db,`${SESSION_PARTICIPANTS_PATH}/${safeFirebaseKey(authSelectedPerson.id)}`),{
+    personId:authSelectedPerson.id,
+    name:authSelectedPerson.name,
+    checkedInAt:firebase.database.ServerValue.TIMESTAMP
+  }).catch(()=>{});
   setAuthenticatedParticipant(authSelectedPerson);
   authSelectedPerson=null;
   document.getElementById('auth-code').value='';
@@ -3167,6 +3249,13 @@ function verifyParticipantAuth(){
 function enterParticipant(){
   ensureParticipantAuthUI();
   ensureGiftVerifyUI();
+  replaceListener('sessionParticipants', onValue(ref(db,SESSION_PARTICIPANTS_PATH),(snap)=>{
+    activeSessionParticipants=snap.val()||{};
+    const votingEl=document.getElementById('p-voting');
+    if(votingEl && !votingEl.classList.contains('hidden')){
+      renderPeople(document.getElementById('search-input')?.value||'');
+    }
+  }));
   show('p-view');
   const participant=getAuthenticatedParticipant();
   if(participant){
@@ -3189,12 +3278,17 @@ async function loadSettingsFromDB(){
   const s=settingsSnap.val()||{};
   if(s.questions) questions=s.questions;
   if(s.people) people=normalizePeopleList(s.people);
+  raceSurvivorTarget=normalizeRaceSurvivorTarget(s.raceSurvivorTarget ?? raceSurvivorTarget);
   document.getElementById('questions-textarea').value=questions.join('\n');
   document.getElementById('people-textarea').value=peopleToTextareaValue(people);
+  renderRaceSurvivorTargetInput();
   syncCandidatesFromPeople();
   prizes=catalog;
   initTabs();
   await refreshDraftSafetyIndicators();
+  replaceListener('sessionParticipants', onValue(ref(db,SESSION_PARTICIPANTS_PATH),(snap)=>{
+    activeSessionParticipants=snap.val()||{};
+  }));
 }
 
 async function savePeople(){
@@ -3269,17 +3363,21 @@ async function showReveal(){
     if(v.reason) reasons[key].push(v.reason);
   });
   const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
-  revealData=sorted.slice(0,3).map(([key,cnt])=>({personId:key,name:labels[key]||key,cnt,reasons:reasons[key]||[]}));
+  const topVoteCount=sorted[0]?.[1]||0;
+  revealData=sorted
+    .filter(([,cnt])=>cnt===topVoteCount)
+    .map(([key,cnt])=>({personId:key,name:labels[key]||key,cnt,reasons:reasons[key]||[]}));
   if(!revealData.length){ alert('투표 데이터가 없습니다.'); return; }
-  const rewardLog=await processDraftRewardsForQuestion(currentQIdx, qv, revealData[0].personId, revealData[0].name);
+  const rewardLog=await processDraftRewardsForQuestion(currentQIdx, qv, revealData);
   await refreshDraftSafetyIndicators(qv);
   const summary=(rewardLog?.assignedRewards||[]).map(item=>`${item.name} → ${item.prizeName}`).join(', ');
   const summaryEl=document.getElementById('draft-reward-summary');
+  const winnerLabel=revealData.length>1 ? `공동 1위 ${revealData.map(item=>item.name).join(', ')}` : `1위 ${revealData[0].name}`;
   if(summaryEl){
-    summaryEl.innerHTML=`<div>Q${currentQIdx+1} 1위 ${escapeHtml(revealData[0].name)}</div><div>보상 지급 ${rewardLog?.assignedRewards?.length||0}건${summary?` · ${escapeHtml(summary)}`:''}</div>`;
+    summaryEl.innerHTML=`<div>Q${currentQIdx+1} ${escapeHtml(winnerLabel)}</div><div>보상 지급 ${rewardLog?.assignedRewards?.length||0}건${summary?` · ${escapeHtml(summary)}`:''}</div>`;
   }
   revealQIdx=currentQIdx;
-  revealStep=revealData.length-1;
+  revealStep=0;
   document.getElementById('reveal-ov').classList.remove('hidden');
   showRevealStep();
 }
@@ -3618,9 +3716,10 @@ const FIXED_RACE_RACERS=[
 const RACE_SET_PRIZES={1:'스타벅스 3만원 기프트카드',2:'올리브영 3만원 기프트카드'};
 
 const FINAL_DRAW_LOG_PATH='final_draw_log';
+const SESSION_PARTICIPANTS_PATH='session_participants';
 
-function getRaceEligibleBaseIds(){
-  return normalizePeopleList(people).filter(person=>!isExecutiveName(person.name)).map(person=>person.id);
+function getRaceEligibleBasePeople(){
+  return normalizePeopleList(people).filter(person=>!isExecutiveName(person.name));
 }
 
 async function getRaceSetState(){
@@ -3638,8 +3737,14 @@ function getRaceSetLabel(setNumber){
 }
 
 async function initRaceHost(){
+  try{
+    const settingsSnap=await get(ref(db,'settings'));
+    const settings=settingsSnap.val()||{};
+    raceSurvivorTarget=normalizeRaceSurvivorTarget(settings.raceSurvivorTarget ?? raceSurvivorTarget);
+  }catch(e){}
   racers=[...FIXED_RACE_RACERS];
   renderRacerSetupRows();
+  renderRaceSurvivorTargetInput();
   renderBetBars();
   setTimeout(()=>{
     initRaceCanvas();
@@ -3676,10 +3781,15 @@ function renderRacerSetupRows(){
 
 async function saveRacers(){
   racers=[...FIXED_RACE_RACERS];
+  raceSurvivorTarget=normalizeRaceSurvivorTarget(document.getElementById('race-survivor-target-input')?.value);
   renderRacerSetupRows();
+  renderRaceSurvivorTargetInput();
   renderBetBars();
+  try{
+    await update(ref(db,'settings'),{raceSurvivorTarget});
+  }catch(e){}
   document.getElementById('racer-settings-panel').classList.add('hidden');
-  alert('레이서는 Soo, Chris, John으로 고정됩니다.');
+  alert(`레이서는 Soo, Chris, John으로 고정됩니다.\n최종 생존 인원: ${raceSurvivorTarget}명`);
 }
 
 function openRacerSettings(){
@@ -3707,13 +3817,16 @@ async function openRaceBetting(){
     meta=window._localRaceSetState||{};
   }
   let nextMeta={...meta};
-  const baseEligible=getRaceEligibleBaseIds();
+  const survivorTarget=getCurrentRaceSurvivorTarget();
+  const baseEligiblePeople=getRaceEligibleBasePeople();
+  const baseEligibleIds=baseEligiblePeople.map(person=>person.id);
+  const baseEligibleNames=baseEligiblePeople.map(person=>person.name);
   if(!nextMeta.setNumber){
-    nextMeta={setNumber:1,roundInSet:1,status:'betting',eligibleIds:baseEligible,survivorIds:[],prizeLabel:getRaceSetLabel(1)};
-  } else if(nextMeta.status==='awaiting_next_round' && nextMeta.survivorIds?.length>5){
-    nextMeta={...nextMeta,roundInSet:(nextMeta.roundInSet||1)+1,status:'betting',eligibleIds:[...nextMeta.survivorIds]};
+    nextMeta={setNumber:1,roundInSet:1,status:'betting',eligibleIds:baseEligibleIds,eligibleNames:baseEligibleNames,survivorIds:[],survivorNames:[],prizeLabel:getRaceSetLabel(1),survivorTarget};
+  } else if(nextMeta.status==='awaiting_next_round' && nextMeta.survivorIds?.length>survivorTarget){
+    nextMeta={...nextMeta,roundInSet:(nextMeta.roundInSet||1)+1,status:'betting',eligibleIds:[...(nextMeta.survivorIds||[])],eligibleNames:[...(nextMeta.survivorNames||[])]};
   } else if(nextMeta.status==='set_complete' && nextMeta.setNumber===1){
-    nextMeta={setNumber:2,roundInSet:1,status:'betting',eligibleIds:baseEligible,survivorIds:[],prizeLabel:getRaceSetLabel(2)};
+    nextMeta={setNumber:2,roundInSet:1,status:'betting',eligibleIds:baseEligibleIds,eligibleNames:baseEligibleNames,survivorIds:[],survivorNames:[],prizeLabel:getRaceSetLabel(2),survivorTarget};
   } else if(nextMeta.status==='set_complete' && nextMeta.setNumber===2){
     alert('레이스 두 세트가 모두 종료되었습니다.');
     return;
@@ -3728,12 +3841,25 @@ async function openRaceBetting(){
       setNumber:nextMeta.setNumber||1,
       roundInSet:nextMeta.roundInSet||1,
       status:'betting',
-      eligibleIds:nextMeta.eligibleIds?.length?nextMeta.eligibleIds:baseEligible,
+      eligibleIds:nextMeta.eligibleIds?.length?nextMeta.eligibleIds:baseEligibleIds,
+      eligibleNames:nextMeta.eligibleNames?.length?nextMeta.eligibleNames:baseEligibleNames,
       survivorIds:nextMeta.survivorIds||[],
-      prizeLabel:getRaceSetLabel(nextMeta.setNumber||1)
+      survivorNames:nextMeta.survivorNames||[],
+      prizeLabel:getRaceSetLabel(nextMeta.setNumber||1),
+      survivorTarget
     };
   } else {
-    nextMeta={setNumber:nextMeta.setNumber||1,roundInSet:(nextMeta.roundInSet||0)+1,status:'betting',eligibleIds:nextMeta.survivorIds?.length?nextMeta.survivorIds:baseEligible,survivorIds:nextMeta.survivorIds||[],prizeLabel:getRaceSetLabel(nextMeta.setNumber||1)};
+    nextMeta={
+      setNumber:nextMeta.setNumber||1,
+      roundInSet:(nextMeta.roundInSet||0)+1,
+      status:'betting',
+      eligibleIds:nextMeta.survivorIds?.length?nextMeta.survivorIds:baseEligibleIds,
+      eligibleNames:nextMeta.survivorNames?.length?nextMeta.survivorNames:baseEligibleNames,
+      survivorIds:nextMeta.survivorIds||[],
+      survivorNames:nextMeta.survivorNames||[],
+      prizeLabel:getRaceSetLabel(nextMeta.setNumber||1),
+      survivorTarget
+    };
   }
   raceSession=(await getRaceSessionBaseline())+1;
   racers=[...FIXED_RACE_RACERS];
@@ -3747,6 +3873,8 @@ async function openRaceBetting(){
     raceRoundInSet:nextMeta.roundInSet,
     prizeLabel:nextMeta.prizeLabel,
     eligibleIds:nextMeta.eligibleIds,
+    eligibleNames:nextMeta.eligibleNames,
+    survivorTarget:nextMeta.survivorTarget,
     racers:racers.map(r=>({name:r.name,title:r.title||''}))
   };
   window._localRaceSetState=nextMeta;
@@ -3759,7 +3887,7 @@ async function openRaceBetting(){
   }catch(e){}
   renderBetBars();
   listenToBets();
-  alert(`레이스 ${nextMeta.setNumber}세트 ${nextMeta.roundInSet}라운드 베팅이 시작되었습니다.\n상품: ${nextMeta.prizeLabel}`);
+  alert(`레이스 ${nextMeta.setNumber}세트 ${nextMeta.roundInSet}라운드 베팅이 시작되었습니다.\n상품: ${nextMeta.prizeLabel}\n종료 기준: 생존 ${nextMeta.survivorTarget}명 이하`);
 }
 
 async function closeRaceBetting(){
@@ -3786,10 +3914,11 @@ async function resetRaceSession(){
 }
 
 function getRaceResultDescription(meta, survivorPeople){
-  if((meta?.survivorIds||[]).length<=5){
+  const target=normalizeRaceSurvivorTarget(meta?.survivorTarget ?? raceSurvivorTarget);
+  if((meta?.survivorIds||[]).length<=target){
     return `최종 생존 ${survivorPeople.length}명 · ${meta.prizeLabel} 지급`;
   }
-  return `다음 라운드 진출 ${survivorPeople.length}명`;
+  return `다음 라운드 진출 ${survivorPeople.length}명 · 목표 ${target}명 이하`;
 }
 
 async function showRaceResult(finishOrder){
@@ -3807,11 +3936,14 @@ async function showRaceResult(finishOrder){
       if(!acc.some(item=>item.personId===b.personId)) acc.push({personId:b.personId,name:b.name});
       return acc;
     },[]);
-  const nextStatus=survivorPeople.length<=5 ? 'set_complete' : 'awaiting_next_round';
+  const survivorTarget=normalizeRaceSurvivorTarget(meta?.survivorTarget ?? raceSurvivorTarget);
+  const nextStatus=survivorPeople.length<=survivorTarget ? 'set_complete' : 'awaiting_next_round';
   const nextMeta={
     ...meta,
     status:nextStatus,
-    survivorIds:survivorPeople.map(item=>item.personId)
+    survivorIds:survivorPeople.map(item=>item.personId),
+    survivorNames:survivorPeople.map(item=>item.name),
+    survivorTarget
   };
   const record={
     session:raceSession,
@@ -3884,6 +4016,9 @@ function getAnyPrizeWinnerIdsFromLogs(draftRewards, raceRewardSets, finalDrawLog
     });
   });
   if(finalDrawLog?.winner?.personId) ids.add(finalDrawLog.winner.personId);
+  Object.values(finalDrawLog||{}).forEach(entry=>{
+    if(entry?.winner?.personId) ids.add(entry.winner.personId);
+  });
   return ids;
 }
 
@@ -3920,14 +4055,6 @@ function updatePoolDisplay(){
 
 async function startLottery(){
   if(lotteryPool.length===0||activePrizeIdx===null) return;
-  let finalDrawData=null;
-  try{
-    finalDrawData=(await get(ref(db,FINAL_DRAW_LOG_PATH))).val();
-  }catch(e){}
-  if(finalDrawData?.completed){
-    alert('최종 추첨은 이미 완료되었습니다.');
-    return;
-  }
   const btn=document.getElementById('lottery-start-btn');
   btn.disabled=true;
   const donePrizeIdx=activePrizeIdx;
@@ -3972,8 +4099,7 @@ async function startLottery(){
       try{
         await Promise.all([
           set(ref(db,'settings/prizes'),lotteryPrizes),
-          set(ref(db,FINAL_DRAW_LOG_PATH),{
-            completed:true,
+          push(ref(db,FINAL_DRAW_LOG_PATH),{
             ts:Date.now(),
             prizeName:displayPrize,
             winner:{personId:winnerEntry.id,name:winner}
@@ -3995,14 +4121,9 @@ async function startLottery(){
 
 async function initLottery(){
   let snapVal=null;
-  let finalDrawVal=null;
   try{
-    const [snap,finalDrawSnap]=await Promise.all([
-      get(ref(db,'settings/prizes')),
-      get(ref(db,FINAL_DRAW_LOG_PATH))
-    ]);
+    const snap=await get(ref(db,'settings/prizes'));
     snapVal=snap.val();
-    finalDrawVal=finalDrawSnap.val();
   }catch(e){}
   if(snapVal&&snapVal.length>0 && !isLegacyLotteryPrizeList(snapVal)){
     lotteryPrizes=snapVal;
@@ -4011,19 +4132,6 @@ async function initLottery(){
     try{ await set(ref(db,'settings/prizes'),lotteryPrizes); }catch(e){}
   }
   renderPrizeList();
-  if(finalDrawVal?.completed){
-    const winnerName=finalDrawVal?.winner?.name||'당첨자';
-    const prizeName=finalDrawVal?.prizeName||'최종 추첨 완료';
-    lotteryPool=[];
-    updatePoolDisplay();
-    document.getElementById('lottery-start-btn').disabled=true;
-    document.getElementById('lottery-display').innerHTML=`
-      <div style="font-size:13px;color:rgba(255,255,255,0.3);margin-bottom:8px;">최종 추첨 완료</div>
-      <div class="lottery-winner">${escapeHtml(winnerName)}</div>
-      <div style="font-size:20px;font-weight:800;color:#FFD700;margin:8px 0;">${escapeHtml(prizeName)}</div>
-      <div style="font-size:13px;color:rgba(255,255,255,0.45);">최종 추첨은 1회만 진행됩니다.</div>`;
-    return;
-  }
   await loadPeopleToPool();
 }
 
@@ -4064,7 +4172,10 @@ function listenToHostState(){
       else { showP('voting'); loadVoteQ(qIdx); }
     } else if(mode==='race'){
       const eligibleIds=Array.isArray(s.eligibleIds)?s.eligibleIds:[];
-      const eligible=eligibleIds.length ? eligibleIds.includes(participant.id) : true;
+      const eligibleNames=Array.isArray(s.eligibleNames)?s.eligibleNames:[];
+      const eligible=eligibleIds.length || eligibleNames.length
+        ? eligibleIds.includes(participant.id) || eligibleNames.includes(participant.name)
+        : true;
       if(!eligible){
         const doneEl=document.getElementById('p-race-done');
         if(doneEl){
