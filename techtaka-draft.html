@@ -1451,8 +1451,10 @@ function watchAdminStatus(){
 // ?몄뀡 ?쒖옉 (珥덇린?????湲??곹깭)
 async function adminStartSession(){
   if(!confirm('세션을 시작할까요?\n\n기존 명단/질문/선물 설정은 유지되고, 참여/투표/베팅/보상 로그는 초기화됩니다.')) return;
+  const resetSelectionCatalog=normalizePrizeCatalog(DEFAULT_SELECTION_PRIZES);
   await Promise.all([
     set(ref(db,'state'),{active:false,standby:true,mode:'idle',sessionStartedAt:Date.now()}),
+    set(ref(db,'settings/selection_prizes'), resetSelectionCatalog),
     remove(ref(db,'votes')),
     remove(ref(db,'bets')),
     remove(ref(db,'draft_rewards')),
@@ -1470,7 +1472,11 @@ async function adminStartSession(){
 // ?몄뀡 醫낅즺
 async function adminEndSession(){
   if(!confirm('세션을 종료할까요? 참여자 화면은 종료 화면으로 전환됩니다.')) return;
-  await set(ref(db,'state'),{active:false,ended:true});
+  const resetSelectionCatalog=normalizePrizeCatalog(DEFAULT_SELECTION_PRIZES);
+  await Promise.all([
+    set(ref(db,'state'),{active:false,ended:true}),
+    set(ref(db,'settings/selection_prizes'), resetSelectionCatalog)
+  ]);
   await resetLotterySessionState();
   alert('세션이 종료되었습니다.');
 }
@@ -4580,24 +4586,19 @@ async function refreshSessionRewardPanels(){
   }
 }
 
-function buildGiftStatusSelectionRows(catalog, issuedEntries){
+function buildGiftStatusSelectionRows(catalog){
   const groupMap={S:'A',A:'B',B:'C'};
-  const issuedMap=new Map();
-  (issuedEntries||[]).forEach(item=>{
-    const key=String(item?.prizeId||'').trim();
-    if(!key) return;
-    issuedMap.set(key, (issuedMap.get(key)||0)+1);
-  });
   return getSelectionPrizeCatalog(catalog).map(item=>{
     const prepared=getSelectionDisplayStock(item);
     const remaining=Math.max(0, Number(item.stock)||0);
+    const issued=Math.max(0, prepared-remaining);
     return {
       name:item.name,
       tier:item.tier,
       groupLabel:groupMap[item.tier]||item.tier,
       prepared,
       remaining,
-      issued:issuedMap.get(item.id)||0
+      issued
     };
   }).sort((a,b)=>{
     const tierOrder={S:0,A:1,B:2};
@@ -4690,7 +4691,7 @@ async function refreshGiftStatusView(){
       sessionStartedAt
     );
     renderGiftStatusView({
-      selectionRows:buildGiftStatusSelectionRows(catalog, issuedEntries),
+      selectionRows:buildGiftStatusSelectionRows(catalog),
       lotteryRows:buildGiftStatusLotteryRows(prizeList),
       issuedEntries
     });
