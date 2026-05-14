@@ -471,11 +471,11 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
 <div id="confetti-wrap"></div>
 
 <!-- ══ HOST RACE VIEW ══ -->
-<div id="h-race-view" class="hidden view-wrap" style="background:#000080;">
+<div id="h-race-view" class="hidden" style="background:#000080;height:100vh;display:flex;flex-direction:column;overflow:hidden;">
   <!-- 상단 컨트롤 바 -->
-  <div class="top-bar" style="background:#000060;border-bottom:3px solid #cccc00;flex-shrink:0;">
-    <div class="logo" style="font-family:'Press Start 2P',monospace;font-size:11px;color:#ffff00;">🏁 TECHTAKA RACE</div>
-    <div class="nav-btns">
+  <div style="background:#000060;border-bottom:3px solid #cccc00;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
+    <div style="font-family:'Press Start 2P',monospace;font-size:11px;color:#ffff00;">🏁 TECHTAKA RACE</div>
+    <div style="display:flex;gap:8px;">
       <button class="nb nb-ghost" onclick="openRacerSettings()">⚙️ 레이서 설정</button>
       <button class="nb nb-primary" onclick="openRaceBetting()">🎯 베팅 시작</button>
       <button class="nb nb-amber" onclick="closeRaceBetting()">🔒 베팅 마감</button>
@@ -492,39 +492,23 @@ body{font-family:'Noto Sans KR',sans-serif;background:#0A0F1A;color:#fff;min-hei
     <button class="save-btn" style="width:100%" onclick="saveRacers()">레이서 저장</button>
   </div>
 
-  <!-- 트랙 풀스크린 + 오버레이 -->
-  <div style="flex:1;position:relative;overflow:hidden;border:3px solid #cccc00;min-height:400px;">
-    <canvas id="race-canvas" style="display:block;position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated;"></canvas>
-
+  <!-- 캔버스 영역 -->
+  <div style="flex:1;position:relative;overflow:hidden;">
+    <canvas id="race-canvas" style="display:block;image-rendering:pixelated;image-rendering:crisp-edges;"></canvas>
     <!-- 이벤트 배너 -->
-    <div id="race-event-banner" style="display:none;position:absolute;top:40%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.92);border:3px solid #ffff00;padding:14px 28px;font-family:'Press Start 2P',monospace;font-size:16px;color:#ffff00;text-align:center;z-index:20;white-space:nowrap;"></div>
-
-    <!-- 스코어보드 오버레이 (우측 상단) -->
-    <div style="position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.85);border:2px solid #cccc00;padding:10px 12px;font-family:'Press Start 2P',monospace;min-width:200px;z-index:15;">
-      <div id="sb-logos" style="margin-bottom:6px;"></div>
-      <div id="race-timer" style="font-size:22px;color:#FFD700;letter-spacing:3px;margin-bottom:8px;">READY</div>
-      <div style="font-size:8px;color:#888800;letter-spacing:1px;margin-bottom:6px;">RANKING</div>
+    <div id="race-event-banner" style="display:none;position:absolute;top:45%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.92);border:3px solid #ffff00;padding:14px 28px;font-family:'Press Start 2P',monospace;font-size:16px;color:#ffff00;text-align:center;z-index:20;white-space:nowrap;pointer-events:none;"></div>
+    <!-- 스코어보드 오버레이 -->
+    <div id="race-scoreboard" style="position:absolute;top:8px;right:8px;background:rgba(0,0,20,0.88);border:2px solid #cccc00;padding:10px 14px;font-family:'Press Start 2P',monospace;min-width:180px;z-index:15;pointer-events:none;">
+      <div id="sb-logos" style="margin-bottom:5px;"></div>
+      <div id="race-timer" style="font-size:20px;color:#FFD700;letter-spacing:3px;margin-bottom:6px;">READY</div>
+      <div style="font-size:7px;color:#888800;letter-spacing:1px;margin-bottom:4px;">RANKING</div>
       <div id="sb-rank-board"></div>
     </div>
-
-    <!-- 베팅 오버레이 (좌측 하단) -->
-    <div style="position:absolute;bottom:8px;left:8px;background:rgba(0,0,0,0.85);border:2px solid #cccc00;padding:8px 12px;font-family:'Press Start 2P',monospace;min-width:180px;z-index:15;">
+    <!-- 베팅 오버레이 -->
+    <div id="race-bet-overlay" style="position:absolute;bottom:8px;left:8px;background:rgba(0,0,20,0.88);border:2px solid #cccc00;padding:8px 12px;font-family:'Press Start 2P',monospace;min-width:160px;z-index:15;pointer-events:none;">
       <div style="font-size:7px;color:#888800;margin-bottom:4px;">BETTING · <span id="bet-total-count" style="color:#00ff88;">0</span>명</div>
       <div id="bet-bars"></div>
     </div>
-  </div>
-</div>
-
-<!-- 레이스 결과 오버레이 -->
-<div id="race-result-ov" class="hidden" style="position:fixed;inset:0;background:#000;z-index:150;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;border:4px solid #cccc00;">
-  <div style="text-align:center;max-width:600px;width:100%;font-family:'Press Start 2P',monospace;">
-    <div style="font-size:16px;color:#FFD700;margin-bottom:16px;animation:blink 0.8s step-end infinite;">🏆 WINNER! 🏆</div>
-    <div id="rr-vehicle" style="font-size:48px;margin-bottom:8px;"></div>
-    <div id="rr-winner" style="font-size:32px;font-weight:900;margin-bottom:6px;font-family:'Noto Sans KR',sans-serif;animation:popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;"></div>
-    <div id="rr-event-desc" style="font-size:11px;color:#888800;margin-bottom:16px;line-height:1.8;"></div>
-    <div style="font-size:9px;color:#888800;letter-spacing:2px;margin-bottom:8px;">베팅 맞힌 사람들</div>
-    <div id="rr-betters" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:24px;max-height:120px;overflow-y:auto;"></div>
-    <button class="rv-btn rv-btn-p" onclick="closeRaceResult()" style="font-family:'Press Start 2P',monospace;font-size:10px;padding:10px 24px;background:#000080;border:2px solid #ffff00;color:#ffff00;cursor:pointer;">CLOSE</button>
   </div>
 </div>
 
@@ -943,7 +927,7 @@ async function submitVote(){
 
 let raceCanvas=null, raceCtx=null, raceRaf=null;
 let raceFrame=0, raceStartTime=0;
-let LANE_H=88; const LABEL_W=160;
+const LANE_H=65; const LABEL_W=150;
 const RACER_COLORS=['#ff4444','#ff8800','#ffff00','#44ff88','#44aaff'];
 
 let racerStates=[];
@@ -1018,171 +1002,168 @@ function drawCanvas(){
   if(!raceCanvas||!raceCtx) return;
   const W=raceCanvas.width, H=raceCanvas.height;
   const N=racers.length;
-  const FINISH=W-LABEL_W-28;
-  // 캐릭터 배율: LANE_H에 맞게 동적 계산, 최소 4 최대 8
-  const sc=Math.min(8, Math.max(4, Math.floor((LANE_H-16)/12)));
-  const charH=12*sc;
-  const charW=8*sc;
 
-  raceCtx.fillStyle='#000033';
+  // ── 레이아웃 계산 ──
+  const CROWD_H=Math.round(H*0.06);   // 관중석: 화면 6%
+  const BANNER_H=Math.round(H*0.04);  // 배너: 화면 4%
+  const TOP_H=CROWD_H+BANNER_H;       // 상단 영역
+  const LANE_H=Math.floor((H-TOP_H)/N); // 레인: 나머지를 N등분
+  const LW=Math.round(W*0.1);          // 레이블 너비: 화면 10%
+  const FINISH=W-LW-Math.round(W*0.02); // 결승선 위치
+
+  // sc: 캐릭터가 레인의 85% 높이가 되도록
+  const sc=Math.max(3,Math.round(LANE_H*0.85/12));
+  const charH=12*sc, charW=8*sc;
+
+  // ── 배경 ──
+  raceCtx.fillStyle='#00003a';
   raceCtx.fillRect(0,0,W,H);
 
-  // 관중석
+  // ── 관중석 ──
   raceCtx.fillStyle='#000055';
-  raceCtx.fillRect(LABEL_W, 0, W-LABEL_W, 28);
-  const colors6=['#ff4444','#ffaa00','#44ff88','#44aaff','#ff44ff','#ffff44','#fff'];
-  for(let cx=LABEL_W+4; cx<W-32; cx+=18){
-    const cc=colors6[Math.floor(cx/14)%colors6.length];
-    const jump=raceRunning && raceFrame%20<10 && Math.sin(cx*0.3)>0.5;
-    raceCtx.fillStyle='#f4c07a'; raceCtx.fillRect(cx+3, jump?0:2, 7, 6);
-    raceCtx.fillStyle=cc; raceCtx.fillRect(cx+2, jump?6:8, 9, 7);
+  raceCtx.fillRect(LW,0,W-LW,CROWD_H);
+  const cc6=['#ff4444','#ffaa00','#44ff88','#44aaff','#ff44ff','#ffff44'];
+  const cSpacing=Math.round(W/70);
+  for(let cx=LW+4;cx<W-20;cx+=cSpacing){
+    const col=cc6[Math.floor(cx/cSpacing)%cc6.length];
+    const jump=raceRunning&&raceFrame%20<10&&Math.sin(cx*0.3)>0.5;
+    const hw=Math.round(cSpacing*0.5), hh=Math.round(CROWD_H*0.4);
+    const bh=Math.round(CROWD_H*0.45);
+    raceCtx.fillStyle='#f4c07a';
+    raceCtx.fillRect(cx+1,jump?0:2,hw,hh);
+    raceCtx.fillStyle=col;
+    raceCtx.fillRect(cx,jump?hh:hh+2,hw+2,bh);
   }
 
-  // 홍보 배너
-  raceCtx.fillStyle='#111100';
-  raceCtx.fillRect(LABEL_W, 28, W-LABEL_W, 16);
-  bannerOffset=(bannerOffset+1.2)%(W-LABEL_W);
-  const bannerText='  🏁 TECHTAKA 6TH ANNIVERSARY   ✨ TO KEEP THE WORLD IN MOTION   🚀 POWERED BY ARGO  ';
-  raceCtx.save();
-  raceCtx.beginPath();
-  raceCtx.rect(LABEL_W, 28, W-LABEL_W, 16);
-  raceCtx.clip();
+  // ── 배너 ──
+  raceCtx.fillStyle='#0a0a00';
+  raceCtx.fillRect(LW,CROWD_H,W-LW,BANNER_H);
+  bannerOffset=(bannerOffset+1.5)%((W-LW)*2);
+  const bTxt='  🏁 TECHTAKA 6TH ANNIVERSARY   ✨ TO KEEP THE WORLD IN MOTION   🚀 POWERED BY ARGO  ';
+  const bFont=Math.max(8,Math.round(BANNER_H*0.55));
+  raceCtx.font=`bold ${bFont}px "Courier New"`;
   raceCtx.fillStyle='#cccc00';
-  raceCtx.font='bold 9px "Courier New"';
   raceCtx.textAlign='left';
-  const tbw=raceCtx.measureText(bannerText).width;
-  const bx=LABEL_W - bannerOffset % tbw;
-  raceCtx.fillText(bannerText, bx, 41);
-  raceCtx.fillText(bannerText, bx+tbw, 41);
+  raceCtx.save();
+  raceCtx.beginPath(); raceCtx.rect(LW,CROWD_H,W-LW,BANNER_H); raceCtx.clip();
+  const bw=raceCtx.measureText(bTxt).width;
+  const bx=LW-(bannerOffset%bw);
+  raceCtx.fillText(bTxt,bx,CROWD_H+BANNER_H-Math.round(BANNER_H*0.2));
+  raceCtx.fillText(bTxt,bx+bw,CROWD_H+BANNER_H-Math.round(BANNER_H*0.2));
   raceCtx.restore();
 
-  const CROWD_H=44; // 관중석(28)+배너(16)
+  // ── 레인 ──
   for(let i=0;i<N;i++){
     const s=racerStates[i]||{pos:4,anim:''};
-    const y=CROWD_H+i*LANE_H;
-    const tx=LABEL_W;
+    const y=TOP_H+i*LANE_H;
 
-    // 레인 라벨
+    // 레인 배경 (줄무늬 잔디)
+    const tc1=i%2===0?'#004800':'#003c00';
+    const tc2=i%2===0?'#005800':'#004800';
+    raceCtx.fillStyle=tc1;
+    raceCtx.fillRect(LW,y,W-LW,LANE_H);
+    raceCtx.fillStyle=tc2;
+    const stripeW=Math.round(W/40);
+    for(let sx=0;sx<W-LW;sx+=stripeW*2){
+      raceCtx.fillRect(LW+sx,y,stripeW,LANE_H);
+    }
+
+    // 레인 구분선
+    raceCtx.fillStyle='rgba(255,255,255,0.18)';
+    raceCtx.fillRect(LW,y,W-LW,1);
+
+    // 레이블 배경
     raceCtx.fillStyle='#00003a';
-    raceCtx.fillRect(0,y,LABEL_W,LANE_H);
-    // 구분선
-    raceCtx.fillStyle='rgba(100,100,200,0.3)';
-    raceCtx.fillRect(LABEL_W-2,y,2,LANE_H);
+    raceCtx.fillRect(0,y,LW,LANE_H);
+    raceCtx.fillStyle='rgba(100,100,200,0.25)';
+    raceCtx.fillRect(LW-1,y,1,LANE_H);
+
+    // 레이서 이름
+    const nFont=Math.max(9,Math.round(LANE_H*0.18));
     raceCtx.fillStyle='#ccccff';
-    raceCtx.font='bold 11px "Courier New"';
+    raceCtx.font=`bold ${nFont}px "Courier New"`;
     raceCtx.textAlign='right';
-    raceCtx.fillText(racers[i].name, LABEL_W-6, y+30);
+    raceCtx.fillText(racers[i].name,LW-5,y+Math.round(LANE_H*0.42));
     raceCtx.fillStyle='#7788aa';
-    raceCtx.font='9px "Courier New"';
-    raceCtx.fillText(racers[i].title||'', LABEL_W-6, y+44);
-
-    // 트랙 - 줄무늬 잔디
-    const trackColor1=(i%2===0)?'#004800':'#003c00';
-    const trackColor2=(i%2===0)?'#005800':'#004800';
-    raceCtx.fillStyle=trackColor1;
-    raceCtx.fillRect(tx,y,W-tx,LANE_H);
-    // 밝은 줄무늬 (잔디 방향)
-    raceCtx.fillStyle=trackColor2;
-    for(let stripe=0;stripe<W-tx;stripe+=32){
-      raceCtx.fillRect(tx+stripe,y,16,LANE_H);
-    }
-    // 레인 경계선
-    raceCtx.fillStyle='rgba(255,255,255,0.15)';
-    raceCtx.fillRect(tx,y,W-tx,2);
-    raceCtx.fillStyle='rgba(0,0,0,0.3)';
-    raceCtx.fillRect(tx,y+LANE_H-2,W-tx,2);
-
-    // 레인선
-    raceCtx.strokeStyle='rgba(255,255,255,0.1)';
-    raceCtx.lineWidth=1;
-    raceCtx.setLineDash([5,9]);
-    raceCtx.beginPath();
-    raceCtx.moveTo(tx,y); raceCtx.lineTo(W,y);
-    raceCtx.stroke();
-    raceCtx.setLineDash([]);
-
-    // 거리 마커
-    for(let m=80;m<FINISH;m+=80){
-      raceCtx.fillStyle='rgba(255,255,255,0.04)';
-      raceCtx.fillRect(tx+m,y,1,LANE_H);
-    }
+    raceCtx.font=`${Math.round(nFont*0.8)}px "Courier New"`;
+    raceCtx.fillText(racers[i].title||'',LW-5,y+Math.round(LANE_H*0.68));
 
     // 결승선 체크무늬
-    const fx=tx+FINISH;
-    for(let r2=0;r2<LANE_H;r2+=7){
-      for(let c=0;c<20;c+=7){
-        raceCtx.fillStyle=((Math.floor(r2/7)+Math.floor(c/7))%2===0)?'#fff':'#000';
-        raceCtx.fillRect(fx+c,y+r2,7,7);
+    const fSize=Math.max(5,Math.round(LANE_H/8));
+    for(let fy=0;fy<LANE_H;fy+=fSize){
+      for(let fc=0;fc<Math.round(W*0.015);fc+=fSize){
+        raceCtx.fillStyle=((Math.floor(fy/fSize)+Math.floor(fc/fSize))%2===0)?'#fff':'#000';
+        raceCtx.fillRect(FINISH+fc,y+fy,fSize,fSize);
       }
     }
-    // 결승선 깃발 (첫번째 레인 위에만)
+
+    // 결승선 깃발 (첫 레인 위에)
     if(i===0){
       raceCtx.fillStyle='#FFD700';
-      raceCtx.fillRect(fx+8,y-CROWD_H,4,CROWD_H+10);
-      raceCtx.fillStyle='#FFD700';
+      raceCtx.fillRect(FINISH+Math.round(W*0.005),y-TOP_H,3,TOP_H+Math.round(LANE_H*0.1));
       raceCtx.beginPath();
-      raceCtx.moveTo(fx+12,y-CROWD_H+2);
-      raceCtx.lineTo(fx+30,y-CROWD_H+10);
-      raceCtx.lineTo(fx+12,y-CROWD_H+18);
+      raceCtx.moveTo(FINISH+Math.round(W*0.007),y-TOP_H+2);
+      raceCtx.lineTo(FINISH+Math.round(W*0.022),y-TOP_H+Math.round(TOP_H*0.4));
+      raceCtx.lineTo(FINISH+Math.round(W*0.007),y-TOP_H+Math.round(TOP_H*0.8));
       raceCtx.fill();
-      if(LOGO_TECHTAKA){
-        const img=new Image();
-        img._src=LOGO_TECHTAKA;
-        if(!drawCanvas._ttImg){ drawCanvas._ttImg=new Image(); drawCanvas._ttImg.src=LOGO_TECHTAKA; }
-        if(drawCanvas._ttImg.complete) raceCtx.drawImage(drawCanvas._ttImg,fx-28,y-CROWD_H,28,12);
+      if(drawCanvas._ttImg&&drawCanvas._ttImg.complete){
+        raceCtx.drawImage(drawCanvas._ttImg,FINISH-Math.round(W*0.025),y-TOP_H,Math.round(W*0.025),Math.round(TOP_H*0.5));
+      } else if(!drawCanvas._ttImg){
+        drawCanvas._ttImg=new Image(); drawCanvas._ttImg.src=LOGO_TECHTAKA;
       }
     }
 
-    // 레이서
-    const px=tx+Math.max(0,Math.min(s.pos, FINISH+4));
-    const py=y+Math.floor(LANE_H/2-charH/2);
-    const fi=Math.floor(raceFrame/5)%2;
+    // 레이서 캐릭터
+    const px=LW+Math.max(0,Math.min(s.pos,FINISH-charW));
+    const py=y+Math.floor((LANE_H-charH)/2);
+    const fi=Math.floor(raceFrame/6)%2;
 
     if(s.anim==='fall'){
-      drawPix(px,py+Math.floor(sc/2),PF_FALL,RACER_COLORS[i],sc);
-      if(raceFrame%8<4){
+      drawPix(px,py+Math.round(charH*0.1),PF_FALL,RACER_COLORS[i],sc);
+      if(raceFrame%10<5){
         raceCtx.fillStyle='#ffff00';
-        raceCtx.font='13px serif';
+        raceCtx.font=`${sc*3}px serif`;
         raceCtx.textAlign='left';
-        raceCtx.fillText('★',px+22,py);
+        raceCtx.fillText('★',px+charW,py);
       }
     } else if(s.anim==='sleep'){
       drawPix(px,py,PF[0],RACER_COLORS[i],sc);
       raceCtx.fillStyle='#88ccff';
-      raceCtx.font='12px serif';
+      raceCtx.font=`${sc*2}px serif`;
       raceCtx.textAlign='left';
-      raceCtx.fillText(raceFrame%50<25?'z':'zz', px+24, py-2);
+      raceCtx.fillText(raceFrame%50<25?'z':'zz',px+charW,py);
     } else if(s.anim==='boost'){
       drawPix(px,py,PF[fi],RACER_COLORS[i],sc);
       for(let f2=0;f2<4;f2++){
         raceCtx.fillStyle=`rgba(255,${80+f2*40},0,${0.9-f2*0.2})`;
-        raceCtx.fillRect(px-f2*7-3, py+10+Math.random()*8, 7, 4);
+        raceCtx.fillRect(px-f2*sc-2,py+Math.round(charH*0.5)+Math.random()*sc,sc+2,Math.round(sc*0.6));
       }
     } else if(s.anim==='warp'){
-      raceCtx.fillStyle='rgba(255,255,0,0.7)';
+      raceCtx.fillStyle='rgba(255,255,0,0.6)';
       raceCtx.beginPath();
-      raceCtx.arc(px+12,py+18,18,0,Math.PI*2);
+      raceCtx.arc(px+charW/2,py+charH/2,charH*0.6,0,Math.PI*2);
       raceCtx.fill();
     } else {
-      drawPix(px,py,PF[fi],RACER_COLORS[i],3,s.speed<0);
+      drawPix(px,py,PF[fi],RACER_COLORS[i],sc,s.speed<0);
     }
 
     // 순위 배지
     const rank=raceFinishOrder.indexOf(i);
     if(rank>=0){
-      const bx=tx+FINISH+16, by=y+LANE_H/2;
-      // 배지 글로우
-      raceCtx.fillStyle='rgba(255,200,0,0.3)';
-      raceCtx.beginPath(); raceCtx.arc(bx,by,20,0,Math.PI*2); raceCtx.fill();
+      const bSize=Math.round(LANE_H*0.28);
+      const bx=FINISH+Math.round(W*0.018), by=y+LANE_H/2;
+      raceCtx.fillStyle='rgba(255,200,0,0.2)';
+      raceCtx.beginPath(); raceCtx.arc(bx,by,bSize+4,0,Math.PI*2); raceCtx.fill();
       raceCtx.fillStyle=['#FFD700','#C0C0C0','#CD7F32','#888','#666'][rank];
-      raceCtx.beginPath(); raceCtx.arc(bx,by,15,0,Math.PI*2); raceCtx.fill();
+      raceCtx.beginPath(); raceCtx.arc(bx,by,bSize,0,Math.PI*2); raceCtx.fill();
       raceCtx.fillStyle='#000';
-      raceCtx.font='bold 12px "Courier New"';
+      raceCtx.font=`bold ${Math.round(bSize*0.9)}px "Courier New"`;
       raceCtx.textAlign='center';
-      raceCtx.fillText(rank+1,bx,by+5);
+      raceCtx.fillText(rank+1,bx,by+Math.round(bSize*0.35));
     }
   }
 
+  // ── 외곽선 ──
   raceCtx.strokeStyle='#cccc00';
   raceCtx.lineWidth=2;
   raceCtx.strokeRect(1,1,W-2,H-2);
@@ -1202,7 +1183,9 @@ function updateRaceScoreboard(){
 function raceLoop(){
   raceFrame++;
   const N=racers.length;
-  const FINISH=raceCanvas.width-LABEL_W-28;
+  const W=raceCanvas.width, H=raceCanvas.height;
+  const LW=Math.round(W*0.1);
+  const FINISH=W-LW-Math.round(W*0.02);
 
   for(let i=0;i<N;i++){
     const s=racerStates[i];
@@ -1297,18 +1280,16 @@ function raceLoop(){
 function initRaceCanvas(){
   raceCanvas=document.getElementById('race-canvas');
   if(!raceCanvas) return;
-  const container=raceCanvas.parentElement;
-  const W=Math.max(container.offsetWidth||window.innerWidth||900, 600);
-  // 화면 높이에서 상단바 제외한 사용 가능 높이
-  const availH=Math.max(container.offsetHeight||window.innerHeight-55, 400);
-  // CROWD_H=44, 레인 개수에 맞게 LANE_H 동적 계산
-  LANE_H=Math.floor((availH-44)/racers.length);
-  LANE_H=Math.max(LANE_H, 80); // 최소 80px
+  // 컨테이너(flex:1 div) 실제 크기
+  const wrap=raceCanvas.parentElement;
+  const W=wrap.clientWidth||window.innerWidth||1280;
+  const H=wrap.clientHeight||window.innerHeight-55||600;
   raceCanvas.width=W;
-  raceCanvas.height=availH;
+  raceCanvas.height=H;
   raceCtx=raceCanvas.getContext('2d');
   if(!racerStates.length){
-    racerStates=racers.map(()=>({pos:4,speed:0,baseSpeed:0,event:null,eventTimer:0,anim:'',finished:false,isGagRacer:false,gagFired:false}));
+    racerStates=racers.map(()=>({pos:4,speed:0,baseSpeed:0,event:null,eventTimer:0,
+      anim:'',finished:false,isGagRacer:false,gagFired:false,phase:0,rhythm:1,wobble:0.15,spurted:false}));
   }
   drawCanvas();
 }
@@ -1428,7 +1409,7 @@ async function startRace(){
   raceEventLog='';
 
   if(!raceCanvas) initRaceCanvas();
-  const FINISH=raceCanvas.width-LABEL_W-28;
+  const FINISH=raceCanvas.width-Math.round(raceCanvas.width*0.1)-Math.round(raceCanvas.width*0.02);
 
   const gagIdx=Math.floor(Math.random()*racers.length);
   racerStates=racers.map((_,i)=>{
